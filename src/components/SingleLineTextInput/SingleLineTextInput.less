@@ -18,6 +18,41 @@
     }
 }
 
+.inputValid {
+    border: 1px solid @green;
+}
+
+.inputInvalid {
+    border: 1px solid @red;
+}
+
+.inputIcon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &:after {
+        content: '';
+        background-repeat: no-repeat;
+        background-size: 50% 50%;
+        background-position: center center;
+        margin-left: -32px;
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.inputIconValid {
+    &:after {
+        background-image: data-uri('./Check.svg');
+    }
+}
+
+.inputIconInvalid {
+    &:after {
+        background-image: data-uri('./Cross.svg');
+    }
+}
+
 .inputLarge {
     height: 40px;
 }

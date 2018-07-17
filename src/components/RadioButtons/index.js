@@ -17,11 +17,13 @@ export default class RadioButtons extends Component {
     }
 
     handleChange = (e) => {
+        const { onChange } = this.props
         if (this.state.selectedOption !== e.target.value) {
             this.setState({
                 selectedOption: e.target.value
             })
         }
+        onChange && onChange(e.target.valeu)
     }
 
     render() {

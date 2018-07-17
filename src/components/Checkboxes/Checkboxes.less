@@ -5,7 +5,7 @@
     width: 32px;
     background: @white;
     display: inline-block;
-    border-radius: 50%;
+    border-radius: 15%;
     position: absolute;
     box-shadow: 0 4px 8px 0 fadeout(@black, 96%), 0 1px 2px 0 fadeout(@black, 92%);
     border: 2px solid transparent;
@@ -18,7 +18,7 @@
         width: 16px;
         position: absolute;
         border-radius: 8px;
-        background-color: @red;
+        background-image: data-uri('./Check.svg');
         background-size: 100% 100%;
         background-repeat: no-repeat;
         box-shadow: 0 4px 8px 0 fadeout(@red, 96%), 0 1px 2px 0 fadeout(@red, 92%);
@@ -32,15 +32,21 @@
 }
 
 .label:hover {
-    .input[type=radio]:not(:checked) ~ .checkmark {
+    .input[type=checkbox]:not(:checked) ~ .checkmark {
         &::before {
             opacity: 1;
             transform: scale(.5);
         }
     }
+    .input[type=checkbox]:checked ~ .checkmark {
+        &::before {
+            opacity: 1;
+            transform: scale(.75);
+        }
+    }
 }
 
-.input[type=radio]:checked ~ .checkmark {
+.input[type=checkbox]:checked ~ .checkmark {
     border-color: @red;
     &::before {
         opacity: 1;

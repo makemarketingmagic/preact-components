@@ -11,6 +11,7 @@ import Persona from './../Persona/index';
 import SingleLineTextInput from '../SingleLineTextInput';
 import MultiLineTextInput from './../MultiLineTextInput/index';
 import RadioButtons from '../RadioButtons';
+import Checkboxes from '../Checkboxes';
 
 const data = {
     tooltip: {
@@ -60,7 +61,17 @@ export default class RecommendedLead extends Component {
                     contactMethods={data.company.contact}
                 />
                 <div>
-                    <RadioButtons options={[
+                    <SingleLineTextInput placeholder={'Email Address'} validation={'email'} showIcon={true} />
+                </div>
+                <div>
+                    <SingleLineTextInput placeholder={'Phone Number'} validation={'phone'} />
+                </div>
+                <div>
+                    <SingleLineTextInput placeholder={'Custom Validation'} validation={/^\d.+?\w$/ig} />
+                </div>
+
+                <div>
+                    <Checkboxes options={[
                         { label: 'Option 1', data: 'test0' },
                         { label: 'Option 2', data: 'test1', selected: true }
                     ]} />
