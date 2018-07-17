@@ -1,0 +1,46 @@
+@import '../common/mixins.less';
+@import '../common/variables.less';
+
+.avatar {
+    height: 128px;
+    width: 128px;
+    border: 16px transparent solid;
+    overflow: hidden;
+    border-radius: 50%;
+    .responsive(600px, {
+        margin-bottom: 8px;
+    });
+}
+
+.avatar--red {
+    border-color: @red;
+}
+
+.avatar--pink {
+    border-color: @pink;
+}
+
+.avatar--orange {
+    border-color: @orange;
+}
+
+.avatar--yellow {
+    border-color: @yellow;
+}
+
+.avatar--green {
+    border-color: @green;
+}
+
+.avatar--grey {
+    border-color: @grey; 
+}
+
+.avatar--blue {
+    border-color: @blue;
+}
+
+.avatarImage {
+    height: 100%;
+    width: 100%;
+}

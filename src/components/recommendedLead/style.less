@@ -1,0 +1,122 @@
+@import '../common/mixins.less';
+
+.personaContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0 64px;
+    .responsive(600px, {
+        padding: 0 32px;
+        flex-direction: column;
+        align-items: center;
+    });
+}
+
+
+.companyDetailContainer {
+    margin-top: 32px;
+    padding: 0 64px;
+    .responsive(600px, {
+        padding: 0 32px;
+    });
+}
+
+.visitContainer {
+    margin-top: 16px;
+    padding: 0 64px;
+    .responsive(600px, {
+        padding: 0 32px;
+    });
+}
+
+.visitHeader, .visitRow {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.visitRow {
+    color: #88A5AD;
+}
+
+.visitHeader div:first-child, .visitRow div:first-child {
+    flex: 1;
+}
+
+.visitDate {
+    text-transform: uppercase;
+}
+
+.contactContainer {
+    margin-top: 16px;
+    padding: 32px 64px;
+    background-color: #F2F8FA;
+    .responsive(600px, {
+        padding: 16px 32px;
+    });
+}
+
+.contactMethods {
+    display: flex;
+    flex-direction: row;
+    .responsive(600px, {
+        flex-direction: column;
+    });
+}
+
+.contactMethod a {
+    font-size: 12px;
+    line-height: 16px;
+    margin-right: 64px;
+    display: flex;
+    flex-direction: row;
+    color: #EE4055;
+    text-decoration: none;
+    svg {
+        margin-right: 8px;
+    }
+    .responsive(600px, {
+        margin-bottom: 8px;
+    });
+}
+
+.contactTip {
+    margin-top: 24px;
+    color: #88A5AD;
+
+    span {
+        color: #323232;
+    }
+    .responsive(600px, {
+        margin-top: 12px;
+    });
+}
+
+.buttonsContainer {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    button {
+        margin: 0 4px;
+    }
+
+    .responsive(600px, {
+        margin-top: 16px;
+        flex-direction: column;
+        button {
+            margin: 4px auto;
+        }
+    });
+}
+
+.buttonContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    svg {
+        margin-right: 8px
+    }
+}

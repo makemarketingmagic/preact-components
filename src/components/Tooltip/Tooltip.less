@@ -1,0 +1,129 @@
+@import '../common/mixins.less';
+@import '../common/variables.less';
+
+.tooltip {
+    background: @white;
+    border-color: @white;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.04), 0 1px 2px 2px rgba(0,0,0,0.08);
+    padding: 16px 32px;
+    display: flex;
+}
+
+.tooltip::before {
+    content: "";
+    align-self: center;
+    width: 16px;
+    height: 16px;
+    display: block;
+    border-radius: 4px;
+    transform: rotate(45deg);
+    background: @white;
+    position: relative;
+    left: -39px;
+    top: 4px;
+    .responsive(600px, {
+        display: none;
+    });
+}
+
+.tooltipName {
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 600;
+}
+
+.tooltipPosition {
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}
+
+.tooltipPosition--red {
+    color: @red;
+}
+
+.tooltipPosition--pink {
+    color: @pink;
+}
+
+.tooltipPosition--orange {
+    color: @orange;
+}
+
+.tooltipPosition--yellow {
+    color: @yellow;
+}
+
+.tooltipPosition--green {
+    color: @green;
+}
+
+.tooltipPosition--grey {
+    color: @grey; 
+}
+
+.tooltipPosition--blue {
+    color: @blue;
+}
+
+.tooltipMessage {
+    font-size: 12px;
+    line-height: 14px;
+    margin-top: 8px;
+}
+
+.tooltipContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transform-origin: left center;
+    transition: transform 150ms ease-in;
+}
+
+.tooltipContainerOpen {
+    transform: scaleX(1);
+}
+
+.tooltipContainerClosed {
+    transform: scaleX(0);
+}
+
+.tooltipContents {
+    display: flex;
+    flex-direction: row;
+}
+
+.closeButton {
+    flex: 0 0 8px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.crossIcon--red {
+    fill: @red;
+}
+
+.crossIcon--pink {
+    fill: @pink;
+}
+
+.crossIcon--orange {
+    fill: @orange;
+}
+
+.crossIcon--yellow {
+    fill: @yellow;
+}
+
+.crossIcon--green {
+    fill: @green;
+}
+
+.crossIcon--grey {
+    fill: @grey; 
+}
+
+.crossIcon--blue {
+    fill: @blue;
+}

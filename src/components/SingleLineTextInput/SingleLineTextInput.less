@@ -1,0 +1,27 @@
+@import '../common/variables.less';
+
+.input {
+    color: @text;
+    width: 100%;
+    max-width: 504px;
+    font-size: 14px;
+    outline: none;
+    padding: 8px 16px;
+    font-family: inherit;
+    background: #FFFFFF;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.04), 0 1px 2px 0 rgba(0,0,0,0.16);
+    border-radius: 4px;
+    border-color: transparent;
+
+    &::placeholder {
+        color: @grey;
+    }
+}
+
+.inputLarge {
+    height: 40px;
+}
+
+.inputSmall {
+    height: 32px;
+}
