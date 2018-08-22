@@ -4,6 +4,7 @@ import Papers from './../../components/Papers/index';
 import styles from './Demo.less'
 import InputsDemo from './../../components/Demo/Inputs';
 import Navigation from './../../components/Navigation/index';
+import RecommendedLead from './../../components/recommendedLead/index';
 
 export default class Demo extends Component {
     render() {
@@ -18,6 +19,7 @@ export default class Demo extends Component {
                         { component: InputsDemo, props: {} }
                     ]} />
                 </div>
+                <RecommendedLead />
             </div>
         )
     }

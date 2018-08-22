@@ -1,6 +1,6 @@
 {
   "name": "preact-components",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Ready-to-go Preact starter project powered by webpack.",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --progress",
@@ -79,6 +79,7 @@
     "webpack-dev-server": "^3.0.0"
   },
   "dependencies": {
+    "babel-plugin-styled-components": "^1.5.1",
     "classnames": "^2.2.6",
     "date-fns": "^1.29.0",
     "material-design-lite": "^1.3.0",
@@ -89,7 +90,8 @@
     "preact-router": "^2.5.1",
     "promise-polyfill": "^7.0.1",
     "proptypes": "^1.0.0",
-    "serve": "^6.0.0"
+    "serve": "^6.0.0",
+    "styled-components": "^3.4.4"
   },
   "main": "webpack.config.babel.js",
   "directories": {
