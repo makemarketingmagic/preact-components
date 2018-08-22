@@ -11,12 +11,16 @@ const CSS_MAPS = ENV !== 'production';
 
 module.exports = {
 	context: path.resolve(__dirname, "src"),
-	entry: './index.js',
+	entry: {
+		"bundle": "./index.js",
+		"components/recommendedLead/index": "./components/recommendedLead/index.js",
+		"components/Avatar/index": "./components/Avatar/index.js"
+	},
 
 	output: {
-		path: path.resolve(__dirname, "build"),
+		path: path.resolve(__dirname, "lib"),
 		publicPath: '/',
-		filename: 'bundle.js'
+		filename: '[name].js'
 	},
 
 	resolve: {
