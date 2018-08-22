@@ -1,6 +1,6 @@
 {
   "name": "preact-components",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Ready-to-go Preact starter project powered by webpack.",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --progress",
@@ -94,6 +94,6 @@
   "main": "webpack.config.babel.js",
   "directories": {
     "test": "__test__",
-    "lib": "./lib"
+    "lib": "lib"
   }
 }
