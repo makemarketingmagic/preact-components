@@ -93,6 +93,7 @@
   },
   "main": "webpack.config.babel.js",
   "directories": {
-    "test": "__test__"
+    "test": "__test__",
+    "lib": "./lib"
   }
 }
