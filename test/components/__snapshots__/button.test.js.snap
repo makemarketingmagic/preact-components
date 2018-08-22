@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button should render 1`] = `
+<button raised colored accent class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--raised mdl-button--colored mdl-button--accent">
+  <div class="buttonContent">
+    <span style="margin-left: 0px; margin-right: 0px;">Hello World</span>
+  </div>
+</button>
+`;
+
+exports[`Button should render disabled 1`] = `
+<button raised colored accent disabled class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--raised mdl-button--colored mdl-button--accent mdl-button--disabled">
+  <div class="buttonContent">
+    <span style="margin-left: 0px; margin-right: 0px;">Hello World</span>
+  </div>
+</button>
+`;
+
+exports[`Button should render secondary 1`] = `
+<button raised primary class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--raised mdl-button--primary">
+  <div class="buttonContent">
+    <span style="margin-left: 0px; margin-right: 0px;">Hello World</span>
+  </div>
+</button>
+`;
+
+exports[`Button should render with Icon on the left 1`] = `
+<button raised colored accent class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--raised mdl-button--colored mdl-button--accent">
+  <div class="buttonContent">
+    <svg width="14" height="10">
+      <path fill="none" fill-rule="evenodd" stroke="inherit" stroke-linecap="round"
+      stroke-linejoin="round" stroke-width="2" d="M1 5l4 4 8-8"></path>
+    </svg>
+    <span style="margin-left: 8px; margin-right: 0px;">Hello World</span>
+  </div>
+</button>
+`;
+
+exports[`Button should render with Icon on the right 1`] = `
+<button raised colored accent class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--raised mdl-button--colored mdl-button--accent">
+  <div class="buttonContent">
+    <span style="margin-left: 0px; margin-right: 8px;">Hello World</span>
+    <svg width="14" height="10">
+      <path fill="none" fill-rule="evenodd" stroke="inherit" stroke-linecap="round"
+      stroke-linejoin="round" stroke-width="2" d="M1 5l4 4 8-8"></path>
+    </svg>
+  </div>
+</button>
+`;

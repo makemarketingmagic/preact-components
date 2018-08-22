@@ -30,13 +30,13 @@ export default class RadioButtons extends Component {
         const { options = [] } = this.props
         return (
             <form>
-                {options && options.map(({ label, data }, i) => {
+                {options && options.map(({ label, data }) => {
                     return (
                         <label class={styles.label}>
                             <input
                                 class={styles.input}
                                 onChange={this.handleChange}
-                                checked={this.state.selectedOption == data}
+                                checked={this.state.selectedOption === data}
                                 type='radio'
                                 value={data}
                             />

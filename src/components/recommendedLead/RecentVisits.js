@@ -11,7 +11,7 @@ export default class RecentVisits extends Component {
                     <div>Bezochte pagina</div>
                     <div>Datum</div>
                 </div>
-                {visits.map((visit, i) => (
+                {visits.map((visit) => (
                     <div class={style.visitRow}>
                         <div>{visit.page}</div>
                         <div class={style.visitDate}>{format(visit.date, 'DD MMM YYYY')}</div>

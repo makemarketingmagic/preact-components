@@ -1,0 +1,117 @@
+@import '../common/variables.less';
+@import '../common/mixins.less';
+
+.title {
+    .typography('titleDark');
+    flex: 1 1 100%;
+    text-align: center;
+}
+
+.subTitle {
+    .typography('UIColored');
+    margin-bottom: 16px;
+}
+
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.fullWidth {
+    flex: 1 1 100%;
+    padding: 32px;
+}
+
+.column {
+    flex: 1 1 50%;
+    padding: 32px;
+    .responsive(900px, {
+        flex: 1 1 100%;
+    });
+}
+
+.divider {
+    height: 32px;
+}
+
+.dividerSmall {
+    height: 16px;
+}
+
+.labelGrey {
+    .typography('labelGrey');
+}
+
+.labelColored {
+    .typography('labelColored');
+}
+
+.labelRed {
+    .typography('labelRed');
+}
+
+.labelDark {
+    .typography('labelDark');
+}
+
+.labelWhite {
+    background-color: @disabled;
+    .typography('labelWhite');
+}
+
+.labelDisabled {
+    .typography('labelDisabled');
+}
+
+.uiRegular {
+    .typography('UIRegular');
+}
+
+.uiPlaceholder {
+    .typography('UIPlaceholder');
+}
+
+.uiColored {
+    .typography('UIColored');
+}
+
+.titleLabel {
+    .typography('titleLabel');
+}
+
+.titleDark {
+    .typography('titleDark');
+}
+
+.titleRed {
+    .typography('titleRed');
+}
+
+.personaName {
+    .typography('personaName');
+}
+
+.personaOrange {
+    .typography('personaOrange');
+}
+
+.personaYellow {
+    .typography('personaYellow');
+}
+
+.personaRed {
+    .typography('personaRed');
+}
+
+.personaGreen {
+    .typography('personaGreen');
+}
+
+.personaBlue {
+    .typography('personaBlue');
+}
+
+.personaGrey {
+    .typography('personaGrey');
+}

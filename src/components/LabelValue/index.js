@@ -12,7 +12,7 @@ export default class LabelValue extends Component {
         elements = flipped ? elements.reverse() : elements
         return (
             <div>
-                {elements.map((element, i) => (
+                {elements.map((element) => (
                     element
                 ))}
             </div>

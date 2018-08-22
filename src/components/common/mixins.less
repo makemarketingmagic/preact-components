@@ -1,5 +1,155 @@
+@import './variables.less';
+
 .responsive(@maxWidth; @rules) {
     @media only screen and (max-width: @maxWidth) {
         @rules();
     }
+}
+
+.typography('navigation') {
+    font-family: 'Montserrat';
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 500;
+    color: @text;
+}
+
+.typography('navigationActive') {
+    .typography('navigation');
+    color: @red;
+}
+
+.typography('currentUser') {
+    font-family: 'Montserrat';
+    line-height: 14px;
+    color: @label;
+}
+
+.typography('currentUserName') {
+    .typography('currentUser');
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.typography('currentUserCompany') {
+    .typography('currentUser');
+    font-size: 12px;
+}
+
+.typography('label') {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.typography('labelGrey') {
+	.typography('label');
+    color: @gray;
+}
+
+.typography('labelColored') {
+    .typography('label');
+    color: @label;
+}
+
+.typography('labelRed') {
+    .typography('label');
+    color: @red;
+}
+
+.typography('labelDark') {
+    .typography('label');
+    color: @text;
+}
+
+.typography('labelWhite') {
+    .typography('label');
+    color: @white;
+}
+
+.typography('labelDisabled') {
+    .typography('label');
+    color: @disabled;
+}
+
+.typography('UI') {
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.typography('UIRegular') {
+    .typography('UI');
+    color: @text;
+}
+
+.typography('UIPlaceholder') {
+    .typography('UI');
+    color: @placeholder;
+}
+
+.typography('UIColored') {
+    .typography('UI');
+    color: @label;
+}
+
+.typography('titleLabel') {
+    font-size: 14px;
+    line-height: 16px;
+    color: @label;
+}
+
+.typography('title') {
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.typography('titleDark') {
+    .typography('title');
+    color: @text;
+}
+
+.typography('titleRed') {
+    .typography('title');
+    color: @red;
+}
+
+.typography('persona') {
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}
+
+.typography('personaOrange') {
+    .typography('persona');
+    color: @orange;
+}
+
+.typography('personaYellow') {
+    .typography('persona');
+    color: @yellow;
+}
+
+.typography('personaRed') {
+    .typography('persona');
+    color: @red;
+}
+
+.typography('personaGreen') {
+    .typography('persona');
+    color: @green;
+}
+
+.typography('personaBlue') {
+    .typography('persona');
+    color: @blue;
+}
+
+.typography('personaGrey') {
+    .typography('persona');
+    color: @grey;
+}
+
+.typography('personaName') {
+    font-size: 14px;
+    line-height: 20px;
+    color: @text;
 }

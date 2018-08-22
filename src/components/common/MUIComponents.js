@@ -77,17 +77,15 @@ export class MaterialComponent extends Component {
     preserveMdlDom(base, r) {
         if (!base || !base.hasAttribute || !r) return;
 
-        let c = base.childNodes,
-            persist = [
-                'mdl-js-ripple-effect--ignore-events',
-                'mdl-js-ripple-effect',
-                'is-upgraded',
-                'is-dirty'
-            ],
+        let persist = [
+            'mdl-js-ripple-effect--ignore-events',
+            'mdl-js-ripple-effect',
+            'is-upgraded',
+            'is-dirty'
+        ],
             v = base.getAttribute('data-upgraded'),
             a = r.attributes,
-            cl = getClass(a) || '',
-            foundRipple = false;
+            cl = getClass(a) || '';
 
         if (!a) a = {};
 
@@ -209,7 +207,7 @@ let upgradeQueue = {
  *	@param mini-fab = false
  *	@param disabled = false
  */
-export class Button extends MaterialComponent {
+export class MUIButton extends MaterialComponent {
     component = 'button';
     nodeName = 'button';
     js = true;
@@ -220,5 +218,5 @@ export class Button extends MaterialComponent {
 
 export default {
     options,
-    Button
+    MUIButton
 };

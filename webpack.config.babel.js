@@ -27,6 +27,11 @@ module.exports = {
 			'node_modules'
 		],
 		alias: {
+			'react-dom/server': 'preact-render-to-string',
+			'react-addons-test-utils': 'preact-test-utils',
+			'react-addons-transition-group': 'preact-transition-group',
+			'react': 'preact-compat-enzyme',
+			'react-dom': 'preact-compat-enzyme',
 			components: path.resolve(__dirname, "src/components"),    // used for tests
 			style: path.resolve(__dirname, "src/style"),
 			'react': 'preact-compat',
@@ -50,7 +55,7 @@ module.exports = {
 			{
 				// Transform our own .(less|css) files with PostCSS and CSS-modules
 				test: /\.(less|css)$/,
-				include: [path.resolve(__dirname, 'src/components')],
+				include: [path.resolve(__dirname, 'src/components'), path.resolve(__dirname, 'src/containers')],
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
 					use: [
@@ -76,7 +81,7 @@ module.exports = {
 			},
 			{
 				test: /\.(less|css)$/,
-				exclude: [path.resolve(__dirname, 'src/components')],
+				exclude: [path.resolve(__dirname, 'src/components'), path.resolve(__dirname, 'src/containers')],
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
 					use: [

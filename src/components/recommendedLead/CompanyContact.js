@@ -8,7 +8,7 @@ export default class CompanyContact extends Component {
         return (
             <div class={style.contactContainer}>
                 <div class={style.contactMethods}>
-                    {contactMethods.map((method, i) => (
+                    {contactMethods.map((method) => (
                         <ContactMethod type={method.type} value={method.value} />
                     ))}
                 </div>

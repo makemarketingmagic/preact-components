@@ -1,7 +1,4 @@
 import { h, Component } from 'preact';
-import style from './style.less';
-import Avatar from '../Avatar';
-import Tooltip from '../Tooltip';
 import Papers from '../Papers';
 import CompanyDetails from './CompanyDetails';
 import RecentVisits from './RecentVisits';
@@ -9,8 +6,6 @@ import CompanyContact from './CompanyContact';
 import RecommendedLeadButtons from './RecommendedLeadButtons';
 import Persona from './../Persona/index';
 import SingleLineTextInput from '../SingleLineTextInput';
-import MultiLineTextInput from './../MultiLineTextInput/index';
-import RadioButtons from '../RadioButtons';
 import Checkboxes from '../Checkboxes';
 
 const data = {
@@ -27,8 +22,11 @@ const data = {
         visits: [
             { page: '/', date: new Date('02/17/2018') },
             { page: '/services', date: new Date('02/17/2018') },
-            { page: '/services/design', date: new Date('02/23/2018') },
-            { page: '/contact', date: new Date('02/23/2018') },
+            {
+                page: '/services/design', date: new
+                    Date('02/23/2018')
+            },
+            { page: '/contact', date: new Date('02/23/2018') }
         ],
         contact: [
             { type: 'phone', value: '020 1234567' },
@@ -41,7 +39,26 @@ const data = {
 export default class RecommendedLead extends Component {
     render() {
         return (
-            <Papers>
+            <Papers pages={[
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} },
+                { component: RecommendedLeadComponent, props: {} }
+            ]} />
+        )
+    }
+}
+
+export class RecommendedLeadComponent extends Component {
+    render() {
+        const { nextPage } = this.props
+        return (
+            <div>
                 <Persona
                     color={'orange'}
                     imageUrl={data.tooltip.imageUrl}
@@ -64,7 +81,7 @@ export default class RecommendedLead extends Component {
                     <SingleLineTextInput placeholder={'Email Address'} validation={'email'} showIcon={true} />
                 </div>
                 <div>
-                    <SingleLineTextInput placeholder={'Phone Number'} validation={'phone'} />
+                    <SingleLineTextInput placeholder={'Netherlands Phone Number'} validation={'phone-nl'} />
                 </div>
                 <div>
                     <SingleLineTextInput placeholder={'Custom Validation'} validation={/^\d.+?\w$/ig} />
@@ -76,8 +93,8 @@ export default class RecommendedLead extends Component {
                         { label: 'Option 2', data: 'test1', selected: true }
                     ]} />
                 </div>
-                <RecommendedLeadButtons />
-            </Papers>
+                <RecommendedLeadButtons nextPage={nextPage} />
+            </div>
         )
     }
 }
