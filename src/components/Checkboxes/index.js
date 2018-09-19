@@ -1,6 +1,78 @@
 import { h, Component } from 'preact'
-import styles from './Checkboxes.less'
+import styled from 'styled-components'
+import { media, typography, colors } from '../common/scMixins'
+import { transparentize } from 'polished'
+import check from './Check.svg'
 
+const Checkmark = styled.div`
+    height: 32px;
+    width: 32px;
+    background: ${colors.white};
+    display: inline-block;
+    border-radius: 15%;
+    position: absolute;
+    box-shadow: 0 4px 8px 0 ${transparentize(0.96, colors.black)}, 0 1px 2px 0 ${transparentize(0.92, colors.black)};
+    border: 2px solid transparent;
+    box-sizing: content-box;
+    transition: border-color 150ms ease-in-out;
+
+    &:before {
+        display: block;
+        height: 16px;
+        width: 16px;
+        position: absolute;
+        border-radius: 8px;
+        background-image: url(${check});
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        box-shadow: 0 4px 8px 0 ${transparentize(0.96, colors.red)}, 0 1px 2px 0 ${transparentize(0.92, colors.red)};
+        top: 8px;
+        left: 8px;
+        content: '';
+        opacity: 0;
+        transform: scale(0);
+        transition: all 150ms ease-in-out;
+    }
+`,
+    Label = styled.label`
+        display: flex;
+        margin: 8px 0;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        min-height: 32px;
+
+        &:hover {
+            ${Input}[type=checkbox]:not(:checked) ~ ${Checkmark} {
+                &::before {
+                    opacity: 1;
+                    transform: scale(.5);
+                }
+            }
+            ${Input}[type=checkbox]:checked ~ ${Checkmark} {
+                &::before {
+                    opacity: 1;
+                    transform: scale(.75);
+                }
+            }
+        }
+`,
+    CheckboxLabelText = styled(typography.LabelDark)`
+        padding-left: 48px;
+`,
+    Input = styled.input`
+        position: absolute;
+        visibility: hidden;
+
+        &[type=checkbox]:checked ~ ${Checkmark} {
+            border-color ${colors.red};
+            &::before {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    `
 export default class Checkboxes extends Component {
     constructor(props) {
         super(props)
@@ -25,21 +97,21 @@ export default class Checkboxes extends Component {
     }
 
     render() {
-        const { options = [] } = this.props
+        const { options = [] } = this.state
         return (
             <form>
-                {options && options.map(({ label, data }, i) => {
+                {options && options.map(({ selected, label, data }, i) => {
                     return (
-                        <label class={styles.label} key={i}>
+                        <Label key={i}>
                             <Checkbox
                                 id={i}
-                                checked={this.state.options[i].selected}
+                                selected={selected}
                                 handleChange={this.handleChange}
                                 data={data}
                             />
-                            <div class={styles.checkmark} />
-                            <span class={styles.labelText}>{label}</span>
-                        </label>
+                            <Checkmark />
+                            <CheckboxLabelText>{label}</CheckboxLabelText>
+                        </Label>
                     )
                 }
                 )}
@@ -51,18 +123,17 @@ export default class Checkboxes extends Component {
 class Checkbox extends Component {
     handleChange = (e) => {
         const { handleChange, id } = this.props
-        handleChange && id && handleChange(e, id)
+        handleChange && id >= 0 && handleChange(e, id)
     }
 
     render() {
         const { selected, data } = this.props
         return (
-            <input
-                class={styles.input}
+            <Input
                 onChange={this.handleChange}
                 checked={selected}
                 type='checkbox'
-                valud={data}
+                value={data}
             />
         )
     }

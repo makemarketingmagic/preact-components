@@ -1,6 +1,39 @@
 import { h, Component } from 'preact'
-import styles from './MultiLineTextInput.less'
-import classNames from 'classnames';
+import styled from 'styled-components';
+import { colors } from '../common/scMixins';
+import { transparentize } from 'polished';
+
+const Input = styled.input`
+    margin: 4px 0;
+    color: ${colors.text};
+    width: 100%;
+    max-height: 240px;
+    resize: none;
+    max-width: 504px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    background: ${colors.white};
+    box-shadow: 0 4px 8px 0 ${transparentize(0.96, colors.black)}, 0 1px 2px 0 ${transparentize(0.84, colors.black)};
+    border-radius: 4px;
+    border-color: transparent;
+
+    &::placeholder {
+        color: ${colors.grey};
+    }
+`
+
+const InputLarge = styled(Input)`
+    height: 40px;
+    min-height: 40px;
+    padding: 8px 16px;
+`
+
+const InputSmall = styled(Input)`
+    height: 32px;
+    min-height: 32px;
+    padding: 6px 16px;
+`
 
 export default class MultiLineTextInput extends Component {
     constructor(props) {
@@ -33,18 +66,17 @@ export default class MultiLineTextInput extends Component {
 
     render() {
         const { placeholder = '', variant = 'large' } = this.props,
-            variantClass = {
-                'large': styles.inputLarge,
-                'medium': null,
-                'small': styles.inputSmall
+            InputEl = {
+                'large': InputLarge,
+                'medium': Input,
+                'small': InputSmall
             }[variant]
         return (
-            <textarea
+            <InputEl
                 onInput={this.handleChange}
                 ref={(el) => this.el = el}
                 value={this.state.value}
                 placeholder={placeholder}
-                class={classNames(styles.input, variantClass)}
                 type="text"
             />
         )

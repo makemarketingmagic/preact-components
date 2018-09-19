@@ -1,12 +1,12 @@
 import { h, Component } from 'preact';
 import styled from 'styled-components';
 import LabelValue from '../LabelValue';
-import mixins from './../common/scMixins';
+import { media } from './../common/scMixins';
 
 const CompanyDetailContainer = styled.div`
     margin-top: 32px;
     padding: 0 64px;
-    ${mixins.media.mobile`padding: 0 32px`} 
+    ${media.mobile`padding: 0 32px`} 
 `
 
 export default class CompanyDetails extends Component {

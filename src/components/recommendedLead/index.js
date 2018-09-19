@@ -5,8 +5,6 @@ import RecentVisits from './RecentVisits';
 import CompanyContact from './CompanyContact';
 import RecommendedLeadButtons from './RecommendedLeadButtons';
 import Persona from './../Persona/index';
-import SingleLineTextInput from '../SingleLineTextInput';
-import Checkboxes from '../Checkboxes';
 
 const data = {
     tooltip: {
@@ -77,22 +75,6 @@ export class RecommendedLeadComponent extends Component {
                 <CompanyContact
                     contactMethods={data.company.contact}
                 />
-                <div>
-                    <SingleLineTextInput placeholder={'Email Address'} validation={'email'} showIcon={true} />
-                </div>
-                <div>
-                    <SingleLineTextInput placeholder={'Netherlands Phone Number'} validation={'phone-nl'} />
-                </div>
-                <div>
-                    <SingleLineTextInput placeholder={'Custom Validation'} validation={/^\d.+?\w$/ig} />
-                </div>
-
-                <div>
-                    <Checkboxes options={[
-                        { label: 'Option 1', data: 'test0' },
-                        { label: 'Option 2', data: 'test1', selected: true }
-                    ]} />
-                </div>
                 <RecommendedLeadButtons nextPage={nextPage} />
             </div>
         )

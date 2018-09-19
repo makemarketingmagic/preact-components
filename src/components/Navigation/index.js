@@ -1,16 +1,32 @@
 import { h, Component } from 'preact'
-import styles from './Navigation.less'
+import styled from 'styled-components';
 import WOOLogo from '../icons/WOOLogo';
 import CurrentUser from './CurrentUser';
 import Tabs from './Tabs';
+import { colors } from '../common/scMixins';
+
+const Header = styled.header`
+    width: 100%;
+    height: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: ${colors.white};
+    border-bottom: 1px solid rgba(32, 32, 32, 0.1);
+    align-items: center;
+    justify-content: space-between;
+`
+
+const LogoContainer = styled.div`
+    margin-left: 32px;
+`
 
 export default class Navigation extends Component {
     render() {
         return (
-            <header class={styles.header}>
-                <div class={styles.wooLogo}>
+            <Header>
+                <LogoContainer>
                     <WOOLogo />
-                </div>
+                </LogoContainer>
                 <Tabs tabs={[
                     { text: 'AHA Feedback' },
                     {
@@ -33,7 +49,7 @@ export default class Navigation extends Component {
                     { text: 'Informatie' }
                 ]} />
                 <CurrentUser />
-            </header>
+            </Header>
         )
     }
 }

@@ -1,12 +1,13 @@
 import { h, Component } from 'preact';
 import format from 'date-fns/format'
 import styled from 'styled-components';
-import scMixins from '../common/scMixins';
+import { media } from '../common/scMixins';
 
 const VisitContainer = styled.div`
     margin-top: 16px;
+    margin-bottom: 16px;
     padding: 0 64px;
-    ${scMixins.media.mobile`padding: 0 32px;`}
+    ${media.mobile`padding: 0 32px;`}
 `
 
 const VisitHeader = styled.div`
@@ -20,7 +21,7 @@ const VisitHeader = styled.div`
     }
 `
 
-const VisitRow = VisitHeader.extend`
+const VisitRow = styled(VisitHeader)`
     color: #88A5AD;
 `
 

@@ -5,7 +5,7 @@ import { MUIButton } from '../common/MUIComponents';
 import mdl from 'material-design-lite/material';
 import TickIcon from '../icons/TickIcon';
 import LaterIcon from '../icons/LaterIcon';
-import scMixins from '../common/scMixins';
+import { media } from '../common/scMixins';
 
 const ButtonsContainer = styled.div`
     margin-top: 32px;
@@ -17,7 +17,7 @@ const ButtonsContainer = styled.div`
         margin: 0 4px;
     }
     
-    ${scMixins.media.mobile`
+    ${media.mobile`
         margin-top: 16px;
         flex-direction: column;
         button {
@@ -32,7 +32,7 @@ const ButtonContent = styled.div`
     align-items: center;
     
     svg {
-        margin-right;
+        margin-right: 8px;
     }
 `
 
@@ -46,20 +46,20 @@ export default class RecommendedLeadButtons {
                     primary={true}
                     onClick={nextPage}
                 >
-                    <div class={style.buttonContent}>
+                    <ButtonContent>
                         <LaterIcon color={'#EE4055'} />
                         <span>Herinner me later</span>
-                    </div>
+                    </ButtonContent>
                 </MUIButton>
                 <MUIButton
                     raised={true}
                     colored={true}
                     accent={true}
                 >
-                    <div class={style.buttonContent}>
+                    <ButtonContent>
                         <TickIcon />
                         <span>Contact opgenomen</span>
-                    </div>
+                    </ButtonContent>
                 </MUIButton>
             </ButtonsContainer>
         )
