@@ -6,7 +6,7 @@ import CompanyContact from './CompanyContact';
 import RecommendedLeadButtons from './RecommendedLeadButtons';
 import Persona from './../Persona/index';
 
-const data = {
+const sampleData = {
     tooltip: {
         name: 'Yoeri Kayser',
         position: 'Consultant',
@@ -36,25 +36,21 @@ const data = {
 
 export default class RecommendedLead extends Component {
     render() {
+        let { data = [sampleData, sampleData, sampleData, sampleData, sampleData] } = this.props;
+        debugger;
+        data = data.reduce((acc, val) => {
+            acc.push(Object.assign({ props: { data: val } }, { component: RecommendedLeadComponent }))
+            return acc;
+        }, [])
         return (
-            <Papers pages={[
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} },
-                { component: RecommendedLeadComponent, props: {} }
-            ]} />
+            <Papers pages={data} />
         )
     }
 }
 
 export class RecommendedLeadComponent extends Component {
     render() {
-        const { nextPage } = this.props
+        const { data, nextPage } = this.props
         return (
             <div>
                 <Persona

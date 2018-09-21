@@ -1,5 +1,4 @@
 import { h, Component } from 'preact'
-import classNames from 'classnames'
 import styled from 'styled-components'
 import { media, colors } from '../common/scMixins'
 import dropdownArrowClosed from '../../assets/DropdownArrowClosed.png'
