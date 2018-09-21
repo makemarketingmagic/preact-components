@@ -7,6 +7,7 @@ const animationLength = 250;
 
 const PaperEl = styled.div`
     width: 100%;
+    padding: 2px;
     display: flex;
     flex-direction: column;
     position: ${props =>
