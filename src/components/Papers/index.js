@@ -1,6 +1,56 @@
 import { h, Component } from 'preact';
-import style from './Papers.less'
-import classNames from 'classnames';
+import styled from 'styled-components';
+import { media, colors } from '../common/scMixins';
+import { transparentize } from 'polished';
+
+const animationLength = 250;
+
+const PaperEl = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: ${props =>
+        props.level === 0 ? 'relative' : 'absolute'
+    };
+    ${props =>
+        props.level === 0 ? `margin-top: 48px` : 'margin-top: 0'
+    };
+    ${media.mobile`
+        margin-top: 28px;
+    `}
+    transition: transform ${animationLength}ms ease-in-out,
+        z-index 1ms ease-in-out ${animationLength}ms;
+    top: 0;
+    opacity: ${props =>
+        props.level <= 2 ? 1 : 0
+    };
+    transform: ${props =>
+        props.level === 1 ? 'translate(0, -16px) scaleX(.95)' :
+            props.level >= 2 ? 'translate(0, -32px) scaleX(.9)' :
+                props.level < 0 ? 'translateX(-100%)' : ''
+    };
+`
+
+const Container = styled.div`
+    z-index: 3;
+    background-color: ${colors.white};
+    box-shadow: 0 8px 16px 0 ${transparentize(0.92, colors.black)}, 0 1px 2px 1px ${transparentize(0.84, colors.black)};
+    border-radius: 16px;
+    max-width: 800px;
+    width: 100%;
+    color: #323232;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 0;
+    ${media.mobile`
+        padding: 16px 0;
+    `}
+`
+
+
+
 export default class Papers extends Component {
     constructor(props) {
         super(props)
@@ -34,29 +84,16 @@ export default class Papers extends Component {
                     position: 'relative'
                 }}>
                     {pages.map(({ component: Component, props }, key) => {
-                        const classes = []
-                        if (key === this.state.currentPage) {
-                            classes.push(style.papers)
-                        } else if (key > this.state.currentPage) {
-                            classes.push(style.papersBack)
-                        } else {
-                            classes.push(style.papersDismissed)
-                        }
-                        if (this.state.currentPage + 1 === key) {
-                            classes.push(style['paperLevel-1'])
-                        } else if (this.state.currentPage + 2 === key) {
-                            classes.push(style['paperLevel-2'])
-                        }
                         return (
-                            <div
+                            <PaperEl
+                                level={key - this.state.currentPage}
                                 ref={(ref) => this.pageRefs[key] = ref}
-                                class={classNames(...classes)}
                                 style={{ zIndex: this.state.totalPages - key }}
                             >
-                                <div class={style.container}>
+                                <Container>
                                     <Component nextPage={this.nextPage} {...props} />
-                                </div>
-                            </div>
+                                </Container>
+                            </PaperEl>
                         )
                     })}
                 </div>
