@@ -37,7 +37,6 @@ const sampleData = {
 export default class RecommendedLead extends Component {
     render() {
         let { data = [sampleData, sampleData, sampleData, sampleData, sampleData] } = this.props;
-        debugger;
         data = data.reduce((acc, val) => {
             acc.push(Object.assign({ props: { data: val } }, { component: RecommendedLeadComponent }))
             return acc;
@@ -69,7 +68,7 @@ export class RecommendedLeadComponent extends Component {
                     visits={data.company.visits}
                 />
                 <CompanyContact
-                    contactMethods={data.company.contact}
+                    contactMethods={data.contact}
                 />
                 <RecommendedLeadButtons nextPage={nextPage} />
             </div>
