@@ -76,7 +76,7 @@ export default class FullScreenOverlay extends Component {
                     <CloseButton onClick={this.toggleOverlay}><CrossIcon /></CloseButton>
                     {childrenWithProps}
                 </Overlay>
-                <OverlayButton onClick={this.toggleOverlay}>Open Overlay</OverlayButton>
+                <OverlayButton onClick={this.toggleOverlay}>{buttonText}</OverlayButton>
             </div>
         )
     }
