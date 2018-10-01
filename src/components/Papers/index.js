@@ -69,9 +69,14 @@ export default class Papers extends Component {
     }
 
     nextPage = () => {
-        const { pages } = this.props,
+        const { pages, toggleOverlay = () => { } } = this.props,
             nextPage = this.state.currentPage + 1 > pages.length ? 0 : this.state.currentPage + 1
         this.setState({ currentPage: nextPage })
+        if (this.isLastPage()) { toggleOverlay() }
+    }
+
+    isLastPage = () => {
+        return this.state.currentPage === this.state.totalPages;
     }
 
     render() {

@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { h, Component, cloneElement } from 'preact'
 import styled from 'styled-components'
 import Button from '../Button';
 import CrossIcon from '../icons/CrossIcon';
@@ -52,6 +52,8 @@ export default class FullScreenOverlay extends Component {
         super(props);
         this.timeout = null;
         this.state = { open: false, animating: false }
+
+
     }
 
     toggleOverlay = () => {
@@ -66,11 +68,13 @@ export default class FullScreenOverlay extends Component {
 
     render() {
         const { children, buttonText = "Open Overlay" } = this.props;
+        const childrenWithProps = children.map(child =>
+            cloneElement(child, { toggleOverlay: this.toggleOverlay }));
         return (
             <div>
                 <Overlay open={this.state.open} animating={this.state.animating}>
                     <CloseButton onClick={this.toggleOverlay}><CrossIcon /></CloseButton>
-                    {children}
+                    {childrenWithProps}
                 </Overlay>
                 <OverlayButton onClick={this.toggleOverlay}>Open Overlay</OverlayButton>
             </div>
