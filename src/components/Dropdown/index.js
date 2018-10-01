@@ -5,7 +5,7 @@ import dropdownArrowClosed from '../../assets/DropdownArrowClosed.png'
 import dropdownArrowOpen from '../../assets/dropdownArrowOpen.png'
 import { transparentize } from 'polished';
 
-const BaseDropdown = styled.div`
+const BaseDropdown = styled.select`
     width: 100%;
     max-width: 504px;
     font-family: inherit;

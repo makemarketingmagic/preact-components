@@ -38,7 +38,7 @@ const Overlay = styled.div`
     bottom: 0;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 1030;
     transition: opacity ${animationLength}ms ease-in-out;
 
     & > * {
