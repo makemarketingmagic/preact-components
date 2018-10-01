@@ -37,13 +37,22 @@ const sampleData = {
 
 export default class RecommendedLead extends Component {
     render() {
-        let { data = [sampleData, sampleData, sampleData, sampleData, sampleData] } = this.props;
+        let {
+            data = [sampleData, sampleData, sampleData, sampleData, sampleData],
+            buttonText = "Try the new layout!",
+            actions
+        } = this.props;
+        const defaultActions = {
+            remindMe: () => { console.log("Remind me") },
+            done: () => { console.log("Done") }
+        }
+        actions = Object.assign(defaultActions, actions)
         data = data.reduce((acc, val) => {
-            acc.push(Object.assign({ props: { data: val } }, { component: RecommendedLeadComponent }))
+            acc.push(Object.assign({ props: { data: val, actions } }, { component: RecommendedLeadComponent }))
             return acc;
         }, [])
         return (
-            <FullScreenOverlay>
+            <FullScreenOverlay buttonText={buttonText}>
                 <Papers pages={data} />
             </FullScreenOverlay>
         )
@@ -52,7 +61,7 @@ export default class RecommendedLead extends Component {
 
 export class RecommendedLeadComponent extends Component {
     render() {
-        const { data, nextPage } = this.props
+        const { data, actions, nextPage } = this.props
         return (
             <div>
                 <Persona
@@ -73,7 +82,7 @@ export class RecommendedLeadComponent extends Component {
                 <CompanyContact
                     contactMethods={data.contact}
                 />
-                <RecommendedLeadButtons nextPage={nextPage} />
+                <RecommendedLeadButtons done={actions.done} nextPage={nextPage} remindMe={actions.remindMe} />
             </div>
         )
     }

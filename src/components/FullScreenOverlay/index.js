@@ -56,18 +56,16 @@ export default class FullScreenOverlay extends Component {
 
     toggleOverlay = () => {
         clearTimeout(this.timeout);
-        console.log("Toggling Overlay")
         this.timeout = setTimeout(this.finishedAnimating, animationLength);
         this.setState({ open: !this.state.open, animating: true })
     }
 
     finishedAnimating = () => {
-        console.log("Animation finished")
         this.setState({ animating: false })
     }
 
     render() {
-        const { children } = this.props;
+        const { children, buttonText = "Open Overlay" } = this.props;
         return (
             <div>
                 <Overlay open={this.state.open} animating={this.state.animating}>
