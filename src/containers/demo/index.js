@@ -5,6 +5,7 @@ import styles from './Demo.less'
 import InputsDemo from './../../components/Demo/Inputs';
 import Navigation from './../../components/Navigation/index';
 import RecommendedLead from './../../components/recommendedLead/index';
+import FullScreenOverlay from '../../components/FullScreenOverlay';
 
 export default class Demo extends Component {
     render() {
@@ -19,7 +20,9 @@ export default class Demo extends Component {
                         { component: InputsDemo, props: {} }
                     ]} />
                 </div>
-                <RecommendedLead />
+                <FullScreenOverlay>
+                    <RecommendedLead />
+                </FullScreenOverlay>
             </div>
         )
     }

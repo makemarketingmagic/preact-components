@@ -25,13 +25,13 @@ const sampleData = {
                     Date('02/23/2018')
             },
             { page: '/contact', date: new Date('02/23/2018') }
-        ],
-        contact: [
-            { type: 'phone', value: '020 1234567' },
-            { type: 'email', value: 'info@viatelinfrastructure.nl' },
-            { type: 'address', value: 'Viatelstraat 1, Wognum' }
         ]
-    }
+    },
+    contact: [
+        { type: 'phone', value: '020 1234567' },
+        { type: 'email', value: 'info@viatelinfrastructure.nl' },
+        { type: 'address', value: 'Viatelstraat 1, Wognum' }
+    ]
 }
 
 export default class RecommendedLead extends Component {

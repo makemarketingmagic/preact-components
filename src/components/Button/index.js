@@ -12,7 +12,7 @@ const ButtonContent = styled.div`
 
 export default class Button extends Component {
     render() {
-        const { children, Icon = null, iconLeft = false, iconRight = false, secondary = false, disabled = false } = this.props
+        const { children, onClick = null, Icon = null, iconLeft = false, iconRight = false, secondary = false, disabled = false } = this.props
         return (
             <MUIButton
                 raised={true}
@@ -20,10 +20,13 @@ export default class Button extends Component {
                 colored={!secondary}
                 accent={!secondary}
                 disabled={disabled}
+                onClick={onClick}
             >
                 <ButtonContent>
                     {iconLeft && Icon && <Icon color='inherit' />}
                     <span style={{
+                        textAlign: 'center',
+                        width: '100%',
                         marginLeft: iconLeft ? 8 : 0,
                         marginRight: iconRight ? 8 : 0
                     }}>{children}</span>
