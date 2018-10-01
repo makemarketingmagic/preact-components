@@ -5,6 +5,7 @@ import RecentVisits from './RecentVisits';
 import CompanyContact from './CompanyContact';
 import RecommendedLeadButtons from './RecommendedLeadButtons';
 import Persona from './../Persona/index';
+import FullScreenOverlay from './../FullScreenOverlay/index';
 
 const sampleData = {
     tooltip: {
@@ -42,7 +43,9 @@ export default class RecommendedLead extends Component {
             return acc;
         }, [])
         return (
-            <Papers pages={data} />
+            <FullScreenOverlay>
+                <Papers pages={data} />
+            </FullScreenOverlay>
         )
     }
 }

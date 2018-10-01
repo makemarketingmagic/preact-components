@@ -20,9 +20,7 @@ export default class Demo extends Component {
                         { component: InputsDemo, props: {} }
                     ]} />
                 </div>
-                <FullScreenOverlay>
-                    <RecommendedLead />
-                </FullScreenOverlay>
+                <RecommendedLead />
             </div>
         )
     }
