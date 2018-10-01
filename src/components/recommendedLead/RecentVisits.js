@@ -31,12 +31,12 @@ const VisitDate = styled.div`
 
 export default class RecentVisits extends Component {
     render() {
-        const { visits } = this.props;
+        const { visits, translations } = this.props;
         return (
             <VisitContainer>
                 <VisitHeader>
-                    <div>Bezochte pagina</div>
-                    <div>Datum</div>
+                    <div>{translations.VISITED_PAGE}</div>
+                    <div>{translations.DATE}</div>
                 </VisitHeader>
                 {visits.map((visit) => (
                     <VisitRow>

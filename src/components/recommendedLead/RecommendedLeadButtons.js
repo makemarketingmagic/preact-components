@@ -38,7 +38,7 @@ const ButtonContent = styled.div`
 
 export default class RecommendedLeadButtons {
     render() {
-        const { nextPage, remindMe, done } = this.props
+        const { nextPage, remindMe, done, translations } = this.props
         return (
             <ButtonsContainer>
                 <MUIButton
@@ -51,7 +51,7 @@ export default class RecommendedLeadButtons {
                 >
                     <ButtonContent>
                         <LaterIcon color={'#EE4055'} />
-                        <span>Herinner me later</span>
+                        <span>{translations.REMIND_ME}</span>
                     </ButtonContent>
                 </MUIButton>
                 <MUIButton
@@ -65,7 +65,7 @@ export default class RecommendedLeadButtons {
                 >
                     <ButtonContent>
                         <TickIcon />
-                        <span>Contact opgenomen</span>
+                        <span>{translations.CONTACTED}</span>
                     </ButtonContent>
                 </MUIButton>
             </ButtonsContainer>
