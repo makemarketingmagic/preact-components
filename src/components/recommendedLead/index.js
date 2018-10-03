@@ -35,6 +35,34 @@ const sampleData = {
     ]
 }
 
+const sampleAddedData = {
+    tooltip: {
+        name: 'Yoeri Kayser',
+        position: 'Consultant',
+        imageUrl: './assets/Yoeri.png',
+        message: 'Bingo! Laat deze verkoopkans niet ontsnappen; neem contact op!'
+    },
+    company: {
+        name: 'Testing Some Stuff BV',
+        city: 'Wognum',
+        industry: 'Adviesverlening',
+        visits: [
+            { page: '/', date: new Date('02/17/2018') },
+            { page: '/services', date: new Date('02/17/2018') },
+            {
+                page: '/services/design', date: new
+                    Date('02/23/2018')
+            },
+            { page: '/contact', date: new Date('02/23/2018') }
+        ]
+    },
+    contact: [
+        { type: 'phone', value: '020 1234567' },
+        { type: 'email', value: 'info@viatelinfrastructure.nl' },
+        { type: 'address', value: 'Viatelstraat 1, Wognum' }
+    ]
+}
+
 const defaultTranslations = {
     VISITED_PAGE: "Visited Page",
     DATE: "Date",
@@ -45,24 +73,37 @@ const defaultTranslations = {
 export default class RecommendedLead extends Component {
     render() {
         let {
-            data = [sampleData, sampleData, sampleData, sampleData, sampleData],
+        data = [sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData, sampleData],
             buttonText = "Try the new layout!",
             actions,
             translations
         } = this.props;
         const defaultActions = {
             remindMe: () => { console.log("Remind me") },
-            done: () => { console.log("Done") }
+            done: () => { console.log("Done") },
+            fetchCards: async () => {
+                function timeout(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+                console.log("Starting fetch")
+                await timeout(1000)
+                console.log("Fetch finished")
+                const result = {
+                    props: { data: Object.assign({}, sampleAddedData), actions: this.actions, translations: this.translations },
+                    component: RecommendedLeadComponent
+                }
+                return [result, result, result, result, result, result, result, result, result, result]
+            }
         }
-        translations = Object.assign(defaultTranslations, translations)
-        actions = Object.assign(defaultActions, actions)
-        data = data.reduce((acc, val) => {
-            acc.push(Object.assign({ props: { data: val, actions, translations } }, { component: RecommendedLeadComponent }))
+        this.translations = Object.assign(defaultTranslations, translations)
+        this.actions = Object.assign(defaultActions, actions)
+        this.data = data.reduce((acc, val) => {
+            acc.push(Object.assign({ props: { data: val, actions: this.actions, translations: this.translations } }, { component: RecommendedLeadComponent }))
             return acc;
         }, [])
         return (
             <FullScreenOverlay buttonText={buttonText}>
-                <Papers pages={data} />
+                <Papers fetchCards={this.actions.fetchCards} pages={this.data} />
             </FullScreenOverlay>
         )
     }
@@ -96,6 +137,7 @@ export class RecommendedLeadComponent extends Component {
                     contactMethods={data.contact}
                 />
                 <RecommendedLeadButtons
+                    cardId={data.id}
                     translations={{
                         REMIND_ME: translations.REMIND_ME,
                         CONTACTED: translations.CONTACTED

@@ -38,14 +38,14 @@ const ButtonContent = styled.div`
 
 export default class RecommendedLeadButtons {
     render() {
-        const { nextPage, remindMe, done, translations } = this.props
+        const { cardId, nextPage, remindMe, done, translations } = this.props
         return (
             <ButtonsContainer>
                 <MUIButton
                     raised={true}
                     primary={true}
                     onClick={() => {
-                        remindMe();
+                        remindMe(cardId);
                         nextPage();
                     }}
                 >
@@ -59,7 +59,7 @@ export default class RecommendedLeadButtons {
                     colored={true}
                     accent={true}
                     onClick={() => {
-                        done();
+                        done(cardId);
                         nextPage();
                     }}
                 >

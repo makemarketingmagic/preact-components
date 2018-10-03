@@ -23,12 +23,12 @@ const PaperEl = styled.div`
         z-index 1ms ease-in-out ${animationLength}ms;
     top: 0;
     opacity: ${props =>
-        props.level <= 2 ? 1 : 0
+        props.level < -1 ? 0 : props.level <= 2 ? 1 : 0
     };
     transform: ${props =>
         props.level === 1 ? 'translate(0, -16px) scaleX(.95)' :
             props.level >= 2 ? 'translate(0, -32px) scaleX(.9)' :
-                props.level < 0 ? 'translateX(-100%)' : ''
+                props.level < 0 ? 'translateX(-110%)' : ''
     };
 `
 
@@ -58,21 +58,38 @@ export default class Papers extends Component {
         this.pageRefs = []
         this.state = {
             currentPage: 0,
-            totalPages: 0
+            totalPages: 0,
+            dismissedPages: 0,
+            pages: []
         }
     }
 
     componentDidMount() {
         const { pages = [] } = this.props,
             papers = pages.length >= 2 ? 2 : pages.length - 1
-        this.setState({ papers, totalPages: this.props.pages.length })
+        this.setState({
+            papers,
+            pages,
+            totalPages: this.props.pages.length
+        })
     }
 
-    nextPage = () => {
-        const { pages, toggleOverlay = () => { } } = this.props,
+    nextPage = async () => {
+        const { pages } = this.state,
+            { fetchCards, toggleOverlay = () => { } } = this.props,
+            dismissedPages = this.state.dismissedPages + 1,
             nextPage = this.state.currentPage + 1 > pages.length ? 0 : this.state.currentPage + 1
-        this.setState({ currentPage: nextPage })
+        this.setState({ currentPage: nextPage, dismissedPages })
+        if (this.state.totalPages - this.state.currentPage <= 5) {
+            let newPages = await fetchCards()
+            let combinedPages = [...this.state.pages, ...newPages]
+            let papers = combinedPages.length >= 2 ? 2 : combinedPages.length - 1
+            this.setState({
+                pages: combinedPages, papers, totalPages: combinedPages.length
+            })
+        }
         if (this.isLastPage()) { toggleOverlay() }
+
     }
 
     isLastPage = () => {
@@ -80,7 +97,30 @@ export default class Papers extends Component {
     }
 
     render() {
-        const { pages } = this.props
+        let start, end, currentIndex, pages
+        const dismissed = this.state.dismissedPages,
+        total = this.state.totalPages,
+        limit = 10
+        if(dismissed === 0) {
+            start = 0;
+            end = 10
+            currentIndex = 0;
+        } else if(dismissed > 0) {
+            if(total - dismissed >= limit) {
+                start = dismissed - 1
+                currentIndex = 1
+                end = start + 10
+            } else if(total < limit) {
+                start = 0
+                end = 10
+                currentIndex = dismissed
+            } else {
+                currentIndex = limit - (total - dismissed)
+                start = dismissed - currentIndex
+                end = start + 10
+            }
+        }
+        pages = this.state.pages.slice(start, end)
         return (
             <div style={{
                 overflow: 'hidden',
@@ -92,7 +132,9 @@ export default class Papers extends Component {
                     {pages.map(({ component: Component, props }, key) => {
                         return (
                             <PaperEl
-                                level={key - this.state.currentPage}
+                                key={start + key}
+                                test={start + key}
+                                level={key - currentIndex}
                                 ref={(ref) => this.pageRefs[key] = ref}
                                 style={{ zIndex: this.state.totalPages - key }}
                             >

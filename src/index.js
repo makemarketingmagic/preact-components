@@ -1,4 +1,4 @@
-// import 'promise-polyfill';
+import 'babel-polyfill';
 // import 'isomorphic-fetch';
 import { h, render } from 'preact';
 import './style';
