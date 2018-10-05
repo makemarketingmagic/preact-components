@@ -32,9 +32,19 @@ export default class CompanyContact extends Component {
         return (
             <ContactContainer>
                 <ContactMethods>
-                    {contactMethods.map((method) => (
-                        <ContactMethod type={method.type} value={method.value} />
-                    ))}
+                    {contactMethods.map((method) => {
+                        return (method.value instanceof Array ?
+                            method.value.map((methodValue) => (
+                                methodValue ?
+                                    <ContactMethod type={method.type} value={methodValue} /> :
+                                    null
+                            )) :
+                            method.value ?
+                                <ContactMethod type={method.type} value={method.value} /> :
+                                null
+                        )
+                    }
+                    )}
                 </ContactMethods>
                 <ContactTip>
                     <span>Tips voor het contact:</span> Introduceer jezelf vriendelijk, vermeld dat de prospect naar boven is gekomen met een analyse op je website, vrag of je ze ergens mee kan helpen en of een kop koffie een idee is.

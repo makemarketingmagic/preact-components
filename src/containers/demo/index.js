@@ -5,8 +5,8 @@ import styles from './Demo.less'
 import InputsDemo from './../../components/Demo/Inputs';
 import Navigation from './../../components/Navigation/index';
 import RecommendedLead from './../../components/recommendedLead/index';
-import FullScreenOverlay from '../../components/FullScreenOverlay';
-
+import Onboarding from './../../components/Onboarding'
+ 
 export default class Demo extends Component {
     render() {
         return (
@@ -20,6 +20,7 @@ export default class Demo extends Component {
                         { component: InputsDemo, props: {} }
                     ]} />
                 </div>
+                <Onboarding/>
                 <RecommendedLead />
             </div>
         )
