@@ -114,28 +114,28 @@ export class RecommendedLeadComponent extends Component {
         const { data, actions, nextPage, translations } = this.props
         return (
             <div>
-                <Persona
+                {data.tooltip ? <Persona
                     color={'orange'}
-                    imageUrl={data.tooltip.imageUrl}
-                    name={data.tooltip.name}
-                    position={data.tooltip.position}
-                    message={data.tooltip.message}
-                />
-                <CompanyDetails
-                    name={data.company.name}
-                    city={data.company.city}
-                    industry={data.company.industry}
-                />
-                <RecentVisits
+                    imageUrl={data.tooltip.imageUrl ? data.tooltip.imageUrl : 'defaultTooltipImage.png'}
+                    name={data.tooltip.name ? data.tooltip.name : ''}
+                    position={data.tooltip.position ? data.tooltip.position : ''}
+                    message={data.tooltip.message ? data.tooltip.message : ''}
+                /> : null}
+                {data.company ? <CompanyDetails
+                    name={data.company.name ? data.company.name : ''}
+                    city={data.company.city ? data.company.city : ''}
+                    industry={data.company.industry ? data.company.industry : ''}
+                /> : null}
+                {data.company.visits ? <RecentVisits
                     translations={{
                         VISITED_PAGE: translations.VISITED_PAGE,
                         DATE: translations.DATE
                     }}
                     visits={data.company.visits}
-                />
-                <CompanyContact
+                /> : null}
+                {data.contact ? <CompanyContact
                     contactMethods={data.contact}
-                />
+                /> : null}
                 <RecommendedLeadButtons
                     cardId={data.id}
                     translations={{
