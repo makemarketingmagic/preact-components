@@ -126,7 +126,7 @@ export class RecommendedLeadComponent extends Component {
                     city={data.company.city ? data.company.city : ''}
                     industry={data.company.industry ? data.company.industry : ''}
                 /> : null}
-                {data.company.visits ? <RecentVisits
+                {data.company && data.company.visits ? <RecentVisits
                     translations={{
                         VISITED_PAGE: translations.VISITED_PAGE,
                         DATE: translations.DATE
