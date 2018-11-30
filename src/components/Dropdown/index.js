@@ -54,7 +54,9 @@ export default class Dropdown extends Component {
         this.setState({
             selected: e.target.value
         })
-        onChange && onChange(e)
+        onChange && onChange({
+            value: e.target.value
+        })
     }
 
     render() {

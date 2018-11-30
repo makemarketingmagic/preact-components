@@ -88,10 +88,12 @@
     "polished": "^2.0.3",
     "preact": "^8.1.0",
     "preact-compat": "^3.15.0",
+    "preact-markdown": "^0.4.1",
     "preact-render-to-string": "^3.6.0",
     "preact-router": "^2.5.1",
     "promise-polyfill": "^7.0.1",
     "proptypes": "^1.0.0",
+    "react-markdown": "^4.0.3",
     "serve": "^6.0.0",
     "styled-components": "^3.4.4"
   },

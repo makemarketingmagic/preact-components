@@ -5,13 +5,13 @@ import styles from './Demo.less'
 import InputsDemo from './../../components/Demo/Inputs';
 import Navigation from './../../components/Navigation/index';
 import RecommendedLead from './../../components/recommendedLead/index';
-import Onboarding from './../../components/Onboarding'
- 
+import { Onboarding, defaultSteps } from './../../components/Onboarding'
+
 export default class Demo extends Component {
     render() {
         return (
             <div id="demo">
-                <Navigation />
+                {/* <Navigation />
                 <div class={styles.demoGrid}>
                     <Papers pages={[
                         { component: TypographyDemo, props: {} }
@@ -19,9 +19,9 @@ export default class Demo extends Component {
                     <Papers pages={[
                         { component: InputsDemo, props: {} }
                     ]} />
-                </div>
-                <Onboarding/>
-                <RecommendedLead />
+                </div> */}
+                <Onboarding steps={defaultSteps} />
+                {/* <RecommendedLead /> */}
             </div>
         )
     }

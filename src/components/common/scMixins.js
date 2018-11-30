@@ -19,11 +19,12 @@ const colors = {
     white: '#FFF',
     gray: '#999',
     black: '#000',
+    actionIncomplete: '#F2F8FA'
 }
 
 
 const Font = styled.span`
-    font-family: 'Montserrat';
+    font-family: 'Varela Round';
 `,
     Navigation = styled(Font)`
         font-size: 14px;
