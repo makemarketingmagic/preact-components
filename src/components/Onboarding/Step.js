@@ -2,6 +2,8 @@ import { h, Component } from 'preact';
 import styled from 'styled-components';
 import { colors } from '../common/scMixins';
 import { textInputs, transparentize } from 'polished';
+import TickIcon from '../icons/TickIcon';
+import DotsIcon from '../icons/DotsIcon';
 
 const StepContainer = styled.div`
     height: 128px;
@@ -34,12 +36,26 @@ const IndicatorContainer = styled.div`
     justify-content: flex-end;
 `
 
-const Indicator = styled.div`
+const IndicatorIncomplete = styled.div`
     height: 24px;
     width: 24px;
     border-radius: 50%;
     background-color: ${colors.actionIncomplete};
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
+
+const IndicatorComplete = styled.div`
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background-color: ${props => props.active ? colors.white : colors.red};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
 
 export default class Step extends Component {
     constructor(props) {
@@ -52,14 +68,27 @@ export default class Step extends Component {
     }
 
     render() {
-        const { info, active } = this.props
+        const { info, active, complete } = this.props
         return (
             <StepContainer active={active} onClick={this.toggleStep}>
                 <StepInfo active={active}>{info}</StepInfo>
                 <IndicatorContainer>
-                    <Indicator />
+                    {this.renderIndicator()}
                 </IndicatorContainer>
             </StepContainer>
         )
+    }
+
+    renderIndicator = () => {
+        const { active, complete } = this.props
+        if (active && complete) {
+            return <IndicatorComplete active={active}><TickIcon color={colors.red} /></IndicatorComplete>
+        } else if (!active && complete) {
+            return <IndicatorComplete active={active}><TickIcon color={colors.white} /></IndicatorComplete>
+        } else if (!active && !complete) {
+            return <IndicatorIncomplete></IndicatorIncomplete>
+        } else {
+            return <IndicatorIncomplete><DotsIcon color={colors.red} /></IndicatorIncomplete>
+        }
     }
 }

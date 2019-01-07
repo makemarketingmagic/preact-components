@@ -8,6 +8,11 @@ import RecommendedLead from './../../components/recommendedLead/index';
 import { Onboarding, defaultSteps } from './../../components/Onboarding'
 
 export default class Demo extends Component {
+    onDrop(acceptedFiles, rejectedFiles) {
+        console.log('Accepted files: ', acceptedFiles);
+        console.log('Rejected files: ', rejectedFiles);
+    }
+
     render() {
         return (
             <div id="demo">
@@ -20,6 +25,7 @@ export default class Demo extends Component {
                         { component: InputsDemo, props: {} }
                     ]} />
                 </div> */}
+
                 <Onboarding steps={defaultSteps} />
                 {/* <RecommendedLead /> */}
             </div>

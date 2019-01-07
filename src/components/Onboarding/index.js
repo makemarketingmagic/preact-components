@@ -5,6 +5,7 @@ import StepContent from './StepContent';
 import Switch from '../Switch';
 import ExpandableSection from './../ExpandableSection/index';
 import ExpandableMarkdownSection from '../ExpandableMarkdownSection';
+import UploadSection from './../UploadSection/index';
 
 export const defaultSteps = [
     {
@@ -16,6 +17,23 @@ export const defaultSteps = [
             sections: [
                 {
                     name: 'generalInformation', inputs: [
+                        {
+                            name: 'expandingTest', type: 'ExpandableMarkdownSection', settings: {
+                                title: 'Expanding Test',
+                                content: `<test href='http://www.google.com' text='Test Info'></test>
+                                <link href='http://www.google.com' text='test'></link>
+                                <complete href='http://www.google.com' text='Test Complete'></complete>`
+                            }
+                        },
+                        {
+                            name: 'uploadingTest', type: 'UploadSection', settings: {
+                                title: 'Expanding Test',
+                                content: `<test href='http://www.google.com' text='Test Info'></test>
+                                <link href='http://www.google.com' text='test'></link>
+                                <complete href='http://www.google.com' text='Test Complete'></complete>`,
+                                multiple: true
+                            }, span: true, hideLabel: true
+                        },
                         {
                             name: 'companyName', type: 'SingleLineTextInput', settings: {
                                 placeholder: 'Text Placeholder',
@@ -76,6 +94,7 @@ export const defaultSteps = [
                 }
             ],
             data: {
+                uploadingTest: [],
                 companyName: '',
                 branch: '',
                 companySize: '',
@@ -97,14 +116,7 @@ export const defaultSteps = [
             sections: [
                 {
                     name: 'generalInformation', inputs: [
-                        {
-                            name: 'expandingTest', type: 'ExpandableMarkdownSection', settings: {
-                                title: 'Expanding Test',
-                                content: `<test href='http://www.google.com' text='Test Info'></test>
-                                <link href='http://www.google.com' text='test'></link>
-                                <complete href='http://www.google.com' text='Test Complete'></complete>`
-                            }
-                        },
+
                         {
                             name: 'branch', type: 'Dropdown', settings: {
                                 placeholder: 'Blah blah blah',
@@ -180,7 +192,9 @@ export class Onboarding extends Component {
 
     setActive = (id) => {
         const { steps } = this.props
-        this.setState({ currentStep: id, step: steps[id] })
+        if (steps[id].step.completed || steps[this.state.currentStep].step.completed || steps[this.state.currentStep].step.skippable) {
+            this.setState({ currentStep: id, step: steps[id] })
+        }
     }
 
     canGoToNextStep = () => {
@@ -201,7 +215,7 @@ export class Onboarding extends Component {
     isComplete = () => {
         const { steps } = this.props,
             { step } = steps[this.state.currentStep],
-            complete = typeof Object.values(step.data).find((val) => val === '') === 'undefined'
+            complete = typeof Object.values(step.data).find((val) => val.length === 0) === 'undefined'
 
         if (complete && !step.complete) {
             step.completed = true
@@ -219,6 +233,10 @@ export class Onboarding extends Component {
         this.isComplete()
     }
 
+    canGoToStep = (id) => {
+
+    }
+
     render() {
         const { steps } = this.props
         return (
@@ -226,7 +244,7 @@ export class Onboarding extends Component {
                 <StepNavigation>
                     {steps.map((props, i) => {
                         return (
-                            cloneElement(<Step />, { ...props.navigation, id: i, setActive: this.setActive, active: this.state.currentStep === i })
+                            cloneElement(<Step />, { ...props.navigation, id: i, setActive: this.setActive, active: this.state.currentStep === i, complete: props.step.completed })
                         )
                     })}
                 </StepNavigation>

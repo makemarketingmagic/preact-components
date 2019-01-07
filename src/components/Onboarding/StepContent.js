@@ -8,11 +8,13 @@ import Dropdown from './../Dropdown/index';
 import { colors } from '../common/scMixins';
 import Label from './../Label/index';
 import ExpandableMarkdownSection from './../ExpandableMarkdownSection/index';
+import UploadSection from './../UploadSection/index';
 
 const Inputs = {
     SingleLineTextInput,
     Dropdown,
-    ExpandableMarkdownSection
+    ExpandableMarkdownSection,
+    UploadSection
 }
 
 const StepContentEl = styled.div`
@@ -46,6 +48,7 @@ const StepContentEl = styled.div`
     `,
     InputContainer = styled.div`
         margin: 16px 8px;
+        grid-column: ${props => props.span ? '1/3' : 'span 1'};
     `
 
 export default class StepContent extends Component {
@@ -86,11 +89,11 @@ export class StepSection extends Component {
             <div>
                 <StepSectionTitle>{sectionName}</StepSectionTitle>
                 <InputGrid>
-                    {inputs.map(({ name, settings, type }, i) => {
+                    {inputs.map(({ name, settings, type, span = false, hideLabel = false }, i) => {
                         const El = Inputs[type]
                         return (
-                            <InputContainer>
-                                <InputLabel>{name}</InputLabel>
+                            <InputContainer span={span}>
+                                {!hideLabel && <InputLabel>{name}</InputLabel>}
                                 {cloneElement(<El />, { ...settings, onChange: (update) => onChange(update, sectionName, name), id: i })}
                             </InputContainer>
                         )

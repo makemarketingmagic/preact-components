@@ -6,8 +6,9 @@ import NavigateIcon from './../icons/NavigateIcon';
 import LaterIcon from './../icons/LaterIcon';
 import ArrowRightIcon from './../icons/ArrowRight';
 import TickIcon from './../icons/TickIcon';
+import InfoIcon from './../icons/InfoIcon';
 
-const components = {
+export const components = {
     Link: ({ text, href }) => {
         const handleClick = () => {
             window.open(href, '_BLANK')
@@ -22,7 +23,7 @@ const components = {
         }
 
         return (
-            <Button onClick={handleClick} iconLeft={true} Icon={ArrowRightIcon}>{text}</Button>
+            <Button secondary={true} onClick={handleClick} iconLeft={true} Icon={InfoIcon}>{text}</Button>
         )
     },
     Complete: ({ text }) => {
