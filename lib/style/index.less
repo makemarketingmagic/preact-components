@@ -1,0 +1,266 @@
+@import 'helpers';
+html, body {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	background: #FFFFFF;
+	font-family: 'Varela Round', arial, sans-serif;
+	font-weight: 400;
+	color: #444;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+#app {
+	height: 100%;
+}
+
+a,.mdl-accordion,.mdl-button,.mdl-card,.mdl-checkbox,.mdl-dropdown-menu,.mdl-icon-toggle,.mdl-item,.mdl-radio,.mdl-slider,.mdl-switch,.mdl-tabs__tab {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(255,255,255,0)
+}
+
+.mdl-button .mdl-badge[data-badge]:after {
+    top: -10px;
+    right: -5px
+}
+
+.mdl-button {
+    background: 0 0;
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    position: relative;
+    height: 32px;
+    margin: 4px 0;
+    min-width: 128px;
+    padding: 0 16px;
+    display: inline-block;
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 500;
+	font-family: inherit;
+    letter-spacing: 0;
+    overflow: hidden;
+    will-change: box-shadow;
+    transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    line-height: 36px;
+    vertical-align: middle;
+    svg {
+        fill: inherit;
+    }
+}
+
+.mdl-button::-moz-focus-inner {
+    border: 0
+}
+
+.mdl-button:hover {
+    background-color: rgba(158,158,158,.2)
+}
+
+.mdl-button:focus:not(:active) {
+    background-color: rgba(0,0,0,.12)
+}
+
+.mdl-button:active {
+    background-color: rgba(158,158,158,.4)
+}
+
+.mdl-button.mdl-button--colored {
+    color: rgb(255,255,255)
+}
+
+.mdl-button.mdl-button--colored:focus:not(:active) {
+    background-color: rgba(0,0,0,.12)
+}
+
+input.mdl-button[type="submit"] {
+    -webkit-appearance: none
+}
+
+.mdl-button--raised.mdl-button--primary {
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.04);
+}
+
+.mdl-button--raised:active.mdl-button--primary {
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08);
+}
+
+.mdl-button--raised {
+    background: rgba(158,158,158,.2);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.08),0 4px 8px 0px rgba(238,64,85,.16);
+}
+
+.mdl-button--raised:active {
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.08),0 4px 8px 0px rgba(238,64,85,.32);
+    background-color: rgba(158,158,158,.4)
+}
+
+.mdl-button--raised:focus:not(:active) {
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.08),0 4px 8px 0px rgba(238,64,85,.16);
+    background-color: rgba(158,158,158,.4)
+}
+
+.mdl-button--raised.mdl-button--colored {
+    background: rgb(255,255,255);
+    color: rgb(255,255,255)
+}
+
+.mdl-button--raised.mdl-button--colored:hover {
+    background-color: rgb(255,255,255)
+}
+
+.mdl-button--raised.mdl-button--colored:active {
+    background-color: rgb(255,255,255)
+}
+
+.mdl-button--raised.mdl-button--colored:focus:not(:active) {
+    background-color: rgb(255,255,255)
+}
+
+.mdl-button--raised.mdl-button--colored .mdl-ripple {
+    background: rgb(255,255,255)
+}
+
+.mdl-button--icon {
+    border-radius: 50%;
+    font-size: 24px;
+    height: 32px;
+    margin-left: 0;
+    margin-right: 0;
+    min-width: 32px;
+    width: 32px;
+    padding: 0;
+    overflow: hidden;
+    color: inherit;
+    line-height: normal
+}
+
+.mdl-button--icon .material-icons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-12px,-12px);
+    transform: translate(-12px,-12px);
+    line-height: 24px;
+    width: 24px
+}
+
+.mdl-button--icon.mdl-button--mini-icon {
+    height: 24px;
+    min-width: 24px;
+    width: 24px
+}
+
+.mdl-button--icon.mdl-button--mini-icon .material-icons {
+    top: 0;
+    left: 0
+}
+
+.mdl-button--icon .mdl-button__ripple-container {
+    border-radius: 50%;
+    -webkit-mask-image: -webkit-radial-gradient(circle,#fff,#000)
+}
+
+.mdl-button__ripple-container {
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+    overflow: hidden
+}
+
+.mdl-button[disabled] .mdl-button__ripple-container .mdl-ripple,.mdl-button.mdl-button--disabled .mdl-button__ripple-container .mdl-ripple {
+    background-color: transparent
+}
+
+.mdl-button--primary.mdl-button--primary {
+    color: rgb(255,255,255)
+}
+
+.mdl-button--primary.mdl-button--primary .mdl-ripple {
+    background: rgba(0,0,0,0.15)
+}
+
+.mdl-button--primary.mdl-button--primary.mdl-button--raised,.mdl-button--primary.mdl-button--primary.mdl-button--fab {
+    color: #EE4055;
+    fill: #EE4055;
+    background-color: rgb(255,255,255)
+}
+
+.mdl-button--accent.mdl-button--accent {
+    color: #EE4055;
+    fill: #EE4055;
+}
+
+.mdl-button--accent.mdl-button--accent .mdl-ripple {
+    background: rgba(255,255,255,0.5)
+}
+
+.mdl-button--accent.mdl-button--accent.mdl-button--raised,.mdl-button--accent.mdl-button--accent.mdl-button--fab {
+    color: rgb(255,255,255);
+    fill: white;
+    background-color: #EE4055
+}
+
+.mdl-button[disabled][disabled],.mdl-button.mdl-button--disabled.mdl-button--disabled {
+    color: #DAEAEF;
+    fill: #DAEAEF;
+    cursor: default;
+    background-color: transparent
+}
+
+.mdl-button--fab[disabled][disabled],.mdl-button--fab.mdl-button--disabled.mdl-button--disabled {
+    background-color: rgba(0,0,0,.12);
+    color: #DAEAEF;
+}
+
+.mdl-button--raised[disabled][disabled],.mdl-button--raised.mdl-button--disabled.mdl-button--disabled {
+    background-color: #F2F8FA;
+    color: #DAEAEF;
+    fill: #DAEAEF;
+    box-shadow: none
+}
+
+.mdl-button--colored[disabled][disabled],.mdl-button--colored.mdl-button--disabled.mdl-button--disabled {
+    color: rgba(0,0,0,.26)
+}
+
+.mdl-button .material-icons {
+    vertical-align: middle
+}
+
+.mdl-ripple {
+    background: rgb(0,0,0);
+    border-radius: 50%;
+    height: 50px;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    overflow: hidden;
+}
+
+.mdl-ripple.is-animating {
+    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1), width 0.3s cubic-bezier(0, 0, 0.2, 1), height 0.3s cubic-bezier(0, 0, 0.2, 1), opacity 0.6s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mdl-ripple.is-visible {
+    opacity: 0.3;
+}

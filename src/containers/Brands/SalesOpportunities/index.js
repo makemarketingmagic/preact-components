@@ -8,7 +8,7 @@ import DownloadArrow from '../../../components/icons/DownloadArrow';
 import SearchIcon from './../../../components/icons/SearchIcon';
 import Table, { SORT_DIRECTION } from '../../../components/Table'
 import { debounce } from 'lodash'
-import { getEmployeeRange, labels } from '../MockFunctions';
+import { labels } from '../MockFunctions';
 import { Modal } from '../../../components/Modal';
 import RadioButtons from './../../../components/RadioButtons/index';
 import Checkboxes from './../../../components/Checkboxes/index';
@@ -162,7 +162,7 @@ export default class SalesOpportunities extends Component {
 
     render() {
         const { filteredLeads = [] } = this.state,
-            { leads } = this.props
+            { leads, events: { downloadCsv, showBranche, getOpportunityDetails, getEmployeeRange }, translations, } = this.props
         let i = 0
         return (
             <div>
@@ -211,6 +211,7 @@ export default class SalesOpportunities extends Component {
                             iconLeft={true}
                             Icon={DownloadArrow}
                             secondary={true}
+                            onClick={downloadCsv}
                         >CSV</Button>
                     </TableControls>
                 </TitleArea>
@@ -227,14 +228,20 @@ export default class SalesOpportunities extends Component {
                     renderers={{
                         lastVisit: (val) => new Date(parseInt(val) * 1000).toDateString(),
                         companyname: (val) => val.length > 30 ? val.slice(0, 30) + '...' : val,
-                        employees: (val) => getEmployeeRange(val)
+                        employees: (val) => getEmployeeRange ? getEmployeeRange(val) : val,
+                        sbiSectie: (val) => showBranche ? showBranche(val) : val
 
                     }}
                     events={{
-                        setOrderBy: this.setOrderBy,
+                        setOrderBy: this.setOrderBy
                     }}
                     hasExpandingSection={true}
                     ExpandingSection={ExpandingSection}
+                    expandingSectionProps={{
+                        events: {
+                            getOpportunityDetails
+                        }
+                    }}
                     orderBy={this.state.orderBy}
                     direction={this.state.direction}
                     selected={this.state.selected}

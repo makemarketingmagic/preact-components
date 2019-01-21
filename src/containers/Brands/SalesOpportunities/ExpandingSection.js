@@ -46,17 +46,16 @@ const Container = styled.div`
 
 export default class ExpandingSection extends Component {
     render() {
-        const data = { ...this.props.events.getData(), ...this.props.data }
-        console.debug(data)
+        const data = { ...this.props.events.getOpportunityDetails(this.props.data.id), ...this.props.data }
         return (
             <Container>
                 <VisitsContacts>
                     <SectionTitle>Most recently visited pages:</SectionTitle>
-                    {data.visits.map((val) =>
+                    {data.visits && data.visits.map((val) =>
                         <Visit>{val.pageTitle || val.pageTitleGa}</Visit>
                     )}
                     <SectionTitle>Contacts that have visited your website:</SectionTitle>
-                    {data.contacts.map((val) =>
+                    {data.contacts && data.contacts.map((val) =>
                         <Visit>{val}</Visit>
                     )}
                 </VisitsContacts>

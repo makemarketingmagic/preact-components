@@ -12,6 +12,7 @@ import Notes from './../containers/Brands/Notes/index';
 import Onboarding from './../containers/Brands/Onboarding/index';
 import Files from './../containers/Brands/Files/index';
 import Profile from './../containers/Profile/index';
+import Layout from '../containers/Layout';
 
 require('preact/debug');
 
@@ -37139,7 +37140,7 @@ export default class App extends Component {
                         <Onboarding />
                     </Container>
                     <Container path="/sales-opportunities">
-                        <SalesOpportunities leads={data.leads} />
+                        <SalesOpportunities leads={data.leads} events={{ downloadCsv: null, showBranche: null, getOpportunityDetails: null , getEmployeeRange: null }}/>
                     </Container>
                     <Container path="/profile">
                         <Profile />
