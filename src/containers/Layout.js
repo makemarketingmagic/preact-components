@@ -7,6 +7,7 @@ const Container = styled.div`
     width: 90%;
     margin: 64px auto;
     background-color: white;
+    font-family: 'Montserrat', sans-serif;
 `, data = {
         tabs: [
             {

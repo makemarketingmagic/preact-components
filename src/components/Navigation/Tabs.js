@@ -1,7 +1,5 @@
 import { h, Component } from 'preact'
 import styled from 'styled-components'
-import styles from './Navigation.less'
-import classNames from 'classnames'
 import { colors } from '../common/scMixins'
 
 const TabsEl = styled.nav`
@@ -17,13 +15,32 @@ const TabsEl = styled.nav`
     margin: 0 15px;
     cursor: pointer;
     justify-content: center;
-    border-bottom: ${props => props.active ? '2px solid ' + colors.red : '2px solid transparent'};
+    border-bottom: ${props => props.active ? '2px solid ' + colors.red : '1px solid transparent'};
     transition: border-bottom 250ms ease-in-out,
         color 250ms ease-in-out;
     white-space: nowrap;
     &:hover {
         border-bottom: ${props => props.active ? `2px solid ${colors.red}` : `1px solid ${colors.red}`};
         color: ${ colors.red};
+    }
+`, SubMenu = styled.div`
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(${props => props.open ? '48px' : '-100%'});
+    opacity: ${props => props.open ? '1' : '0'};
+    top: 0;
+    background-color: ${colors.white};
+    padding: 16px;
+    z-index: 30;
+    box-shadow: 2px 2px 0 rgba(32, 32, 32, 0.1);
+    transition: transform 250ms ease-in-out,
+        opacity 250ms ease-in-out;
+`, SubTab = styled.div`
+    color: ${colors.text};
+    margin: 4px 0;
+    &:hover {
+        color: ${colors.red};
     }
 `
 
@@ -89,11 +106,11 @@ class Tab extends Component {
             >
                 {tab.text}
                 {tab.subMenu &&
-                    <div class={classNames(styles.subMenu, subMenuOpen === id ? styles.subMenuOpen : null)}>
+                    <SubMenu open={subMenuOpen === id}>
                         {tab.subMenu.map((subTab, subKey) => (
-                            <div key={subKey} class={styles.subTab}>{subTab.text}</div>
+                            <SubTab key={subKey}>{subTab.text}</SubTab>
                         ))}
-                    </div>
+                    </SubMenu>
                 }
             </TabEl>
         )

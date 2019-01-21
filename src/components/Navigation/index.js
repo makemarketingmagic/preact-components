@@ -6,6 +6,7 @@ import Tabs from './Tabs';
 import { colors } from '../common/scMixins';
 
 const Header = styled.header`
+    font-family: 'Montserrat', sans-serif;
     width: 100%;
     height: 48px;
     display: grid;
