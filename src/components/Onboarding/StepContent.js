@@ -9,6 +9,8 @@ import { colors } from '../common/scMixins';
 import Label from './../Label/index';
 import ExpandableMarkdownSection from './../ExpandableMarkdownSection/index';
 import UploadSection from './../UploadSection/index';
+import TickIcon from './../icons/TickIcon';
+import Persona from '../Persona';
 
 const Inputs = {
     SingleLineTextInput,
@@ -28,9 +30,11 @@ const StepContentEl = styled.div`
 `,
     NextStepContainer = styled.div`
         width: 100%;
-        align-items: flex-end;
+        align-items: center;
+        justify-content: space-between;
+        margin: 16px 0;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
     `,
     StepSectionTitle = styled.div`
         font-style: normal;
@@ -61,12 +65,26 @@ export default class StepContent extends Component {
     }
 
     render() {
-        const { active, sections, events: { nextStep, canGoToNextStep, onChange }, completed, skippable } = this.props,
+        const { active, sections, tooltip, events: { nextStep, canGoToNextStep, onChange, isFinalStep, allStepsComplete, completeOnboarding }, completed, skippable } = this.props,
             buttonText = completed ? 'Complete Step' : skippable ? 'Skip Step' : 'Complete Step'
         return (
             <StepContentEl active={active}>
                 <NextStepContainer>
-                    <div><Button onClick={nextStep} disabled={!canGoToNextStep()} Icon={NavigateIcon}>{buttonText}</Button></div>
+                    <div>
+                        <Persona
+                            markdown={tooltip.markdown}
+                            color={tooltip.color}
+                            imageUrl={tooltip.imageUrl ? tooltip.imageUrl : 'defaultTooltipImage.png'}
+                            name={tooltip.name ? tooltip.name : ''}
+                            position={tooltip.position ? tooltip.position : ''}
+                            message={tooltip.message ? tooltip.message : ''}
+                        />
+                    </div>
+                    {isFinalStep() ?
+                        (<div><Button onClick={completeOnboarding} disabled={!allStepsComplete()} Icon={TickIcon}>Complete Onboarding</Button></div>)
+                        : (<div><Button onClick={nextStep} disabled={!canGoToNextStep()} Icon={NavigateIcon}>{buttonText}</Button></div>)
+                    }
+
                 </NextStepContainer>
                 {sections.map(({ name, inputs }, i) => {
                     return (
@@ -74,7 +92,11 @@ export default class StepContent extends Component {
                     )
                 })}
                 <NextStepContainer>
-                    <div><Button onClick={nextStep} disabled={!canGoToNextStep()} Icon={NavigateIcon}>{buttonText}</Button></div>
+                    <div></div>
+                    {isFinalStep() ?
+                        (<div><Button onClick={completeOnboarding} disabled={!allStepsComplete()} Icon={TickIcon}>Complete Onboarding</Button></div>)
+                        : (<div><Button onClick={nextStep} disabled={!canGoToNextStep()} Icon={NavigateIcon}>{buttonText}</Button></div>)
+                    }
                 </NextStepContainer>
             </StepContentEl>
         )

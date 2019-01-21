@@ -6,6 +6,7 @@ import InputsDemo from './../../components/Demo/Inputs';
 import Navigation from './../../components/Navigation/index';
 import RecommendedLead from './../../components/recommendedLead/index';
 import { Onboarding, defaultSteps } from './../../components/Onboarding'
+import SalesOpportunities from '../Brands/SalesOpportunities';
 
 export default class Demo extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
@@ -16,17 +17,43 @@ export default class Demo extends Component {
     render() {
         return (
             <div id="demo">
-                {/* <Navigation />
-                <div class={styles.demoGrid}>
+                <Navigation tabs={
+                    [
+                        {
+                            text: 'Sales Opportunities',
+                            url: 'test'
+                        },
+                        {
+                            text: 'AHA Planning'
+                        },
+                        {
+                            text: 'Reports'
+                        },
+                        {
+                            text: 'Notes'
+                        },
+                        {
+                            text: 'Files'
+                        },
+                        {
+                            text: 'Onboarding'
+                        },
+                        {
+                            text: 'Info'
+                        }
+                    ]
+                } />
+                <SalesOpportunities leads={[]} />
+                {/* <div class={styles.demoGrid}>
                     <Papers pages={[
                         { component: TypographyDemo, props: {} }
-                    ]} />
+                    ]} />W
                     <Papers pages={[
                         { component: InputsDemo, props: {} }
                     ]} />
                 </div> */}
 
-                <Onboarding steps={defaultSteps} />
+                {/* <Onboarding steps={defaultSteps} /> */}
                 {/* <RecommendedLead /> */}
             </div>
         )

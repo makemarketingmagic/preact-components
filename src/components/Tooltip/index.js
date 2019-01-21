@@ -3,6 +3,8 @@ import CrossIcon from '../icons/CrossIcon';
 import styled from 'styled-components';
 import { colors, media } from '../common/scMixins';
 import { transparentize } from 'polished';
+import Markdown from 'preact-markdown';
+import { components } from './../ExpandableMarkdownSection/index';
 
 const TooltipEl = styled.div`
     background: ${colors.white};
@@ -49,6 +51,12 @@ const TooltipMessage = styled.div`
     margin-top: 8px;
 `
 
+const TooltipMessageMarkdown = styled(Markdown)`
+    font-size: 12px;
+    line-height: 14px;
+    margin-top: 8px;
+`
+
 const TooltipContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -87,17 +95,20 @@ export default class Tooltip extends Component {
 
 
     render() {
-        const { name, position, message, color, closable = true } = this.props;
+        const { name, position, message, color, closable = true, onClose, open, markdown = false } = this.props;
         return (
-            <TooltipContainer open={this.state.visible} class={'notranslate'}>
+            <TooltipContainer open={onClose ? open : this.state.visible} class={'notranslate'}>
                 <TooltipEl>
                     <TooltipContents>
                         <div>
                             <TooltipName>{name}</TooltipName>
                             <TooltipPosition color={color}>{position}</TooltipPosition>
-                            <TooltipMessage>{message}</TooltipMessage>
+                            {markdown ? <TooltipMessageMarkdown markdown={message} markupOpts={{
+                                components,
+                                allowEvents: true
+                            }} /> : <TooltipMessage>{message}</TooltipMessage>}
                         </div>
-                        {closable && <CloseButton onClick={this.toggleTooltip}>
+                        {closable && <CloseButton onClick={onClose ? onClose : this.toggleTooltip}>
                             <CrossIconEl color={color} />
                         </CloseButton>}
                     </TooltipContents>

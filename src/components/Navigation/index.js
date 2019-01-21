@@ -22,32 +22,13 @@ const LogoContainer = styled.div`
 
 export default class Navigation extends Component {
     render() {
+        const { tabs } = this.props
         return (
             <Header>
                 <LogoContainer>
                     <WOOLogo />
                 </LogoContainer>
-                <Tabs tabs={[
-                    { text: 'AHA Feedback' },
-                    {
-                        text: 'Rapportages', subMenu: [
-                            { text: 'Submenu' },
-                            { text: 'Submenu' },
-                            { text: 'Submenu' },
-                            { text: 'Submenu' },
-                            { text: 'Submenu' },
-                            { text: 'Submenu' },
-                            { text: 'Submenu' }
-                        ]
-                    },
-                    {
-                        text: 'Verkoopkansen', subMenu: [
-                            { text: 'Another Submenu' }
-                        ]
-                    },
-                    { text: 'Notities' },
-                    { text: 'Informatie' }
-                ]} />
+                <Tabs tabs={tabs} />
                 <CurrentUser />
             </Header>
         )

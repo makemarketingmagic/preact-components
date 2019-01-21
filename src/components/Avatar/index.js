@@ -5,6 +5,7 @@ import { media, colors } from '../common/scMixins'
 const AvatarContainer = styled.div`
     height: 128px;
     width: 128px;
+    cursor: ${(props) => props.onClick ? 'pointer' : 'default'};
     border: 16px transparent solid;
     overflow: hidden;
     border-radius: 50%;
@@ -19,9 +20,9 @@ const AvatarContainer = styled.div`
 `
 export default class Avatar extends Component {
     render() {
-        const { imageUrl, name, color } = this.props
+        const { imageUrl, name, color, onClick = null } = this.props
         return (
-            <AvatarContainer color={color}>
+            <AvatarContainer color={color} onClick={onClick}>
                 <Image src={imageUrl} alt={name} />
             </AvatarContainer>
         )

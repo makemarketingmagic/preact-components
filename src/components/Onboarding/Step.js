@@ -8,10 +8,11 @@ import DotsIcon from '../icons/DotsIcon';
 const StepContainer = styled.div`
     height: 128px;
     width: 128px;
-    cursor: pointer;
+    cursor: ${props => props.canGoToStep ? 'pointer' : 'not-allowed'};
     margin: 0px 8px;
     transition: background-color 250ms ease-in-out;
-    background-color: ${props => (transparentize(props.active ? 0 : 1, colors.red))};
+    opacity: ${props => props.canGoToStep ? 1 : 0.5};
+    background-color: ${props => transparentize(props.active ? 0 : 1, colors.red)};
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16), 0px 8px 16px rgba(0, 0, 0, 0.08);
     border-radius: 4px;
     padding: 16px;
@@ -68,9 +69,9 @@ export default class Step extends Component {
     }
 
     render() {
-        const { info, active, complete } = this.props
+        const { id, info, active, complete, canGoToStep } = this.props
         return (
-            <StepContainer active={active} onClick={this.toggleStep}>
+            <StepContainer canGoToStep={canGoToStep(id)} active={active} onClick={this.toggleStep}>
                 <StepInfo active={active}>{info}</StepInfo>
                 <IndicatorContainer>
                     {this.renderIndicator()}

@@ -16,20 +16,36 @@ const Container = styled.div`
     `}
 `
 export default class Persona extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            tooltipVisible: true
+        }
+    }
+
+    toggleTooltip = () => {
+        this.setState({ tooltipVisible: !this.state.tooltipVisible })
+    }
+
     render() {
-        const { name, position, message, color, imageUrl } = this.props
+        const { name, position, message, color, imageUrl, markdown = false } = this.props
         return (
             <Container>
                 <Avatar
                     imageUrl={imageUrl}
                     name={name}
                     color={color}
+                    onClick={this.toggleTooltip}
                 />
                 <Tooltip
                     name={name}
                     position={position}
                     message={message}
                     color={color}
+                    markdown={markdown}
+                    open={this.state.tooltipVisible}
+                    onClose={this.toggleTooltip}
                 />
             </Container>
         )

@@ -66,7 +66,6 @@ const Checkmark = styled.div`
         visibility: hidden;
 
         &[type=checkbox]:checked ~ ${Checkmark} {
-            border-color: ${colors.red};
             &::before {
                 opacity: 1;
                 transform: scale(1);

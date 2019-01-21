@@ -12,6 +12,10 @@ export default class Tabs extends Component {
     }
 
     handleOpen = (tab, key) => {
+        const { url = false } = tab
+        if (url) {
+            window.location.href = url
+        }
         this.setState({ subMenuOpen: tab.subMenu ? key : false })
         tab.subMenu && setTimeout(() => {
             let closeSubMenu = this.closeSubMenu
@@ -35,7 +39,7 @@ export default class Tabs extends Component {
                         handleOpen={this.handleOpen}
                         tab={tab}
                         id={key}
-                        active={this.state.active}
+                        active={tab.url === window.location.pathname}
                         subMenuOpen={this.state.subMenuOpen}
                     />
                 ))}
@@ -47,7 +51,7 @@ export default class Tabs extends Component {
 class Tab extends Component {
     handleOpen = (e) => {
         const { handleOpen, tab, id } = this.props
-        handleOpen && tab && id && handleOpen(tab, id)
+        handleOpen && tab && id >= 0 && handleOpen(tab, id)
         e.stopPropagation()
     }
 
@@ -56,7 +60,7 @@ class Tab extends Component {
         return (
             <div
                 onClick={this.handleOpen}
-                class={classNames(styles.tab, id === active ? styles.activeTab : null)}
+                class={classNames(styles.tab, active ? styles.activeTab : null)}
             >
                 {tab.text}
                 {tab.subMenu &&
