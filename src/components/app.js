@@ -37140,7 +37140,21 @@ export default class App extends Component {
                         <Onboarding />
                     </Container>
                     <Container path="/sales-opportunities">
-                        <SalesOpportunities leads={data.leads} events={{ downloadCsv: null, showBranche: null, getOpportunityDetails: null , getEmployeeRange: null }}/>
+                        <SalesOpportunities leads={data.leads} events={{ downloadCsv: null, showBranche: null, getOpportunityDetails: (id) => {
+                          return new Promise((resolve, reject) => {
+
+                            setTimeout(() => {
+                              resolve({"visits":[{"id":"7c7dff80bcc08c38323cf61edcabb5efe1e1210a","totalVisits":"0","visitDate":"1546934400","pagetitle":null,"sourceGa":"google","hostnameGa":"www.makemarketingmagic.com","mediumGa":"organic","sessionsGa":"1","timeOnPageGa":"0.0","label":"-1","cocl":"271909740000","pageTitleGa":"3 tips om van je prospects fans te maken - Make Marketing Magic","status":"-1","pathGa":"\/blog\/3-tips-om-van-je-prospects-fans-te-maken-2"},{"id":"ba69788fe7d7365540c891bb6e5a06ec21e54f0a","totalVisits":"0","visitDate":"1544911200","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"1","timeOnPageGa":"20.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c"},{"id":"273db76df265cb91804cee49bf7693fcec155c85","totalVisits":"0","visitDate":"1544911200","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"0","timeOnPageGa":"3.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c-form_confirmation.html"},{"id":"69160b67e02d6dfa02c6a8d0865a33000d913d58","totalVisits":"0","visitDate":"1544889600","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"1","timeOnPageGa":"53.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c"},{"id":"94646805a7f0a0fff72119846f727cdfd794805a","totalVisits":"0","visitDate":"1544889600","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"0","timeOnPageGa":"5.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c-form_confirmation.html"}],"contacts":["gerard@1afa.com","hanc@1afa.com","richard@1afa.com","wesley@1afa.com"],"result":"success"})
+                            }, 3000)
+                          })
+                        } , getEmployeeRange: null, updateLabelAndStatus: (entry, type) => {
+                          return new Promise((resolve, reject) => {
+                            
+                            setTimeout(() => {
+                              resolve(true)
+                            }, 1500)
+                          })
+                        } }}/>
                     </Container>
                     <Container path="/profile">
                         <Profile />

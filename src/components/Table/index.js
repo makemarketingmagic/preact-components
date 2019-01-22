@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { h, Component, createElement } from 'preact'
 import styled from 'styled-components'
 import { colors } from '../common/scMixins';
 import SortAscIcon from './../icons/SortAscIcon';
@@ -82,7 +82,7 @@ export default class Table extends Component {
                         )
                     }),
                     (hasExpandingSection && ExpandingSection && selected === val.id) ?
-                        (<ExpandableContainer selected={selected === val.id}><ExpandingSection data={val} {...this.props.expandingSectionProps} /></ExpandableContainer>) :
+                        (<ExpandableContainer selected={selected === val.id}>{createElement(ExpandingSection, { data: val, ...this.props.expandingSectionProps })}</ExpandableContainer>) :
                         null]
                 })}
             </Grid>

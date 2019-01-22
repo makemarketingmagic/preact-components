@@ -161,7 +161,7 @@ export default class SalesOpportunities extends Component {
 
     render() {
         const { filteredLeads = [] } = this.state,
-            { leads, labels = defaultLabels, events: { downloadCsv, showBranche, getOpportunityDetails, getEmployeeRange }, translations = {
+            { leads, labels = defaultLabels, events: { downloadCsv, showBranche, getOpportunityDetails, getEmployeeRange, updateLabelAndStatus }, translations = {
                 getLL: (label, fallback, values = []) => {
                     const re = /(%v\d*)/ig
                     let isString = true
@@ -213,7 +213,7 @@ export default class SalesOpportunities extends Component {
                             options={labels} />
                     </Modal>
                     <PageTitle>
-                        {translations.getLL('NUMBER_OF_LEADS', 'You have %v1 leads', [<span style={{ color: colors.red }}>{leads.length}</span>])}
+                        {translations.getLL('NUMBER_OF_LEADS_WITH_VALUE', 'You have %v1 leads', [<span style={{ color: colors.red }}>{leads.length}</span>])}
                     </PageTitle>
                     <TableControls>
                         <SingleLineTextInput
@@ -261,9 +261,11 @@ export default class SalesOpportunities extends Component {
                     ExpandingSection={ExpandingSection}
                     expandingSectionProps={{
                         events: {
-                            getOpportunityDetails
+                            getOpportunityDetails,
+                            updateLabelAndStatus
                         },
-                        labels
+                        labels: labels.map((val) => ({ value: val.data, text: val.label })),
+                        translations
                     }}
                     orderBy={this.state.orderBy}
                     direction={this.state.direction}
