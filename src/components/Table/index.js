@@ -59,7 +59,7 @@ export default class Table extends Component {
             headersArray = Object.entries(headers)
         return (
             <Grid headers={headersArray}>
-                {headersArray.map(([value, key]) => {
+                {headersArray.map(([key, value]) => {
                     return (
                         <Heading
                             onClick={() => setOrderBy(key, orderBy !== key ? true : !direction)}
@@ -71,7 +71,7 @@ export default class Table extends Component {
                     )
                 })}
                 {data.map((val) => {
-                    return [headersArray.map(([value, key]) => {
+                    return [headersArray.map(([key, value]) => {
                         return (
                             <StyledCell
                                 selected={selected === val.id}

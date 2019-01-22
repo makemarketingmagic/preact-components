@@ -8,7 +8,7 @@ import DownloadArrow from '../../../components/icons/DownloadArrow';
 import SearchIcon from './../../../components/icons/SearchIcon';
 import Table, { SORT_DIRECTION } from '../../../components/Table'
 import { debounce } from 'lodash'
-import { labels } from '../MockFunctions';
+import { defaultLabels } from '../MockFunctions';
 import { Modal } from '../../../components/Modal';
 import RadioButtons from './../../../components/RadioButtons/index';
 import Checkboxes from './../../../components/Checkboxes/index';
@@ -148,8 +148,7 @@ export default class SalesOpportunities extends Component {
         //     rightSide = currentPage - totalPages
         // }
         // debugger
-        for (var i = 1; i <= totalPages; i++) {
-            let page = currentPage + i
+        for (let i = 1; i <= totalPages; i++) {
             pages.push((<PageNumber
                 current={i === currentPage}
                 onClick={() => this.changePage(i)}
@@ -162,7 +161,29 @@ export default class SalesOpportunities extends Component {
 
     render() {
         const { filteredLeads = [] } = this.state,
-            { leads, events: { downloadCsv, showBranche, getOpportunityDetails, getEmployeeRange }, translations, } = this.props
+            { leads, labels = defaultLabels, events: { downloadCsv, showBranche, getOpportunityDetails, getEmployeeRange }, translations = {
+                getLL: (label, fallback, values = []) => {
+                    const re = /(%v\d*)/ig
+                    let isString = true
+                    let result = []
+                    fallback = fallback.split(re)
+                    for (var i = 0; i < fallback.length; i++) {
+                        let fallbackFragment = fallback[i]
+                        let match = (/%v(\d*)/ig).exec(fallbackFragment)
+                        if (match) {
+                            let index = parseInt(match[1])
+                            if (values[index - 1].nodeName) {
+                                isString = false
+                            }
+                            result.push(values[index - 1])
+                        } else {
+                            result.push(fallbackFragment)
+                        }
+                    }
+                    return isString ? result.join('') : result
+                }
+            },
+            } = this.props
         let i = 0
         return (
             <div>
@@ -172,10 +193,11 @@ export default class SalesOpportunities extends Component {
                             this.setState({ dialogOpen: false })
                             this.reloadFilters()
                         }}
+                        title={translations.getLL('FILTER_OPPORTUNITIES', 'Filter Opportunities')}
                         open={this.state.dialogOpen}
                         buttons={[
                             {
-                                text: 'Done', onClick: () => {
+                                text: translations.getLL('DONE', 'Done'), onClick: () => {
                                     this.setState({ dialogOpen: false })
                                     this.reloadFilters()
                                 }
@@ -191,14 +213,14 @@ export default class SalesOpportunities extends Component {
                             options={labels} />
                     </Modal>
                     <PageTitle>
-                        You have <span style={{ color: colors.red }}>{leads.length}</span> leads.
+                        {translations.getLL('NUMBER_OF_LEADS', 'You have %v1 leads', [<span style={{ color: colors.red }}>{leads.length}</span>])}
                     </PageTitle>
                     <TableControls>
                         <SingleLineTextInput
                             iconLeft={true}
                             value={this.state.search}
                             Icon={SearchIcon}
-                            placeholder={`Search ${leads.length} leads`}
+                            placeholder={translations.getLL('SEARCH_X_LEADS', 'Search %v1 leads', [leads.length])}
                             onChange={this.updateSearch}
                         />
                         <Button
@@ -206,24 +228,24 @@ export default class SalesOpportunities extends Component {
                             Icon={FilterIcon}
                             secondary={true}
                             onClick={() => { this.setState({ dialogOpen: true }) }}
-                        >Filter</Button>
+                        >{translations.getLL('FILTERS', 'Filters')}</Button>
                         <Button
                             iconLeft={true}
                             Icon={DownloadArrow}
                             secondary={true}
                             onClick={downloadCsv}
-                        >CSV</Button>
+                        >{translations.getLL('CSV', 'CSV')}</Button>
                     </TableControls>
                 </TitleArea>
                 <Table
                     data={filteredLeads.slice((this.state.currentPage - 1) * this.state.perPage, ((this.state.currentPage - 1) * this.state.perPage) + this.state.perPage)}
                     headers={{
-                        "Bedrijsnaam": "companyname",
-                        "Plaats": "city",
-                        "Branche": "sbiSectie",
-                        "Bezoeken": "totalVisits",
-                        "Laatst bezocht": "lastVisit",
-                        "FTE": "employees"
+                        companyname: translations.getLL('COMPANY_NAME', 'Company name'),
+                        city: translations.getLL('CITY', 'City'),
+                        sbiSectie: translations.getLL('BRANCH', 'Industry'),
+                        totalVisits: translations.getLL('VISITS', 'Visits'),
+                        lastVisit: translations.getLL('LAST_VISIT', 'Last visit'),
+                        employees: translations.getLL('FTE', 'FTE')
                     }}
                     renderers={{
                         lastVisit: (val) => new Date(parseInt(val) * 1000).toDateString(),
@@ -240,7 +262,8 @@ export default class SalesOpportunities extends Component {
                     expandingSectionProps={{
                         events: {
                             getOpportunityDetails
-                        }
+                        },
+                        labels
                     }}
                     orderBy={this.state.orderBy}
                     direction={this.state.direction}

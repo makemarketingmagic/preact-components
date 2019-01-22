@@ -46,7 +46,8 @@ const Container = styled.div`
 
 export default class ExpandingSection extends Component {
     render() {
-        const data = { ...this.props.events.getOpportunityDetails(this.props.data.id), ...this.props.data }
+        const data = { ...this.props.events.getOpportunityDetails(this.props.data.id), ...this.props.data },
+            { labels } = this.props
         return (
             <Container>
                 <VisitsContacts>
@@ -60,9 +61,7 @@ export default class ExpandingSection extends Component {
                     )}
                 </VisitsContacts>
                 <ButtonsContainer>
-                    <Dropdown options={[
-                        { name: 'test', text: 'Testing 1 2 3 4 5 6 ' }
-                    ]} placeholder='No Label' />
+                    <Dropdown options={labels} placeholder='No Label' />
                     {data.Url && data.Url.map && data.Url.map((val) =>
                         <ContactButton secondary={true}>{val}</ContactButton>
                     )}

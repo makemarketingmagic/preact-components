@@ -10,7 +10,7 @@ let employeeRanges = [
     { id: 9, description: 'moreThanAThousand', string: '1000+', min: 1000, max: Infinity },
 ];
 
-let labels = [
+let defaultLabels = [
     { data: -1, label: 'Geen label', selected: true },
     { data: 1, label: 'Klant', selected: true },
     { data: 7, label: 'Voormalig klant', selected: true },
@@ -40,7 +40,7 @@ const getEmployeeRange = function (num) {
 }
 
 export {
-    labels,
+    defaultLabels,
     getEmployeeRange,
     getLabelTitle
 }
