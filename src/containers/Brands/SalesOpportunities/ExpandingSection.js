@@ -107,7 +107,9 @@ export default class ExpandingSection extends Component {
                 <VisitsContacts>
                     <SectionTitle>{translations.getLL('MOST_RECENTLY_VISITED_PAGES', 'Most recently visited pages')}:</SectionTitle>
                     {opportunityDetails ? opportunityDetails.visits.map((val) =>
-                        <Visit>{val.pageTitle || val.pageTitleGa}</Visit>
+                        <Visit onClick={() => {
+                            window.open(val.url, '_BLANK')
+                        }}>{val.title}</Visit>
                     ) :
                         <div>
                             <i class="fa fa-spinner fa-spin"></i> {translations.getLL('FETCHING_VISITED_PAGES', 'Fetching visited pages...')}

@@ -161,30 +161,40 @@ export default class SalesOpportunities extends Component {
 
     render() {
         const { filteredLeads = [] } = this.state,
-            { leads, labels = defaultLabels, events: { downloadCsv, showBranche, getOpportunityDetails, getEmployeeRange, updateLabelAndStatus }, translations = {
-                getLL: (label, fallback, values = []) => {
-                    const re = /(%v\d*)/ig
-                    let isString = true
-                    let result = []
-                    fallback = fallback.split(re)
-                    for (var i = 0; i < fallback.length; i++) {
-                        let fallbackFragment = fallback[i]
-                        let match = (/%v(\d*)/ig).exec(fallbackFragment)
-                        if (match) {
-                            let index = parseInt(match[1])
-                            if (values[index - 1].nodeName) {
-                                isString = false
-                            }
-                            result.push(values[index - 1])
-                        } else {
-                            result.push(fallbackFragment)
-                        }
-                    }
-                    return isString ? result.join('') : result
-                }
-            },
+            {
+                leads,
+                labels = defaultLabels,
+                events: {
+                    downloadCsv,
+                    showBranche,
+                    getOpportunityDetails,
+                    getEmployeeRange,
+                    updateLabelAndStatus
+                },
             } = this.props
-        let i = 0
+        let i = 0,
+            { translations = { getTranslation: (label, fallback) => fallback } } = this.props
+        translations.getLL = (label, fallback, values = []) => {
+            let string = translations.getTranslation(label, fallback)
+            const re = /(%v\d*)/ig
+            let isString = true
+            let result = []
+            string = string.split(re)
+            for (var i = 0; i < string.length; i++) {
+                let stringFragment = string[i]
+                let match = (/%v(\d*)/ig).exec(stringFragment)
+                if (match) {
+                    let index = parseInt(match[1])
+                    if (values[index - 1].nodeName) {
+                        isString = false
+                    }
+                    result.push(values[index - 1])
+                } else {
+                    result.push(stringFragment)
+                }
+            }
+            return isString ? result.join('') : result
+        }
         return (
             <div>
                 <TitleArea>
