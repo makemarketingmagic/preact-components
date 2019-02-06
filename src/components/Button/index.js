@@ -21,7 +21,10 @@ export default class Button extends Component {
                 colored={!secondary}
                 accent={!secondary}
                 disabled={disabled}
-                onClick={onClick}
+                onClick={(e) => {
+                    e.preventDefault()
+                    onClick()
+                }}
             >
                 <ButtonContent>
                     {iconLeft && Icon && (<span style={{ display: 'flex' }}><Icon color='inherit' /></span>)}

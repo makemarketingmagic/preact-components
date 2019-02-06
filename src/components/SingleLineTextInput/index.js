@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import classNames from 'classnames'
 import { colors } from '../common/scMixins'
 import { rules } from './validation'
+import TickIcon from './../icons/TickIcon';
+import CrossIcon from './../icons/CrossIcon';
 
 const Container = styled.div`
     font-family: inherit;
@@ -52,12 +54,22 @@ export default class SingleLineTextInput extends Component {
         onChange && onChange(update)
     }
 
+    renderValidIcon() {
+        const Icon = this.state.valid ? TickIcon : CrossIcon
+        return (
+            <div stlye={{ marginRight: 4, marginRight: 4, display: 'flex' }}>
+                <Icon width={14} height={10} color={this.state.valid ? colors.green : colors.red} />
+            </div>
+        )
+    }
+
     render() {
-        const { type = 'text', placeholder = '', iconLeft = false, Icon = null } = this.props
+        const { type = 'text', disabled = false, placeholder = '', iconLeft = false, Icon = null, value, validation = false } = this.props
         return (
             <Container>
                 {iconLeft && <div style={{ marginLeft: 4, display: 'flex' }} ><Icon /></div>}
-                <Input onChange={this.handleChange} placeholder={placeholder} type={type} />
+                <Input onChange={this.handleChange} placeholder={placeholder} type={type} value={value} disabled={disabled} />
+                {(validation && value.length > 0) && this.renderValidIcon()}
             </Container>
         )
     }

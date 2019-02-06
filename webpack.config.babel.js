@@ -5,16 +5,14 @@ import autoprefixer from 'autoprefixer';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import OfflinePlugin from 'offline-plugin';
 import path from 'path';
-const ENV = process.env.NODE_ENV || 'development';
-
+//const ENV = process.env.NODE_ENV || 'development';
+const ENV = 'development'
 const CSS_MAPS = ENV !== 'production';
 
 module.exports = {
 	context: path.resolve(__dirname, "src"),
 	entry: {
 		"bundle": "./index.js",
-		"components/recommendedLead/index": "./components/recommendedLead/index.js",
-		"components/Avatar/index": "./components/Avatar/index.js"
 	},
 
 	output: {
@@ -34,8 +32,6 @@ module.exports = {
 			'react-dom/server': 'preact-render-to-string',
 			'react-addons-test-utils': 'preact-test-utils',
 			'react-addons-transition-group': 'preact-transition-group',
-			'react': 'preact-compat-enzyme',
-			'react-dom': 'preact-compat-enzyme',
 			components: path.resolve(__dirname, "src/components"),    // used for tests
 			style: path.resolve(__dirname, "src/style"),
 			'react': 'preact-compat',
@@ -59,13 +55,13 @@ module.exports = {
 			{
 				// Transform our own .(less|css) files with PostCSS and CSS-modules
 				test: /\.(less|css)$/,
-				include: [path.resolve(__dirname, 'src/components'), path.resolve(__dirname, 'src/containers')],
+				include: [path.resolve(__dirname, 'src/style'), path.resolve(__dirname, 'src/components'), path.resolve(__dirname, 'src/containers')],
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
 					use: [
 						{
 							loader: 'css-loader',
-							options: { modules: true, sourceMap: CSS_MAPS, importLoaders: 1, minimize: true }
+							options: { modules: false, sourceMap: CSS_MAPS, importLoaders: 1, minimize: true }
 						},
 						{
 							loader: `postcss-loader`,
@@ -85,13 +81,13 @@ module.exports = {
 			},
 			{
 				test: /\.(less|css)$/,
-				exclude: [path.resolve(__dirname, 'src/components'), path.resolve(__dirname, 'src/containers')],
+				exclude: [path.resolve(__dirname, 'src/style'), path.resolve(__dirname, 'src/components'), path.resolve(__dirname, 'src/containers')],
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
 					use: [
 						{
 							loader: 'css-loader',
-							options: { sourceMap: CSS_MAPS, importLoaders: 1, minimize: true }
+							options: { modules: true, sourceMap: CSS_MAPS, importLoaders: 1, minimize: true }
 						},
 						{
 							loader: `postcss-loader`,

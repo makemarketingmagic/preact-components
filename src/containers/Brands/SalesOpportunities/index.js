@@ -10,7 +10,6 @@ import Table, { SORT_DIRECTION } from '../../../components/Table'
 import { debounce } from 'lodash'
 import { defaultLabels } from '../MockFunctions';
 import { Modal } from '../../../components/Modal';
-import RadioButtons from './../../../components/RadioButtons/index';
 import Checkboxes from './../../../components/Checkboxes/index';
 import ExpandingSection from './ExpandingSection';
 
@@ -220,7 +219,8 @@ export default class SalesOpportunities extends Component {
                                 if (filter.length === options.length) filter = []
                                 this.setState({ filter })
                             }}
-                            options={labels} />
+                            options={labels}
+                            formStyle={{ margin: '0 16px' }} />
                     </Modal>
                     <PageTitle>
                         {translations.getLL('NUMBER_OF_LEADS_WITH_VALUE', 'You have %v1 leads', [<span style={{ color: colors.red }}>{leads.length}</span>])}

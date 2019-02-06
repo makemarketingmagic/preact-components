@@ -23,14 +23,36 @@ const LogoContainer = styled.div`
 
 export default class Navigation extends Component {
     render() {
-        const { tabs } = this.props
+        const { tabs, user } = this.props
+        let { translations = { getTranslation: (label, fallback) => fallback } } = this.props
+        translations.getLL = (label, fallback, values = []) => {
+            let string = translations.getTranslation(label, fallback)
+            const re = /(%v\d*)/ig
+            let isString = true
+            let result = []
+            string = string.split(re)
+            for (var i = 0; i < string.length; i++) {
+                let stringFragment = string[i]
+                let match = (/%v(\d*)/ig).exec(stringFragment)
+                if (match) {
+                    let index = parseInt(match[1])
+                    if (values[index - 1].nodeName) {
+                        isString = false
+                    }
+                    result.push(values[index - 1])
+                } else {
+                    result.push(stringFragment)
+                }
+            }
+            return isString ? result.join('') : result
+        }
         return (
             <Header>
                 <LogoContainer>
                     <WOOLogo />
                 </LogoContainer>
-                <Tabs tabs={tabs} />
-                <CurrentUser />
+                <Tabs tabs={tabs} translations={translations} />
+                <CurrentUser user={user}/>
             </Header>
         )
     }

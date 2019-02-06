@@ -2,7 +2,6 @@ import { h, Component } from 'preact';
 import { Router } from 'preact-router';
 
 import styled from 'styled-components'
-
 import SalesOpportunities from '../containers/Brands/SalesOpportunities'
 import Info from '../containers/Brands/Info'
 import Navigation from '../components/Navigation'
@@ -24,35 +23,247 @@ const Container = styled.div`
 `,
 
     data = {
-        tabs: [
+        tabs:[
+          {
+              "ID": 1,
+              "TITLE": "Info",
+              "URL": "/info",
+              "TITLE_TRANSLATION_LABEL": "INFO",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41, 51, 61]
+          }, {
+              "ID": 2,
+              "TITLE": "Notities",
+              "TITLE_TRANSLATION_LABEL": "NOTES",
+              "URL": "/notities",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41, 61],
+          }, {
+              "ID": 3,
+              "TITLE": "Verkoopkansen",
+              "TITLE_TRANSLATION_LABEL": "OPPORTUNITIES",
+              "URL": "/verkoopkansen/lijst",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41, 61, 81],
+          }, {
+              "ID": 4,
+              "TITLE": "Onboarding",
+              "TITLE_TRANSLATION_LABEL": "ONBOARDING",
+              "URL": "/producten/on-boarding/overzicht",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41, 61]
+          }, {
+              "ID": 5,
+              "TITLE": "AHA planning",
+              "TITLE_TRANSLATION_LABEL": "AHA_PLANNING",
+              "URL": "/aha-feedback/planning",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 61],
+          }, {
+              "ID": 6,
+              "TITLE": "Rapportages",
+              "TITLE_TRANSLATION_LABEL": "REPORTS",
+              "URL": "/rapportages/maandelijks",
+              "DYNAMIC_URL": "",
+          }, {
+              "ID": 7,
+              "TITLE": "FormGen",
+              "TITLE_TRANSLATION_LABEL": "FORMGEN",
+              "URL": "/formgen",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41]
+          }, {
+              "ID": 8,
+              "TITLE": "Bestanden",
+              "TITLE_TRANSLATION_LABEL": "FILES",
+              "URL": "/file-manager",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41, 61],
+              "$$hashKey": "object:91"
+          }, {
+              "ID": 9,
+              "TITLE": "MAQL",
+              "URL": "/maql",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41],
+              "IS_MICROSOFT": true
+          }, {
+              "ID": 10,
+              "TITLE": "SAQL",
+              "URL": "/saql",
+              "DYNAMIC_URL": "",
+              "IS_ALLOWED": [21, 31, 41, 61],
+              "IS_MICROSOFT": true
+          }
+      ],
+        currentUser: {
+          accountid: "141308000000130004",
+          birthdate: "1994-07-31",
+          company: "NL_testahabrand1",
+          defaultProfileId: null,
+          defaultWebPropertyId: null,
+          email: "tom@makemarketingmagic.com",
+          first_name: "Tom",
+          gaStatus: null,
+          id: "5003",
+          image: "https://s3.eu-central-1.amazonaws.com/upload.yourwoo.com/images/user_images/faceless.png",
+          intercomHash: null,
+          language: "en_GB",
+          last_name: "Steele",
+          phone: "",
+          property: null,
+          rights_id: "21",
+          roles_id: "31",
+          zoho_id: null,
+        },
+        languages: {
+          "da_DK":"Dansk",
+          "de_DE":"Deutsch",
+          "en_GB":"English",
+          "es_ES":"Español",
+          "fr_FR":"Français",
+          "it_IT":"Italiano",
+          "nl_NL":"Nederlands",
+          "no_NO":"Norsk",
+          "pt_PT":"Português",
+          "fi_FI":"Suomi",
+          "sv_SE":"Svenska"
+        },
+        brandInfo: {
+          "info": {
+            "id":"622",
+            "accountid":"1126061000019254072",
+            "account_owner":null,
+            "account_name":"MMM Operations",
+            "phone":"0183512253",
+            "brand_name":"1uur",
+            "branche":"Bedrijfsopleiding en -training",
+            "website_url":"http://1uur.nu/",
+            "ms":"1",
+            "ga_profileid":null,
+            "ga_refreshtoken":null,
+            "status":"0",
+            "brand_owner":"0",
+            "website":null,
+            "billing_street":"Lange Waaijsteeg 3",
+            "billing_code":"4133TM",
+            "billing_city":"Vianen",
+            "billing_country":"nl",
+            "shipping_street":"Lange Waaijsteeg 3",
+            "shipping_city":"Vianen",
+            "shipping_code":"4133TM",
+            "shipping_country":"4133TM",
+            "language":"nl_NL",
+            "brand":"true",
+            "freemium":null,
+            "marketingmanager_id":"1126061000001124118",
+            "marketingmanager":"Mariel Kroon",
+            "journalist_id":"1126061000020605294",
+            "journalist":null,
+            "profile_id":null,
+            "brand_logo_image":"https:\/\/s3.eu-central-1.amazonaws.com\/upload.yourwoo.com\/images\/brands_logos\/uploaded-image_5a576a806ac3b.png",
+            "dateadded":"1515677674",
+            "ahaflow_active":"0",
+            "reminder_subscription":"1",
+            "ga_connected":"0",
+            "cms_credentials_processed":"0",
+            "cms_url":"0",
+            "twitter_credentials_processed":"0",
+            "advertising_manager_id":null
+          },
+          "contacts": [
             {
-                text: 'Sales Opportunities',
-                url: '/sales-opportunities'
-            },
-            {
-                text: 'AHA Planning',
-                url: '/aha-planning'
-            },
-            {
-                text: 'Reports',
-                url: '/reports'
-            },
-            {
-                text: 'Notes',
-                url: '/notes'
-            },
-            {
-                text: 'Files',
-                url: '/files'
-            },
-            {
-                text: 'Onboarding',
-                url: '/onboarding'
-            },
-            {
-                text: 'Info',
-                url: '/'
+              "brand_contacts_id":"10064",
+              "name":null,
+              "contactid":"1126061000019254079",
+              "smownerid":null,
+              "contact_owner":null,
+              "lead_source":null,
+              "first_name":"Bas",
+              "last_name":"van Gool",
+              "accountid":"1126061000019254072",
+              "account_name":null,
+              "vendorid":null,
+              "vendorname":null,
+              "email":"basvangool@1uur.nu",
+              "title":"null",
+              "phone":"085-5000 001",
+              "home_phone":null,
+              "fax":null,
+              "mobile":"+31 (0) 6 5138 1687",
+              "date_of_birth":null,
+              "assistant":null,
+              "asst_phone":null,
+              "reports_to":null,
+              "smcreatorid":null,
+              "created_by":null,
+              "modified_by":null,
+              "modified_at":null,
+              "created_time":null,
+              "modified_time":null,
+              "mailing_street":null,
+              "other_street":null,
+              "mailing_city":null,
+              "other_city":null,
+              "mailing_zip":null,
+              "other_zip":null,
+              "mailing_country":null,
+              "other_country":null,
+              "description":null,
+              "email_opt_out":null,
+              "skype_id":null,
+              "campaignid":null,
+              "campaign_source":null,
+              "salutation":null,
+              "secondary_email":null,
+              "last_activity_time":null,
+              "twitter":null,
+              "contact_type":null,
+              "golf_liefhebber":null,
+              "linkedin":null,
+              "primair_contact":null,
+              "aan_deelgenomen_training":null,
+              "beslisser":null,
+              "gelooft_in_het_mmmmodel":null,
+              "wil_rapportage_ontvangen":"false",
+              "over_deze_persoon":null
             }
+          ]
+        },
+        journalists: [
+          {
+            "id":"2456",
+            "roles_name":"Journalist",
+            "active":"1",
+            "roles_id":"1",
+            "username":"Yara",
+            "email":"yara@makemarketingmagic.com",
+            "first_name":"Yara",
+            "accountid":"1126061000000081569",
+            "phone":"",
+            "birthdate":"1993-10-19",
+            "company":"Make Marketing Magic",
+            "personal_website":null,
+            "zoho_id":"1126061000020605294",
+            "last_name":"Hooglugt",
+            "image":"faceless.png",
+            "rights_id":"51",
+            "scheduling_links":null,
+            "rights_name":"Gilde werknemer"
+          }
+        ],
+        advertisingManagers: [
+          {
+            "id":0,
+            "username":"Sandra",
+            "email":"inactive.5bdaf8ea505f4.6226@makemarketingmagic.com",
+            "first_name":"Sandra",
+            "zoho_id":null,
+            "last_name":"Broere"
+          }
+        ],
+        notes: [
+          {"id":"388","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Evelien, wil jij altijd in berichten naar mij 3 CC's erin gooien: cm@authentiekleiderschap.nl lk@authentiekleiderschap.nl en sl@authentiekleiderschap.nl Dan hebben alle juiste personen de meest actuele info. en bb@authentiekleiderschap.nl","dateCreated":"2016-06-28 15:55:56","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-07-06 15:51:09","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"441","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Eerste verzenddatum. Nynke vonden ze heel leuk.\n- logo moet verticl\n- iedere maand database versturen.\n- Zij sturen nieuwe mensen naar mij.","dateCreated":"2016-07-08 17:21:53","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-07-08 17:22:31","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"547","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Hebben er zin in. We hebben een gesprek over hun website gehad. Dit gaan ze in eerste instantie zelf optimaliseren. Ze weten dat wij het kunnen. Eerste interview is afgenomen over hun Why. Was wat rommelig begonnen omdat hun database heel veel catch all aangaf. Hebben ze zelf nagekeken en hebben in de eerste mailing de eerste adressen gecontroleerd, tweede mailing weer nieuwe adressen aangeleverd.  Ze zijn wel heel blij met ons.","dateCreated":"2016-07-26 15:14:33","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-07-26 15:57:09","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"596","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Call:\n\n- doelstellingen bekijken en bepalen hoe ver we zijn\nVoorstellen formgen te plaatsen op hun webiste zodat ze zich kunnen aanmelden voor de neiuwsbrief.\n- Hoe gaat het met de website?\n- Verkoopkansen\n- Rapportages","dateCreated":"2016-08-04 17:40:37","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-08-04 17:44:37","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"600","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"05-08 belafspraak:\n\nZij zijn heel erg gericht op de webbezoeken. Ze willen dus meer zien in de verkoopkansen. Ook wisten ze op sit moment nig niet wat ze met de lijst konden. \nZe willen misschien Remarketing opstarten. Hier moet ik een voorstel voor maken. Ze zijn zelf met de search van Adwords bezig. \nZe vinden het leuk om te zien wie hun \nSocial reminder\n\n\nlezers ondef elkaar\nremarketing","dateCreated":"2016-08-05 09:48:44","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-08-05 10:36:51","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"744","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"7-09 belafspraak met bas\n\nHun webbezoeken stijgen echt hele snel. Nog geen concrete verkopen hier uit kunnen halen. \n- Remarketing gaan we mee starten hebben zelf al adwords\n- Invulformulier voor downloaden egoscan moet ik een ooferte van maken\n- navragen webbezoeken kloppen niet als je ze op volgorde wilt plaatsen","dateCreated":"2016-09-07 14:39:02","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-09-07 15:22:38","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"862","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Bij AL langs geweest. Vonden ze heel leuk. BP poster langs gebracht.\n\nIk was daar om de doelstellingen uit te zetten voor de remarketingcampagne. Deze willen ze in de week van 24 oktober hebben lopen. Doel is het downloaden van de egoscan en de misssie statement. \nZij maken zelf de download button aan waardoor deze scans in de inbox belanden van diegene die hem download. Ze komen nog terug op de exacte teksten maar waren al heel blij met de banners die Camen had gemaakt.\nIk wacht op de officiele teksten van Bas en dan kan hij live.\n\nVerder loopt het.\n\nCarina Mak heeft een eigen project met Nienke. Zij gaat ia ons schrijven in een vakblad.\n4 uur*85 euro per maand er bij. Moet nog starten en moet nog factureren.","dateCreated":"2016-10-01 08:36:33","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-10-01 08:40:06","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"1076","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Aanvulling Adwords:\n\nHier wordt AL op gevonden:\n\nwww.authentiekleiderschap.nl \n\n 2. wat is sparren \n\n 3. wat is leiderschap \n\n 4. wat is authentiek leiderschap \n\n 5. verschil aftrapsessie en een workshop \n\n 6. solistische functie betekenis \n\n 7. solistisch \n\n 8. schillenmodel \n\n 9. randvoowaarden van reorganisatie \n\n 10. pien janowitz - van ierschot\nper pagina een SEO rapport. We willen nog hoger in de search\n\nWARNING 3 images (out of 6) with missing ALT attribute\nWARNING missing description\nWARNING missing keywords tag\n\nHoe ver zijn we met de doelstellingen?\n\nOp papier zetten! even met bullets\nAdwords express. Doet dit het in Analytucs? ( ze zien niets in Analytics, wel in de app)\n\nBelgacom er uit halen\nwww.intronet.nl\n\nhttps:\/\/client.bannerwise.io\/#\/share\/57e913ca4737dc1300151d13\/57e93a3cf089a7110011fc7d","dateCreated":"2016-11-08 19:49:25","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-11-15 17:42:25","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"1237","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Coockies akkoord? Moet dit geimplementeerd worden voor een remarketing\n\nHTTPS certificaat,.\n\nDatalekken. Statement moet worden opgesteld. Bij MMM moet worden. \nVan hun klanten moeten zij stoppen met leveranciers.","dateCreated":"2016-12-07 09:08:27","createdBy":"61","notifiedUser":null,"dateLastEdited":"2016-12-07 09:23:39","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"1873","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>EMAILMARKETING<br\/><br\/>Authentiek leiderschap wil de beelden op de blog en op de website graag in zwart wit plaatsen. <br\/>Ook in de e-mail het beeld in zwart wit.<\/p><p>Photoshop bestand staat op de Drive: Authentiek Leiderschap > 1. Onboarding > Huisstijl<\/p>","dateCreated":"2017-02-20 16:24:14","createdBy":"106","notifiedUser":null,"dateLastEdited":"2018-06-26 07:09:27","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"2051","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Belafspraak voortgang:\n\n- Rapportage remarketing campagne\n- Aha\u00b4s\n- Reminders om Aha in te leveren. Voorheen was dit 3 dagen voor de deadline wordt hij opgeschoven. Nu is het al soepeler\n- november en januari hadden jullie minder verstuurd. Dat merk je dan echt aan de webbezoeken.\n- 9,1 CTR 1200 mensen toegevoegd.\n- SMR: wordt goed gebruikt: 10 mensen.\nKijk naar adwords campagne! Kunnen we daar nog iets mee doen?\n\nEjS@authentiekleiderschap.nl\nkz@authentiekleiderschap.nl\ndw@authentiekleiderschap.nl\ndw@authentiekleiderschap.nl\npj@authentiekleiderschap.nl\npj@authentiekleiderschap.nl\naf@authentiekleiderschap.nl\noffice@authentiekleiderschap.nl\noffice@authentiekleiderschap.nl\nbb@authentiekleiderschap.nl\nbb@authentiekleiderschap.nl\nrdj@authentiekleiderschap.nl\nlk@authentiekleiderschap.nl\nlk@authentiekleiderschap.nl\nci@authentiekleiderschap.nl\n\nnavtragen wannneer kan je per adres zien welke mailing hij heeft gelezen?\n\negoscan gedaan hebben, kunnen we die er uit filteren.  Kunnen we hier iets mee? adressen er uit filteren?\nwie heeft er ooit een ego. optim","dateCreated":"2017-03-16 11:46:34","createdBy":"61","notifiedUser":null,"dateLastEdited":"2017-03-16 13:48:14","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"2355","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Helen mail 2 mei\nAuthentiek Leiderschap lag vorige week even stil (vanuit Bas). Hij had een bijeenkomst in Spanje en daaruit is een nieuw concept gekomen, waar ik een blog over ga schrijven. Eerst zou dat met hem zijn (afgelopen week) maar uiteindelijk met iemand anders (volgende week interview over 2 onderwerpen). En week erna interview met andere collega. Bas laat het bloggen even aan anderen over. Dan snap je waarom er even een gat valt, maar dat dit weer is opgevuld.","dateCreated":"2017-05-05 09:43:21","createdBy":"61","notifiedUser":null,"dateLastEdited":"2017-05-05 09:43:38","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"2410","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Belafspraak 15 mei\n\n- Adwords moet aan om bezoeken te stimuleren. We krijgen nu te weinig bezoeken uit zichzelf. Wij duiken er in met mijn adwords collega en morgen heb je een geoptimaliseerde campagne voorstel op de mail.\n\n- Klikken zijn te weinig. Voorstel: eerst adwords aanzetten, dan door.\n\n- Aha\u00b4s: Onderwerpen gericht op de directeur\/manager doet het geod. Bijvoorbeeld: Maak mensen trots op je onderneming.\n\nWellicht moeten we ons de ene 2 weken richten op de\n\n- Campagne adwords: Call to action! meld je aan, schrijf je in, meer info? vul je adres in. Kijk voor de grap even op hypotheek afsluiten. \n\n- Uitnodigen  masterclass sales in juni\n\nPagina open intervisie. adwords campagne maken! \nWat voor leider ben jij een andere teksten. Dit vinden ze het belangrijkste product. Ze weten niet hoe ze het moeten verkopen. 3 mensen hebben zich al aangemeld. Intervisie. Anne afstemmen! Open intervisie? Hier op kunnen klikken. mailverkeer in de CC en Lia in de CC zetten!\n\nManier om aan business te komen. Oefening v oor het buitenland. In Engeland willen ze . De sleutel die leiden . \nZe volgen zo nu en dan op. Maar niet zo veel. Jullie moeten daar echt bij helpen. Hij is bereid om meer te investeren. \nZij willen heel erg graag en willen ook graag willen. \n\nPien janowich. even op de hoogte wordt gebracht van de mogelijk. Pien","dateCreated":"2017-05-15 14:16:05","createdBy":"61","notifiedUser":null,"dateLastEdited":"2017-05-17 13:54:12","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"2711","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"Authentiek Leiderschap:\n\nBezoekersbronnen in kleuren:\nWie zijn de bedrijven die via de zoekmachines op de website komen?","dateCreated":"2017-06-29 08:40:30","createdBy":"61","notifiedUser":null,"dateLastEdited":"2017-06-29 08:41:49","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"2729","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"- We moeten meer verkeer naar de website trekken! LinkedIn?\n- Aha\u00b4s: Onderwerpen gericht op de directeur\/manager doet het geod. Bijvoorbeeld: Maak mensen trots op je onderneming.\n\nPagina open intervisie. adwords campagne maken! \nWat voor leider ben jij een andere teksten. Dit vinden ze het belangrijkste product. Ze weten niet hoe ze het moeten verkopen. 3 mensen hebben zich al aangemeld. Intervisie. Anne afstemmen! Open intervisie? Hier op kunnen klikken. mailverkeer in de CC en Lia in de CC zetten!\n\nManier om aan business te komen. Oefening v oor het buitenland. In Engeland willen ze . De sleutel die leiden . \nZe volgen zo nu en dan op. Maar niet zo veel. Jullie moeten daar echt bij helpen. Hij is bereid om meer te investeren. \nZij willen heel erg graag en willen ook graag willen.","dateCreated":"2017-07-04 06:56:22","createdBy":"61","notifiedUser":null,"dateLastEdited":"2017-07-04 07:05:12","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"3025","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"18 augustus belafspraak\n\n- willen investeren maar wij moetegn meer helpen\n- Adwords campagne opzetten richting open intervisie\n\nStarten adwords!! https:\/\/www.authentiekleiderschap.nl\/intervisie-sessies-alis\/\n\nPagina open intervisie. adwords campagne maken! \nWat voor leider ben jij een andere teksten. Dit vinden ze het belangrijkste product. Ze weten niet hoe ze het moeten verkopen. 3 mensen hebben zich al aangemeld. Intervisie. Anne afstemmen! Open intervisie? Hier op kunnen klikken. mailverkeer in de CC en Lia in de CC zetten!\n\nLinkedin en Facebook: \n\n-> analytics: adwords opleidingen welke? Ja!! verder. follow up.\n-> \n\n\n-> intervisie:","dateCreated":"2017-08-18 13:39:28","createdBy":"61","notifiedUser":null,"dateLastEdited":"2017-08-31 12:22:32","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"3713","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>Poster verstuurd<\/p>","dateCreated":"2017-11-29 09:48:09","createdBy":"1514","notifiedUser":null,"dateLastEdited":"2018-04-25 15:00:25","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"4803","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>25 april call<\/p><p><br\/><\/p><p>-> Bezoekers:<\/p><p>file:\/\/\/home\/chronos\/u-f1a2ab2c35954f459a8d23124bf5d82450685068\/Downloads\/Analytics Alle websitegegevens Kanalen 20180101-20180424.pdf<\/p><p>-> Wat doet het goed en wat doet het minder goed?<\/p><p><br\/><\/p><p><b>Actie Evelien<\/b><\/p><p>-> Facebook bereik: Is veel meer als Anne iets post<\/p><p>-> LinkedIn Hetzelfde... Hoe komt dit? Het bereik is\ufeff anders.<\/p><p>-> Helen bellen voor afspraak en Data.\u00a0<\/p><p><br\/><\/p><p>Voor maandag:<\/p><p>-> Thema\u00b4s en trends. Hoe vallen de blogs?<\/p><p>-> Tips en Tricks succesvoller maken blogs<\/p><p>-> Hoe blogs nog beter kunnen.\u00a0<\/p><p><br\/><\/p><p><br\/><\/p>","dateCreated":"2018-04-25 13:54:25","createdBy":"61","notifiedUser":null,"dateLastEdited":"2018-04-25 15:00:23","lastEditedBy":null,"colour":"","private":"false","category":"0","assignedUser":null,"assignedDate":null},{"id":"4822","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>call 30 april<\/p><p><br\/><\/p><p>-> Tips, Tricks en trends succesvoller maken blogs<\/p><p><b>1. Video (zorgt voor langere bezoektijd op je website en een hogere CTR.) Wij maken dan vaak een playbutton op een screenshot van de video. 1,5 minuut. eenmaal per 2 maanden. Ook tekst er bij. 200-300 woorden.<\/b><\/p><p><b>2. Langere artikelen met iets meer diepgang. Denk aan 750 woorden. Eenmaal per 2 maanden.<\/b><\/p><p><b>3. Laat het vooral zien. Zeg niet dat je de beste bent maar laat dat zien uit voorbeelden en kennis. klant cases.<\/b><\/p><p><b>4. Infographics. Soort lange grote flyers, min mogelijk tekst, veel beeld, vaak getekend. tips en trics.<\/b><\/p><p>-> Hoe blogs nog beter kunnen.\u00a0<br\/><\/p><p><b>1. Gebruik een concreet onderwerp waarin al duidelijk wordt vermeld wat de lezer kan verwachten.<\/b><\/p><p><b>2. Motiveer je lezers. Meld je hier aan, download hier de whitepaper\/ infographic.<\/b><\/p><p><b>3. Concrete vraag in de titel. Hoe...\u00a0<\/b><\/p><p><b>4. Wie delen er wel en nog niet.\u00a0<\/b><\/p><p><b><br\/><\/b><\/p><p><b>-> Actie evelien:\u00a0<\/b><\/p><p><b>Voorbeelden filmpjes<\/b><\/p><p><b>Opvolging tips.<\/b><\/p><p><b>Voorbeelden infographic<\/b><\/p><p>Zijn er video\u00b4s die je kan gebruiken om iets uit te leggen.\u00a0<\/p><p>Vakantie evelien: 3-11 mei<\/p><p><br\/><\/p>","dateCreated":"2018-04-30 08:09:14","createdBy":"61","notifiedUser":null,"dateLastEdited":"2018-05-01 13:49:21","lastEditedBy":null,"colour":"","private":"false","category":"0","assignedUser":null,"assignedDate":null},{"id":"5782","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>21 augustus call<\/p><p><br\/><\/p><p>-> We zijn goed met de content bezig.\u00a0<\/p><p>- Denk aan interne linkjes in de blogs. Geef die door aan Helen, dan komen ze er in te staan.\u00a0<\/p><p>- Verkoopkansen volgen ze heel goed op. Boosten? Adverteren? Ja, maar eerst de nieuwe website live!<\/p><p>Onderwerpen hebben ze nog. Anne is in charge<\/p><p>-> Bezoekers nemen iets af, dit zien we bij alle klanten en jullie hebben niet gecommuniceert. Dus dat geeft gelijk aan wat de mailing doet. Kijk ook naar de bronnen, soms komen er ruim 500 personen uit de mailings, dat is gewoon hele erg veel.\u00a0<\/p><p>->\u00a0<\/p><p>->\u00a0<\/p>","dateCreated":"2018-08-21 11:02:08","createdBy":"61","notifiedUser":null,"dateLastEdited":"2018-09-19 11:29:26","lastEditedBy":null,"colour":"","private":"false","category":"0","assignedUser":null,"assignedDate":null},{"id":"6045","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>19 september<\/p><p><br\/><\/p><p>-> Nieuwe website live<\/p><p>- Analytics installeren<\/p><p><b>Actie Evelien: code analytics sturen.<\/b>\u200b<\/p><p>- Referentverhalen mis ik<\/p><p>- Ik mis wel Call to actions op de homepage. (denk de CTA bij onze producten)<\/p><p>- SEO check in de bestanden toegevoegd<\/p><p>- alle ge\u00efndexeerde pagina\u00b4s moeten worden doorverwezen naar jullie nieuwe website:\u00a0site:authentiekleiderschap.nl<\/p><p>- Aha\u00b4s: Gif heeft het goed gedaan<\/p><p><br\/><\/p><p>Vorige keer:<\/p><p>- Verkoopkansen volgen ze heel goed op. Boosten? Adverteren? Ja, maar eerst de nieuwe website live!<br\/><\/p><p><br\/><\/p><p>Verkoopkansen:<\/p><p><br\/><\/p><p><br\/><\/p>","dateCreated":"2018-09-19 11:22:26","createdBy":"61","notifiedUser":null,"dateLastEdited":"2018-09-19 11:51:33","lastEditedBy":null,"colour":"","private":"false","category":"0","assignedUser":null,"assignedDate":null},{"id":"6278","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>16 oktober<\/p><p><br \/><\/p><p>-> Eerste cijfers van de website. Webbezoeken gaan weer omhoog. Analytics is later ge\u00efnstalleerd natuurlijk. CTA mogen duidelijker op de website. Kijk naar de bestel nu button.\u00a0<\/p><p>Kijk nog wel even naar de 404 pagina\u00b4s.\u00a0<\/p><p>-> Blogs:<\/p><p>- CTR: gemiddeld 5%. Dit is prima<\/p><p>- Onderwerpen: Cultuurveranderingen en missies doen het goed.\u00a0<\/p><p>-> Aandachtspunten<\/p><p>- website bezoeken. Maar dat komt ook doordat we in september minder konden meten.\u00a0<\/p><p><br \/><\/p><p>-> Eva navragen waarom de blogs niet goed te zien zijn: 404 pagina\u00b4s.\u00a0<\/p><p>-> Sitemap is ook nog niet helemaal af.\u00a0<\/p><p>-> Groei database navragen:\u00a0<\/p><p><br \/><\/p><p>Zijn bezig met de website dus even geen campagne.<\/p><p><br \/><\/p><p>Formgen:\u00a0https:\/\/formgen.makemarketingmagic.com\/#\/user\/18e3d2c8b2424d81c9d07e636e37c569<\/p><p><br \/><\/p><p><br \/><\/p><p><br \/><\/p>","dateCreated":"2018-10-16 11:16:13","createdBy":"61","notifiedUser":null,"dateLastEdited":"2018-10-16 12:02:18","lastEditedBy":null,"colour":"","private":"false","category":"0","assignedUser":null,"assignedDate":null},{"id":"6646","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>27 november 2018 call<\/p><p><br \/><\/p><p>-> Webbezoekers flink gestegen. Komt voornamelijk door Winnaar van de Gazellen awards. Daarnaast, wie wij zijn en gratis tools.<\/p><p>-> Misschien een stuk hier over?\u00a0<\/p><p>-> 2 aha\u00b4s staan op ingeleverd<\/p><p>->\u00a0 Ellis statistische : VGZ mailadressen? Hoe kan dit? Wat is dit voor bedrijf? Stichting kunstzinnige zaken. 404 pagina<\/p><p><b>Actie Evelien<\/b><\/p><p><b>- 404 pagina opzoeken<\/b><\/p><p><b>- verkoopkansen nakijken.<\/b><\/p><p><br \/><\/p><p><br \/><\/p>","dateCreated":"2018-11-27 12:29:59","createdBy":"61","notifiedUser":null,"dateLastEdited":"2018-11-27 12:57:05","lastEditedBy":null,"colour":"","private":"true","category":"0","assignedUser":null,"assignedDate":null},{"id":"7008","status":"1","accountid":"1126061000005990081","title":null,"innerContent":"<p>januari call:<\/p><p><br \/><\/p><p>-> Statistieken:<\/p><p>- Vanaf oktober zijn de webbezoeken behoorlijk gestegen. Dit zijn voornamelijk nieuwe bezoekers zag ik dus waarschinlijk komt dat door de Gazellen Award.<\/p><p>- Ook de e-mail heeft het in december heel erg goed gedaan:<\/p><p>-\u00a0Follow the leader: hoe ga je het beste om met weerstand? Heeft her erg goed gedaan. 1 note: wel veel uitschrijvingen. Wellicht iets concretere buttons of preview in de mail, ze openen wel.\u00a0<\/p><p>- De laatste in December heeft veel minder uitschrijvingen: Goed teken! En heel veel acties op social media!<br \/><\/p><p>-> Onderwerpen is Helen mee bezig.\u00a0<\/p><p>-> 1 keer per maand? Willen zich focussen op de huidige artikelen. -\u00a0<\/p>","dateCreated":"2019-01-16 11:18:56","createdBy":"1336","notifiedUser":null,"dateLastEdited":"2019-01-16 12:08:35","lastEditedBy":null,"colour":"","private":"false","category":"0","assignedUser":null,"assignedDate":null}
         ],
         leads: [
             {
@@ -37119,10 +37330,13 @@ export default class App extends Component {
     render() {
         return (
             <div id="app">
-                <Navigation tabs={data.tabs} />
+                <Navigation tabs={data.tabs} user={data.currentUser}/>
                 <Router onChange={this.handleRoute}>
-                    <Container path="/" >
-                        <Info />
+                    <Container path="/">
+                      <div> Nothing here</div>
+                    </Container>
+                    <Container path="/info" >
+                        <Info brandInfo={data.brandInfo} journalist={data.journalists[0]} advertisingManager={data.advertisingManagers[0]}/>
                     </Container>
                     <Container path="/aha-planning">
                         <AHAPlanning />
@@ -37130,8 +37344,8 @@ export default class App extends Component {
                     <Container path="/reports">
                         <Reports />
                     </Container>
-                    <Container path="/notes">
-                        <Notes />
+                    <Container path="/notities">
+                        <Notes notes={data.notes}/>
                     </Container>
                     <Container path="/files">
                         <Files />
@@ -37139,7 +37353,7 @@ export default class App extends Component {
                     <Container path="/onboarding">
                         <Onboarding />
                     </Container>
-                    <Container path="/sales-opportunities">
+                    <Container path="/verkoopkansen/lijst">
                         <SalesOpportunities leads={data.leads} events={{ downloadCsv: null, showBranche: null, getOpportunityDetails: (id) => {
                           return new Promise((resolve, reject) => {
 
@@ -37157,7 +37371,13 @@ export default class App extends Component {
                         } }}/>
                     </Container>
                     <Container path="/profile">
-                        <Profile />
+                        <Profile user={data.currentUser} languages={data.languages} events={{
+                          saveChanges: (data) => new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                              resolve(true)
+                            }, 1500)
+                          })
+                        }}/>
                     </Container>
                 </Router>
             </div>

@@ -97,8 +97,9 @@ export default class Checkboxes extends Component {
 
     render() {
         const { options = [] } = this.state
+        const { formStyle } = this.props
         return (
-            <form>
+            <form style={formStyle}>
                 {options && options.map(({ selected, label, data }, i) => {
                     return (
                         <Label key={i}>
