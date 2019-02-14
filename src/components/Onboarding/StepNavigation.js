@@ -11,6 +11,7 @@ const StepNavEl = styled.nav`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
 `,
     LogoContainer = styled.div`
     margin-right: 64px;
@@ -18,12 +19,12 @@ const StepNavEl = styled.nav`
 
 export default class StepNavigation extends Component {
     render() {
-        const { children } = this.props
+        const { children, showLogo = true } = this.props
         return (
             <StepNavEl>
-                <LogoContainer>
+                {showLogo && <LogoContainer>
                     <WOOLogo />
-                </LogoContainer>
+                </LogoContainer>}
                 {children}
             </StepNavEl>
         )

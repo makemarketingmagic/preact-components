@@ -51,8 +51,8 @@ export default class Navigation extends Component {
                 <LogoContainer>
                     <WOOLogo />
                 </LogoContainer>
-                <Tabs tabs={tabs} translations={translations} />
-                <CurrentUser user={user}/>
+                <Tabs tabs={tabs} brandId={user.accountid} translations={translations} />
+                <CurrentUser user={user} />
             </Header>
         )
     }

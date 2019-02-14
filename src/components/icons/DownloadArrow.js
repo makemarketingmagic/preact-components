@@ -1,7 +1,7 @@
 import { h } from 'preact'
 
 export default function DownloadArrow(props) {
-    const { width = 16, height = 16 } = this.props
+    const { width = 16, height = 16 } = props
     return (
         <svg width={width} height={height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7 1V11C7 11.5523 7.44772 12 8 12C8.55228 12 9 11.5523 9 11V1C9 0.447715 8.55228 0 8 0C7.44772 0 7 0.447715 7 1Z" fill="#EE4055" />

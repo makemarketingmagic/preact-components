@@ -1,13 +1,15 @@
 import { h, Component } from 'preact'
 import styled from 'styled-components'
 import { colors } from '../common/scMixins'
+import { route } from 'preact-router';
+import { Link } from 'preact-router/match'
 
 const TabsEl = styled.nav`
     display: flex; 
     flex-direction: row;
     height: 100%;
     background-color: ${colors.white};
-`, TabEl = styled.div`
+`, TabEl = styled(Link)`
     display: flex;
     position: relative;
     flex-direction: column;
@@ -19,6 +21,9 @@ const TabsEl = styled.nav`
     transition: border-bottom 250ms ease-in-out,
         color 250ms ease-in-out;
     white-space: nowrap;
+    color: ${colors.text};
+    text-decoration: none;
+    
     &:hover {
         border-bottom: ${props => props.active ? `2px solid ${colors.red}` : `1px solid ${colors.red}`};
         color: ${ colors.red};
@@ -55,19 +60,25 @@ export default class Tabs extends Component {
 
     isActive = (tab) => {
         const { DYNAMIC_URL = false, URL } = tab
-        let vars = {}
+        let vars = {
+
+        }
+        let accountId = this.props.brandId
         // /brand-details/:accountId/info
         if (DYNAMIC_URL) {
             let re = /:(\w+)/ig,
                 url = DYNAMIC_URL
-            while (re.test(url)) {
-                let match = re.exec(url)
-                vars[match[1]] = {
-                    index: match.index + 1
-                }
+            //     match = re.exec(url)
+            // while (match) {
+            //     vars[match[1]] = {
+            //         index: match.index + 1
+            //     }
+            url = url.replace(re, '.+?')
+            return new RegExp(url).test(window.location.pathname)
+            // url = url.slice(match.index + 1 + match[1].length)
+            // match = re.exec(url)
+            // }
 
-                url = url.slice(match.index + 1 + match[1].length)
-            }
         } else {
             if (URL[0] === '#')
                 return window.location.hash === URL
@@ -77,10 +88,9 @@ export default class Tabs extends Component {
 
     handleOpen = (tab, key) => {
         const { DYNAMIC_URL = false, URL } = tab
-
+        const { brandId } = this.props
         if (DYNAMIC_URL) {
-            const accountId = (/brand-details\/(\d+)\//).exec(window.location.hash)[1]
-            window.location.hash = DYNAMIC_URL.replace(':accountId', accountId)
+            route(DYNAMIC_URL.replace(/:accountid/ig, brandId), true)
         } else {
             if (URL[0] === '#')
                 window.location.hash = URL
@@ -101,12 +111,12 @@ export default class Tabs extends Component {
     }
 
     render() {
-        const { tabs = [], translations } = this.props
+        const { tabs = [], translations, brandId } = this.props
         return (
             <TabsEl>
                 {tabs.map((tab, key) => (
                     <Tab
-                        handleOpen={this.handleOpen}
+                        brandId={brandId}
                         tab={tab}
                         id={key}
                         active={this.isActive(tab)}
@@ -127,11 +137,12 @@ class Tab extends Component {
     }
 
     render() {
-        const { tab: { TITLE, TITLE_TRANSLATION_LABEL, URL, DYNAMIC_URL, IS_ALLOWED, IS_MICROSOFT = false }, id, active, subMenuOpen, translations } = this.props
+        const { brandId, tab: { TITLE, TITLE_TRANSLATION_LABEL, URL, DYNAMIC_URL, IS_ALLOWED, IS_MICROSOFT = false }, id, active, subMenuOpen, translations } = this.props
         return (
             <TabEl
                 onClick={this.handleOpen}
                 active={active}
+                activeClassName="active" href={DYNAMIC_URL.replace(/:accountid/ig, brandId)}
             >
                 {translations.getLL(TITLE_TRANSLATION_LABEL || TITLE, TITLE)}
                 {/* {tab.subMenu &&

@@ -32,6 +32,10 @@ const Input = styled.input`
 
 export default class DatePicker extends Component {
     handleChange = (e) => {
+        const { onChange } = this.props
+        onChange && onChange({
+            value: e.target.value
+        })
         return {
             value: e.target.value
         }

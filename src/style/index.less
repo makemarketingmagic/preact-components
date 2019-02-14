@@ -9,7 +9,20 @@ html, body {
 	font-weight: 400;
 	color: #444;
 	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    -moz-osx-font-smoothing: grayscale;
+    
+    &::-webkit-scrollbar-track {
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #EE4055;
+    }
 }
 
 * {

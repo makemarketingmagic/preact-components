@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../common/scMixins';
 import { transparentize } from 'polished';
 
-const Input = styled.input`
+const Input = styled.textarea`
     margin: 4px 0;
     color: ${colors.text};
     width: 100%;
@@ -61,7 +61,9 @@ export default class MultiLineTextInput extends Component {
 
         this._handleTextAreaSize(e.target)
 
-        onChange && onChange(e)
+        onChange && onChange({
+            value: e.target.value
+        })
     }
 
     render() {
@@ -83,7 +85,9 @@ export default class MultiLineTextInput extends Component {
     }
 
     _handleTextAreaSize = (target = this.el) => {
-        target.style.height = 0
-        target.style.height = `${target.scrollHeight + 2}px`
+        if (target.style) {
+            target.style.height = 0
+            target.style.height = `${target.scrollHeight + 2}px`
+        }
     }
 }

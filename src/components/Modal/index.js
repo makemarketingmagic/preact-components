@@ -31,6 +31,7 @@ const Overlay = styled.div`
     box-shadow: 0 8px 16px 0 ${transparentize(0.92, colors.black)}, 0 1px 2px 1px ${transparentize(0.84, colors.black)};
     border-radius: 4px;
     max-width: 800px;
+    max-height: 90vh;
     width: 100%;
     color: #323232;
     margin: 0 auto;
@@ -41,7 +42,6 @@ const Overlay = styled.div`
     color: ${colors.red};
     padding-top: 28px;
     padding-bottom: 20px;
-    margin-bottom: 32px;
     text-align: center;
     font-family: 'Montserrat';
     font-style: normal;
@@ -53,6 +53,25 @@ const Overlay = styled.div`
     padding: 32px 0;
     display: flex;
     justify-content: center;
+    border-top: 1px solid rgba(32, 32, 32, 0.1);
+`, ScrollSection = styled.div`
+    overflow-y: scroll;
+    padding-top: 32px;
+
+    &::-webkit-scrollbar-track {
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar
+    {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar-thumb
+    {
+        background-color: ${colors.red};
+    }
 `
 
 export class Modal extends Component {
@@ -64,13 +83,15 @@ export class Modal extends Component {
     }
 
     render() {
-        const { children, open, onDialogClose, isAnimating, title = 'Modal Title', buttons = [{ text: 'Close', onClick: this.props.onDialogClose }] } = this.props
+        const { children, containerProperties = {}, open, onDialogClose, isAnimating, title = 'Modal Title', buttons = [{ text: 'Close', onClick: this.props.onDialogClose }] } = this.props
 
         return (
-            <Overlay open={open} isAnimating={false}>
+            <Overlay open={open} isAnimating={false} onClick={onDialogClose}>
                 <Container>
                     <Title>{title}</Title>
-                    {children}
+                    <ScrollSection style={containerProperties}>
+                        {children}
+                    </ScrollSection>
                     <ButtonSection>
                         {buttons.map(({ text, ...rest }) => {
                             return (<Button {...rest}>{text}</Button>)

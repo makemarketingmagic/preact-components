@@ -23,11 +23,55 @@ let defaultLabels = [
     { data: 8, label: 'Concurrent', selected: true },
 ]
 
+const AHA_SENDING_STATES_NAMES = {
+    ACTIVE: 1,
+    INACTIVE: 2,
+    SUBMITTED: 3,
+    FEEDBACK: 4,
+    APPROVED: 5,
+    PLANNED: 6,
+    SENT: 7,
+    CANCELLED: 8,
+    SMR_SENT: 9
+};
+
+const AHA_SENDING_STATES = [
+    { ID: AHA_SENDING_STATES_NAMES.ACTIVE, TITLE: 'Actief', TITLE_TRANSLATION_LABEL: 'ACTIVE' },
+    { ID: AHA_SENDING_STATES_NAMES.INACTIVE, TITLE: 'Inactief', TITLE_TRANSLATION_LABEL: 'INACTIVE' },
+    { ID: AHA_SENDING_STATES_NAMES.SUBMITTED, TITLE: 'Ingeleverd', TITLE_TRANSLATION_LABEL: 'SUBMITTED' },
+    { ID: AHA_SENDING_STATES_NAMES.FEEDBACK, TITLE: 'Feedback', TITLE_TRANSLATION_LABEL: 'FEEDBACK' },
+    { ID: AHA_SENDING_STATES_NAMES.APPROVED, TITLE: 'Goedgekeurd', TITLE_TRANSLATION_LABEL: 'APPROVED' },
+    { ID: AHA_SENDING_STATES_NAMES.PLANNED, TITLE: 'Ingepland', TITLE_TRANSLATION_LABEL: 'PLANNED' },
+    { ID: AHA_SENDING_STATES_NAMES.SENT, TITLE: 'Verzonden', TITLE_TRANSLATION_LABEL: 'SENT' },
+    { ID: AHA_SENDING_STATES_NAMES.CANCELLED, TITLE: 'Geannuleerd', TITLE_TRANSLATION_LABEL: 'CANCELLED' },
+    { ID: AHA_SENDING_STATES_NAMES.SMR_SENT, TITLE: 'SMR verstuurd', TITLE_TRANSLATION_LABEL: 'SMR_SENT' }
+]
+
+const returnAhaStateName = (state, translations) => {
+    var row = findRowWithAttr(AHA_SENDING_STATES, 'ID', parseInt(state));
+    return translations.getLL(row.TITLE_TRANSLATION_LABEL, row.TITLE);
+}
+
 const getLabelTitle = function (num) {
     num = parseInt(num)
     labels.find((label) => {
         return label.id === num
     })
+}
+
+const findRowWithAttr = (sourceArray, attr, value) => {
+    var index = findWithAttr(sourceArray, attr, value);
+    return index == -1 ? -1 : sourceArray[index];
+}
+
+const findWithAttr = (sourceArray, attr, value) => {
+    for (var i = 0; i < sourceArray.length; i += 1) {
+        if (sourceArray[i][attr] === value) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 const getEmployeeRange = function (num) {
@@ -42,5 +86,7 @@ const getEmployeeRange = function (num) {
 export {
     defaultLabels,
     getEmployeeRange,
-    getLabelTitle
+    getLabelTitle,
+    returnAhaStateName,
+    AHA_SENDING_STATES
 }

@@ -12,7 +12,7 @@ const Grid = styled.div`
     
     
 `, HeaderCell = styled.div`
-    cursor: pointer;
+    cursor: ${props => props.value ? 'pointer' : 'default'};
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 600;
@@ -37,7 +37,7 @@ const Grid = styled.div`
 
     color: #888888;
 
-    background-color: ${props => props.selected ? '#F2F8FA' : '#fff'};
+    background-color: ${props => props.selected ? props.selectedBackground : colors.white};
 `, SortIcon = styled.img`
     margin-left: 4px;
     transition: all 250ms ease-in-out;
@@ -47,7 +47,7 @@ const Grid = styled.div`
     transform: ${props => props.direction ? 'rotate(180deg)' : 'rotate(0deg)'};
 `, ExpandableContainer = styled.div`
     grid-column: 1 / ${props => props.columns + 1};
-    background-color: ${props => props.selected ? '#F2F8FA' : '#fff'};
+    background-color: ${props => props.selected ? props.selectedBackground : colors.white};
 `
 
 export default class Table extends Component {
@@ -56,7 +56,16 @@ export default class Table extends Component {
             events: {
                 setOrderBy
             },
-            orderBy, direction, data, headers, renderers, hasExpandingSection = false, ExpandingSection = null, selected = false, onSelect = null
+            orderBy,
+            direction,
+            data,
+            headers,
+            renderers = {},
+            hasExpandingSection = false,
+            ExpandingSection = null,
+            selected = false,
+            onSelect = null,
+            selectedBackground = colors.actionIncomplete
         } = this.props,
             headersArray = Object.entries(headers)
         return (
@@ -64,7 +73,7 @@ export default class Table extends Component {
                 {headersArray.map(([key, value]) => {
                     return (
                         <Heading
-                            onClick={() => setOrderBy(key, orderBy !== key ? true : !direction)}
+                            onClick={() => value ? setOrderBy(key, orderBy !== key ? true : !direction) : false}
                             text={value}
                             field={key}
                             ordered={orderBy === key}
@@ -77,14 +86,15 @@ export default class Table extends Component {
                         return (
                             <StyledCell
                                 selected={selected === val.id}
+                                selectedBackground={selectedBackground}
                                 onClick={() => {
-                                    onSelect && onSelect(val.id)
+                                    onSelect && onSelect(val.id, val)
                                 }}
-                            >{renderers[key] ? renderers[key](val[key], selected === val.id) : val[key]}</StyledCell>
+                            >{renderers[key] ? renderers[key](val[key], selected === val.id, val) : val[key]}</StyledCell>
                         )
                     }),
                     (hasExpandingSection && ExpandingSection && selected === val.id) ?
-                        (<ExpandableContainer columns={headersArray.length} selected={selected === val.id}>{createElement(ExpandingSection, { data: val, ...this.props.expandingSectionProps })}</ExpandableContainer>) :
+                        (<ExpandableContainer selectedBackground={selectedBackground} columns={headersArray.length} selected={selected === val.id}>{createElement(ExpandingSection, { data: val, ...this.props.expandingSectionProps })}</ExpandableContainer>) :
                         null]
                 })}
             </Grid>

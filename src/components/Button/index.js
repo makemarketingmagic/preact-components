@@ -23,7 +23,7 @@ export default class Button extends Component {
                 disabled={disabled}
                 onClick={(e) => {
                     e.preventDefault()
-                    onClick()
+                    onClick && onClick()
                 }}
             >
                 <ButtonContent>
