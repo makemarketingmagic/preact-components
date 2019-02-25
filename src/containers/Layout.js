@@ -87,10 +87,10 @@ const Container = styled.div`
 
 export default class Layout extends Component {
     render() {
-        const { Component, componentProps } = this.props
+        const { Component, componentProps, user } = this.props
         return (
             <div>
-                <Navigation tabs={data.tabs} tramslations={componentProps.translations} />
+                <Navigation user={user} tabs={data.tabs} tramslations={componentProps.translations} />
                 <Container>
                     <Component {...componentProps} />
                 </Container>
