@@ -9,8 +9,23 @@ html, body {
 	font-weight: 400;
 	color: #444;
 	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    -moz-osx-font-smoothing: grayscale;
+    
+    &::-webkit-scrollbar-track {
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #EE4055;
+    }
 }
+
+
 
 * {
 	box-sizing: border-box;
@@ -263,4 +278,8 @@ input.mdl-button[type="submit"] {
 
 .mdl-ripple.is-visible {
     opacity: 0.3;
+}
+
+.ql-toolbar.ql-snow, .ql-container.ql-snow {
+    background-color: white;
 }
