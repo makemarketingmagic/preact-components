@@ -90,13 +90,21 @@ export default class AHAPlanning extends Component {
     }
 
     onSelect = (id, value) => {
-        debugger
-        route(`${this.props.url.replace('planning', 'manager')}/${value['aha_sending_id']}`, true)
+        const { events: { onSelect } } = this.props
+        onSelect ? onSelect(value) :
+            window.location.hash = window.location.href.replace('planning', 'manager').replace(window.location.origin + '/', '') + '/' + value['aha_sending_id']
     }
 
     componentDidMount() {
-        let { AHAs } = this.props
-        this.setState({ AHAs, filteredAHAs: AHAs })
+        this.getAllAHAs()
+    }
+
+    getAllAHAs() {
+        this.setState({ loading: true }, async () => {
+            const { events: { getAllAHAs } } = this.props
+            let AHAs = getAllAHAs ? await getAllAHAs() : this.props.AHAs
+            this.setState({ AHAs, filteredAHAs: AHAs, loading: false })
+        })
     }
 
     render() {

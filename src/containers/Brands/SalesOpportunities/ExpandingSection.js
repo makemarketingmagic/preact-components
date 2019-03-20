@@ -78,7 +78,7 @@ export default class ExpandingSection extends Component {
     initialise = async () => {
         let { labels } = this.props,
             { label, id } = this.props.data
-        this.setState({ opportunityDetails: null }, async () => {
+        this.setState({ opportunityDetails: null, loading: true }, async () => {
             if (labels.length && label) {
                 labels = labels.map((val) =>
                     ({ ...val, selected: label === val.value.toString() })
@@ -86,14 +86,16 @@ export default class ExpandingSection extends Component {
                 this.setState({ labels })
             }
             let opportunityDetails = await this.getOpportunityDetails(id)
-            this.setState({ opportunityDetails })
+            this.setState({ opportunityDetails, loading: false })
         })
     }
 
     renderDropdown() {
         const { events: { updateLabelAndStatus } } = this.props
         return (<Dropdown options={this.state.labels} onChange={(val) => {
-            updateLabelAndStatus({ ...this.props.data, label: val.value })
+            this.setState({ loading: true }, async () => {
+                await updateLabelAndStatus({ ...this.props.data, label: val.value })
+            })
         }} placeholder='No Label' />)
     }
 

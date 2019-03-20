@@ -4,6 +4,7 @@ import { colors } from '../../../components/common/scMixins';
 import Button from './../../../components/Button/index';
 import Label from '../../../components/Label';
 import SingleLineTextInput from '../../../components/SingleLineTextInput';
+import DragDropZone from './../../../components/DragDropZone/index';
 
 const Container = styled.div`
     display: flex;
@@ -18,12 +19,17 @@ const Container = styled.div`
     height: 256px;
     position: relative;
     margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     &::after {
         content: '';
         height: 256px;
         width: 256px;
         position: absolute;
         left: 0;
+        top: 0;
         background-color: rgba(136, 165, 173, 0.2);
         mix-blend-mode: normal;
     }
@@ -62,8 +68,14 @@ export default class Info extends Component {
         this.setState({ ...brandInfo, journalist, advertisingManager })
     }
 
+    onDrop = (files) => {
+        debugger
+        const { uploadFile } = this.props
+        uploadFile && uploadFile(files)
+    }
+
     render() {
-        let { translations = { getTranslation: (label, fallback) => fallback } } = this.props
+        let { getLanguage, translations = { getTranslation: (label, fallback) => fallback } } = this.props
         const { info, contacts, journalist, advertisingManager } = this.state
         translations.getLL = (label, fallback, values = []) => {
             let string = translations.getTranslation(label, fallback)
@@ -90,9 +102,18 @@ export default class Info extends Component {
             <Container>
                 <LeftSide>
                     <ImageContainer>
-                        <BrandImage src={this.state.image} />
+                        <div><BrandImage src={this.state.info.brand_logo_image} /></div>
                     </ImageContainer>
-                    <Button secondary={true}>{translations.getLL('UPLOAD_NEW_IMAGE', 'Upload new image')}</Button>
+                    <DragDropZone
+                        multiple={false}
+                        onDrop={this.onDrop}
+                        style={{}}
+                        activeStyle={{}}
+                        rejectStyle={{}}
+                        accept={'image/*'}
+                    >
+                        <Button secondary={true}>{translations.getLL('UPLOAD_NEW_IMAGE', 'Upload new image')}</Button>
+                    </DragDropZone>
                 </LeftSide>
                 <RightSide>
                     <Title>{translations.getLL('CONTACTS', 'Contacts')}</Title>
@@ -105,7 +126,7 @@ export default class Info extends Component {
                                 </Group>
                                 <Group>
                                     <Label>{translations.getLL('PHONE', 'Phone')}</Label>
-                                    <SingleLineTextInput disabled={true} value={val.mobile} />
+                                    <SingleLineTextInput disabled={true} value={val.mobile || ''} />
                                 </Group>
                                 <Group>
                                     <Label>{translations.getLL('EMAIL_ADDRESS', 'Email Address')}</Label>
@@ -122,11 +143,15 @@ export default class Info extends Component {
                         </Group>
                         <Group>
                             <Label>{translations.getLL('JOURNALIST', 'Journalist')}</Label>
-                            <SingleLineTextInput disabled={true} value={journalist.first_name + ' ' + journalist.last_name} />
+                            <SingleLineTextInput
+                                disabled={true}
+                                value={journalist.first_name ? journalist.first_name + ' ' + journalist.last_name : ''} />
                         </Group>
                         <Group>
                             <Label>{translations.getLL('ADVERTSING_MANAGER', 'Advertising Manager')}</Label>
-                            <SingleLineTextInput disabled={true} value={advertisingManager.first_name + ' ' + advertisingManager.last_name} />
+                            <SingleLineTextInput
+                                disabled={true}
+                                value={advertisingManager.first_name ? advertisingManager.first_name + ' ' + advertisingManager.last_name : ''} />
                         </Group>
                     </InfoForm>
                     <Title>{translations.getLL('CONTACT_INFORMATION', 'Contact Information')}</Title>
@@ -157,7 +182,7 @@ export default class Info extends Component {
                         </Group>
                         <Group>
                             <Label>{translations.getLL('LANGUAGE', 'Language')}</Label>
-                            <SingleLineTextInput disabled={true} value={info.language} />
+                            <SingleLineTextInput disabled={true} value={getLanguage()} />
                         </Group>
 
                     </InfoForm>

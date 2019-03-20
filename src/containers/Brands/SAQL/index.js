@@ -10,6 +10,7 @@ import PlusIcon from './../../../components/icons/PlusIcon';
 import { Modal } from './../../../components/Modal/index';
 import Label from '../../../components/Label';
 import DatePicker from './../../../components/DatePicker/index';
+import Checkboxes from '../../../components/Checkboxes';
 
 const Title = styled.div`
     font-family: 'Varela Round';
@@ -50,11 +51,12 @@ export default class SAQL extends Component {
             search: '',
             leads: [],
             filteredLeads: [],
-            orderBy: 'engagement_date',
+            orderBy: 'estimated_signing_date',
             direction: SORT_DIRECTION.DESC,
             selected: false,
             editSAQL: false,
-            mode: FLAGS.NONE
+            mode: FLAGS.NONE,
+            solutions: Object.keys(this.props.WeMicrosoftService.getAllSolutions())
         }
         this.searchColumns = ['company_name', 'contact_full_name', 'solutions']
         this.changeSearch = debounce(this.reloadFilters.bind(this), 500)
@@ -73,8 +75,7 @@ export default class SAQL extends Component {
     }
 
     reloadFilters = () => {
-        let { leads } = this.props
-        let { direction, orderBy, search } = this.state
+        let { leads, direction, orderBy, search } = this.state
         let filteredLeads = leads
         if (search !== '') {
             filteredLeads = filteredLeads.filter((value) => {
@@ -103,8 +104,15 @@ export default class SAQL extends Component {
     }
 
     componentDidMount() {
-        let { leads } = this.props
-        this.setState({ leads, filteredLeads: leads })
+        this.getLeads()
+    }
+
+    getLeads = () => {
+        this.setState({ loading: true }, async () => {
+            const { events: { getLeads } } = this.props
+            let leads = getLeads ? await getLeads() : this.props.leads
+            this.setState({ leads, filteredLeads: leads, loading: false })
+        })
     }
 
     editSAQL = (field, value) => {
@@ -113,23 +121,37 @@ export default class SAQL extends Component {
         this.setState({ editSAQL })
     }
 
+    getKnownBrandNames = () => {
+        const { leads } = this.state
+        return leads.map((lead) => lead.company_name)
+    }
+
     renderModal(translations) {
-        const { editSAQL } = this.state
+        const { editSAQL, mode, solutions } = this.state
+        const { SAQLModel, authToken, accountId, WeMicrosoftService, WeBackendService } = this.props
         return (<Modal
             onDialogClose={() => {
-                this.setState({ editSAQL: false, mode: FLAGS.NONE })
+                this.setState({ editSAQL: false, mode: FLAGS.NONE, selected: false })
             }}
             title={translations.getLL('ADD_EDIT_SAQL', 'Add / Edit SAQL')}
             open={editSAQL}
             buttons={[
                 {
-                    text: translations.getLL('ADD_SAQL', 'Add SAQL'), onClick: () => {
+                    text: mode === FLAGS.EDIT ?
+                        translations.getLL('EDIT_SAQL', 'Edit SAQL') :
+                        translations.getLL('ADD_SAQL', 'Add SAQL'),
+                    onClick: async () => {
+                        const SAQL = new SAQLModel(editSAQL, authToken, accountId, this.getKnownBrandNames(), WeMicrosoftService, WeBackendService)
+                        if (SAQL.isReadyToUpsert()) {
+                            let result = await SAQL.upsertSaql()
+                            await this.getLeads()
+                        }
                         this.setState({ editSAQL: false, mode: FLAGS.NONE })
                     }
                 },
                 {
                     text: translations.getLL('CANCEL', 'Cancel'), secondary: true, onClick: () => {
-                        this.setState({ editSAQL: false, mode: FLAGS.NONE })
+                        this.setState({ editSAQL: false, mode: FLAGS.NONE, selected: false })
                     }
                 }
             ]}
@@ -141,7 +163,7 @@ export default class SAQL extends Component {
                 </Group>
                 <Group>
                     <Label>{translations.getLL('DATE_EXPECTED_TO_SIGN', 'When is the company expected to sign?')}</Label>
-                    <DatePicker value={editSAQL.engagement_date} onChange={({ value }) => { this.editSAQL('engagement_date', value) }} />
+                    <DatePicker value={(editSAQL.estimated_signing_date ? new Date(editSAQL.estimated_signing_date * 1000) : new Date()).toISOString().split('T')[0]} onChange={({ value }) => { this.editSAQL('estimated_signing_date', value) }} />
                 </Group>
                 <Group>
                     <Label>{translations.getLL('PARTNER_SOLUTION', 'Partner Solution')}</Label>
@@ -149,7 +171,18 @@ export default class SAQL extends Component {
                 </Group>
                 <Group>
                     <Label>{translations.getLL('SOLUTIONS', 'Solutions')}</Label>
-                    <SingleLineTextInput value={editSAQL.solutions} onChange={({ value }) => { this.editSAQL('solutions', value) }} />
+                    <Checkboxes
+                        options={solutions.map((label) => {
+                            return { label, data: label, selected: editSAQL ? (editSAQL.solutions || []).indexOf(label) >= 0 : false }
+                        })}
+                        onChange={(options) => {
+                            let solutions = options.reduce((acc, val) => {
+                                if (val.selected) acc.push(val.data)
+                                return acc
+                            }, [])
+                            this.editSAQL('solutions', solutions)
+                        }}
+                    />
                 </Group>
                 <Group>
                     <Label>{translations.getLL('BUDGET', 'Budget')}</Label>
@@ -157,11 +190,28 @@ export default class SAQL extends Component {
                 </Group>
                 <Group>
                     <Label>{translations.getLL('CONTACT_NAME', 'Contact Name')}</Label>
-                    <SingleLineTextInput value={editSAQL.contact_full_name} onChange={({ value }) => { this.editSAQL('contact_full_name', value) }} />
+                    <div style={{ display: 'flex' }}>
+                        <SingleLineTextInput style={{ flex: 0.4 }} value={editSAQL.contact_first_name} onChange={({ value }) => { this.editSAQL('contact_first_name', value) }} />
+                        <SingleLineTextInput style={{ flex: 0.2 }} value={editSAQL.contact_prefix} onChange={({ value }) => { this.editSAQL('contact_prefix', value) }} />
+                        <SingleLineTextInput style={{ flex: 0.4 }} value={editSAQL.contact_last_name} onChange={({ value }) => { this.editSAQL('contact_last_name', value) }} />
+
+                    </div>
                 </Group>
                 <Group>
-                    <Label>{translations.getLL('PHONE_NUMBER', 'Phone Number')}</Label>
+                    <Label>{translations.getLL('JOB_TITLE', 'Job Title')}</Label>
+                    <SingleLineTextInput value={editSAQL.contact_job_title} onChange={({ value }) => { this.editSAQL('contact_job_title', value) }} />
+                </Group>
+                <Group>
+                    <Label>{translations.getLL('CONTACT_EMAIL', 'Contact Email Address')}</Label>
+                    <SingleLineTextInput value={editSAQL.contact_email} onChange={({ value }) => { this.editSAQL('contact_email', value) }} />
+                </Group>
+                <Group>
+                    <Label>{translations.getLL('CONTACT_PHONE', 'Contact Phone Number')}</Label>
                     <SingleLineTextInput value={editSAQL.contact_phone} onChange={({ value }) => { this.editSAQL('contact_phone', value) }} />
+                </Group>
+                <Group>
+                    <Label>{translations.getLL('MOBILE_PHONE_NUMBER', 'Mobile Phone Number')}</Label>
+                    <SingleLineTextInput value={editSAQL.contact_mobile} onChange={({ value }) => { this.editSAQL('contact_mobile', value) }} />
                 </Group>
             </SAQLForm>
         </Modal>)
@@ -224,7 +274,7 @@ export default class SAQL extends Component {
                         'contact_full_name': translations.getLL('CONTACT', 'Contact'),
                         'contact_phone': translations.getLL('PHONE', 'Phone'),
                         'solutions': translations.getLL('SOLUTIONS', 'Solution(s)'),
-                        'engagement_date': translations.getLL('ENGAGEMENT_DATE', 'Engagement Date')
+                        'estimated_signing_date': translations.getLL('estimated_signing_date', 'Engagement Date')
                     }}
                     events={{
                         setOrderBy: this.setOrderBy
@@ -232,7 +282,8 @@ export default class SAQL extends Component {
                     orderBy={this.state.orderBy}
                     direction={this.state.direction}
                     renderers={{
-                        'engagement_date': (val) => new Date(val * 1000).toISOString().split('T')[0]
+                        'estimated_signing_date': (val) => new Date(val * 1000).toISOString().split('T')[0],
+                        'solutions': (val) => val.map((val) => <div>{val}</div>)
                     }}
                     selected={this.state.selected}
                     onSelect={this.onSelect}

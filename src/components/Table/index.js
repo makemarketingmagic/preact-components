@@ -81,7 +81,7 @@ export default class Table extends Component {
                         />
                     )
                 })}
-                {data.map((val) => {
+                {data.map((val, i) => {
                     return [headersArray.map(([key, value]) => {
                         return (
                             <StyledCell
@@ -94,7 +94,7 @@ export default class Table extends Component {
                         )
                     }),
                     (hasExpandingSection && ExpandingSection && selected === val.id) ?
-                        (<ExpandableContainer selectedBackground={selectedBackground} columns={headersArray.length} selected={selected === val.id}>{createElement(ExpandingSection, { data: val, ...this.props.expandingSectionProps })}</ExpandableContainer>) :
+                        (<ExpandableContainer selectedBackground={selectedBackground} columns={headersArray.length} selected={selected === val.id}>{createElement(ExpandingSection, { data: val, i, ...this.props.expandingSectionProps })}</ExpandableContainer>) :
                         null]
                 })}
             </Grid>

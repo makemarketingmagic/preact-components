@@ -13,11 +13,13 @@ export default class Targets extends Component {
                 IFrameContainer
             },
             translations,
-            clients,
-            futureClients,
-            offers,
-            conversations,
-            inDatabase,
+            data: {
+                klanten,
+                gewensteKlanten,
+                offertes,
+                gesprekken,
+                inDatabase
+            },
             updateField
         } = this.props
         return (
@@ -31,23 +33,23 @@ export default class Targets extends Component {
                 <StepForm>
                     <Group>
                         <Label>{translations.getLL('HOW_MANY_CLIENTS', 'How many clients do you currently have?')}</Label>
-                        <SingleLineTextInput value={clients} onChange={({ value }) => updateField('targets', 'clients', value)} />
+                        <SingleLineTextInput value={klanten} onChange={({ value }) => updateField('goals', 'klanten', value)} />
                     </Group>
                     <Group>
                         <Label>{translations.getLL('HOW_MANY_CLIENTS_FUTURE', 'How many clients would you like to add in the next 12 months?')}</Label>
-                        <SingleLineTextInput value={futureClients} onChange={({ value }) => updateField('targets', 'futureClients', value)} />
+                        <SingleLineTextInput value={gewensteKlanten} onChange={({ value }) => updateField('goals', 'gewensteKlanten', value)} />
                     </Group>
                     <Group>
                         <Label>{translations.getLL('HOW_MANY_OFFERS', 'How many offers do you have to submit for this?')}</Label>
-                        <SingleLineTextInput value={offers} onChange={({ value }) => updateField('targets', 'offers', value)} />
+                        <SingleLineTextInput value={offertes} onChange={({ value }) => updateField('goals', 'offertes', value)} />
                     </Group>
                     <Group>
                         <Label>{translations.getLL('HOW_MANY_CONVERSATIONS', 'How many conversations should you have to be able to submit an offer?')}</Label>
-                        <SingleLineTextInput value={conversations} onChange={({ value }) => updateField('targets', 'conversations', value)} />
+                        <SingleLineTextInput value={gesprekken} onChange={({ value }) => updateField('goals', 'gesprekken', value)} />
                     </Group>
                     <Group>
                         <Label>{translations.getLL('HOW_MANY_IN_DATABASE', 'How many addresses are there in your email database?')}</Label>
-                        <SingleLineTextInput value={inDatabase} onChange={({ value }) => updateField('targets', 'inDatabase', value)} />
+                        <SingleLineTextInput value={inDatabase} onChange={({ value }) => updateField('goals', 'inDatabase', value)} />
                     </Group>
                 </StepForm>
             </StepContents>

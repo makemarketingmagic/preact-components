@@ -51,6 +51,7 @@ export default class Dropdown extends Component {
     onChange = (e) => {
         const { onChange } = this.props
         e.target.blur()
+        debugger
         this.setState({
             selected: e.target.value
         })

@@ -67,7 +67,7 @@ export default class RadioButtons extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedOption: false
+            selectedOption: undefined
         }
     }
 
@@ -85,17 +85,16 @@ export default class RadioButtons extends Component {
                 selectedOption: e.target.value
             })
         }
-        onChange && onChange(e.target.valeu)
+        onChange && onChange(e.target.value)
     }
 
     render() {
-        const { options = [], formStyle } = this.props
-        console.debug(formStyle)
+        const { options = [], formStyle, inputStyle = {} } = this.props
         return (
             <form style={formStyle}>
                 {options && options.map(({ label, data }) => {
                     return (
-                        <Label>
+                        <Label style={inputStyle}>
                             <Input
                                 onChange={this.handleChange}
                                 checked={this.state.selectedOption === data}

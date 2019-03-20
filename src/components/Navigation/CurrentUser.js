@@ -42,14 +42,14 @@ const Container = styled.div`
 
 export default class CurrentUser extends Component {
     render() {
-        const { user: { first_name, last_name, company, image } } = this.props
+        const { user: { first_name, last_name, company, image }, $location = window.location } = this.props
         return (
             <Container onClick={() =>
-                window.location.pathname = '/profile'
+                $location.path('/profile')
             }>
                 <Details>
-                    <Name current={window.location.pathname === '/profile'}>{first_name + ' ' + last_name}</Name>
-                    <Company current={window.location.pathname === '/profile'}>{company}</Company>
+                    <Name current={$location.path() === '/profile'}>{first_name + ' ' + last_name}</Name>
+                    <Company current={$location.path() === '/profile'}>{company}</Company>
                 </Details>
                 <Image>
                     <Img src={image} />

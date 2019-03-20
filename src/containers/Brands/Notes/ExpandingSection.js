@@ -44,8 +44,7 @@ export default class ExpandingSection extends Component {
     initialise = async () => {
         const note = this.props.data
         this.setState({ innerContent: '' }, () => {
-            this.setState({ innerContent: note.innerContent }, () => {
-
+            this.setState({ ...note }, () => {
                 setTimeout(() => {
                     this.quill = new Quill('#quill-container', {
                         modules: {
@@ -67,21 +66,24 @@ export default class ExpandingSection extends Component {
         this.setState({ innerContent: value })
     }
 
-    onSave = () => {
+    onSave = async () => {
+        const { updateNote } = this.props
         this.setState({ innerContent: this.quill.root.innerHTML })
-        console.debug(this.state.innerContent)
+        await updateNote(this.state)
     }
 
-    onDelete = () => {
+    onDelete = async () => {
+        const { deleteNote } = this.props
+        await deleteNote(this.state)
 
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return false
+        return nextProps.i !== this.props.i
     }
 
     render() {
-        const { translations } = this.props
+        const { translations, loading } = this.props
         return (
             <Container>
                 <div>
@@ -93,6 +95,7 @@ export default class ExpandingSection extends Component {
                         onClick={() => {
                             this.onSave()
                         }}
+                        disabled={loading}
                         iconLeft={true}
                         Icon={TickIcon}
                     >
@@ -103,6 +106,7 @@ export default class ExpandingSection extends Component {
                         onClick={() => {
                             this.onDelete()
                         }}
+                        disabled={loading}
                         iconLeft={true}
                         Icon={CrossIcon}
                     >

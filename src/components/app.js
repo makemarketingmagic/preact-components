@@ -1,5 +1,5 @@
 import { h, Component, cloneElement, Children } from 'preact';
-import { Router } from 'preact-router';
+import { Router, route } from 'preact-router';
 
 import styled from 'styled-components'
 import { colors } from './common/scMixins'
@@ -15,6 +15,7 @@ import Profile from './../containers/Profile/index';
 import Layout from '../containers/Layout';
 import SAQL from './../containers/Brands/SAQL/index';
 import AHAManager from './../containers/Brands/AHAPlanning/Manager/index';
+import createHashHistory from 'history/createHashHistory';
 
 require('preact/debug');
 
@@ -38,69 +39,55 @@ const StyledContainer = styled.div`
               "TITLE": "Info",
               "URL": "/info",
               "TITLE_TRANSLATION_LABEL": "INFO",
-              "DYNAMIC_URL": "/:accountid/info",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/info",
               "IS_ALLOWED": [21, 31, 41, 51, 61]
           }, {
               "ID": 2,
               "TITLE": "Notities",
               "TITLE_TRANSLATION_LABEL": "NOTES",
               "URL": "/notities",
-              "DYNAMIC_URL": "/:accountid/notities",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/notities",
               "IS_ALLOWED": [21, 31, 41, 61],
           }, {
               "ID": 3,
               "TITLE": "Verkoopkansen",
               "TITLE_TRANSLATION_LABEL": "OPPORTUNITIES",
               "URL": "/verkoopkansen/lijst",
-              "DYNAMIC_URL": "/:accountid/verkoopkansen/lijst",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/verkoopkansen/lijst",
               "IS_ALLOWED": [21, 31, 41, 61, 81],
           }, {
               "ID": 4,
               "TITLE": "Onboarding",
               "TITLE_TRANSLATION_LABEL": "ONBOARDING",
               "URL": "/onboarding",
-              "DYNAMIC_URL": "/:accountid/onboarding",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/onboarding",
               "IS_ALLOWED": [21, 31, 41, 61]
           }, {
               "ID": 5,
               "TITLE": "AHA planning",
               "TITLE_TRANSLATION_LABEL": "AHA_PLANNING",
               "URL": "/aha-feedback/planning",
-              "DYNAMIC_URL": "/:accountid/aha-feedback/planning",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/aha-feedback/planning",
               "IS_ALLOWED": [21, 61],
           }, {
               "ID": 6,
               "TITLE": "Rapportages",
               "TITLE_TRANSLATION_LABEL": "REPORTS",
               "URL": "/rapportages/maandelijks",
-              "DYNAMIC_URL": "/:accountid/rapportages/maandelijks",
-          }, {
-              "ID": 7,
-              "TITLE": "FormGen",
-              "TITLE_TRANSLATION_LABEL": "FORMGEN",
-              "URL": "/formgen",
-              "DYNAMIC_URL": "/:accountid/formgen",
-              "IS_ALLOWED": [21, 31, 41]
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/rapportages/maandelijks",
           }, {
               "ID": 8,
               "TITLE": "Bestanden",
               "TITLE_TRANSLATION_LABEL": "FILES",
               "URL": "/file-manager",
-              "DYNAMIC_URL": "/:accountid/file-manager",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/file-manager",
               "IS_ALLOWED": [21, 31, 41, 61],
               "$$hashKey": "object:91"
-          }, {
-              "ID": 9,
-              "TITLE": "MAQL",
-              "URL": "/maql",
-              "DYNAMIC_URL": "/:accountid/maql",
-              "IS_ALLOWED": [21, 31, 41],
-              "IS_MICROSOFT": true
           }, {
               "ID": 10,
               "TITLE": "SAQL",
               "URL": "/saql",
-              "DYNAMIC_URL": "/:accountid/saql",
+              "DYNAMIC_URL": "/brands/brand-details/:accountid/saql",
               "IS_ALLOWED": [21, 31, 41, 61],
               "IS_MICROSOFT": true
           }
@@ -37416,7 +37403,6 @@ function Container(props) {
 
 function BigContainer(props) {
   const { children, matches, path, url } = props
-  debugger
   return (
     <StyledBigContainer>
       {children.map((child) => cloneElement(child, {
@@ -37437,41 +37423,50 @@ export default class App extends Component {
     };
 
     render() {
+        const $location = {
+          path: (val) => {
+            if(!val) {
+              return window.location.hash.replace('#', '')
+            } else {
+              route(val)
+            }
+          }
+        }
         return (
             <div id="app">
-                <Navigation tabs={data.tabs} user={data.currentUser}/>
-                <Router onChange={this.handleRoute}>
+                <Navigation $location={$location} accountId={data.currentUser.accountid} tabs={data.tabs} user={data.currentUser}/>
+                <Router history={createHashHistory()} onChange={this.handleRoute}>
                     <Container path="/">
                       <div> Nothing here</div>
                     </Container>
-                    <Container path="/:accountId/info" >
+                    <Container path="/brands/brand-details/:accountid/info" >
                         <Info brandInfo={data.brandInfo} journalist={data.journalists[0]} advertisingManager={data.advertisingManagers[0]}/>
                     </Container>
-                    <Container path="/:accountId/aha-feedback/planning">
+                    <Container path="/brands/brand-details/:accountId/aha-feedback/planning">
                         <AHAPlanning AHAs={data.AHAs}/>
                     </Container>
-                    <Container path="/:accountId/aha-feedback/manager/:id">
+                    <Container path="/brands/brand-details/:accountId/aha-feedback/manager/:id">
                         <AHAManager AHAManagement={data.ahaManagement} templateUrl={data.templateUrl}/>
                     </Container>
-                    <Container path="/:accountId/reports">
+                    <Container path="/brands/brand-details/:accountId/reports">
                         <Reports />
                     </Container>
-                    <Container path="/:accountId/notities">
-                        <Notes notes={data.notes}/>
+                    <Container path="/brands/brand-details/:accountId/notities">
+                        <Notes notes={data.notes} events={{}}/>
                     </Container>
-                    <Container path="/:accountId/file-manager">
+                    <Container path="/brands/brand-details/:accountId/file-manager">
                         <Files files={data.files} events={{}}/>
                     </Container>
-                    <BigContainer path="/:accountId/onboarding">
+                    <BigContainer path="/brands/brand-details/:accountId/onboarding">
                         <Onboarding data={data.onBoarding}/>
                     </BigContainer>
-                    <Container path="/:accountId/verkoopkansen/lijst">
+                    <Container path="/brands/brand-details/:accountId/verkoopkansen/lijst">
                         <SalesOpportunities leads={data.leads} events={{ downloadCsv: null, showBranche: null, getOpportunityDetails: (id) => {
                           return new Promise((resolve, reject) => {
 
                             setTimeout(() => {
                               resolve({"visits":[{"id":"7c7dff80bcc08c38323cf61edcabb5efe1e1210a","totalVisits":"0","visitDate":"1546934400","pagetitle":null,"sourceGa":"google","hostnameGa":"www.makemarketingmagic.com","mediumGa":"organic","sessionsGa":"1","timeOnPageGa":"0.0","label":"-1","cocl":"271909740000","pageTitleGa":"3 tips om van je prospects fans te maken - Make Marketing Magic","status":"-1","pathGa":"\/blog\/3-tips-om-van-je-prospects-fans-te-maken-2"},{"id":"ba69788fe7d7365540c891bb6e5a06ec21e54f0a","totalVisits":"0","visitDate":"1544911200","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"1","timeOnPageGa":"20.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c"},{"id":"273db76df265cb91804cee49bf7693fcec155c85","totalVisits":"0","visitDate":"1544911200","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"0","timeOnPageGa":"3.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c-form_confirmation.html"},{"id":"69160b67e02d6dfa02c6a8d0865a33000d913d58","totalVisits":"0","visitDate":"1544889600","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"1","timeOnPageGa":"53.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c"},{"id":"94646805a7f0a0fff72119846f727cdfd794805a","totalVisits":"0","visitDate":"1544889600","pagetitle":null,"sourceGa":"linkedin.com","hostnameGa":"lp.makemarketingmagic.com","mediumGa":"referral","sessionsGa":"0","timeOnPageGa":"5.0","label":"-1","cocl":"271909740000","pageTitleGa":"(not set)","status":"-1","pathGa":"\/white-paper-meer-klanten-in-ict\/c-form_confirmation.html"}],"contacts":["gerard@1afa.com","hanc@1afa.com","richard@1afa.com","wesley@1afa.com"],"result":"success"})
-                            }, 3000)
+                            }, 1500)
                           })
                         } , getEmployeeRange: null, updateLabelAndStatus: (entry, type) => {
                           return new Promise((resolve, reject) => {
@@ -37482,7 +37477,7 @@ export default class App extends Component {
                           })
                         } }}/>
                     </Container>
-                    <Container path="/:accountId/saql">
+                    <Container path="/brands/brand-details/:accountId/saql">
                         <SAQL 
                           leads={data.SAQLs}
                         />

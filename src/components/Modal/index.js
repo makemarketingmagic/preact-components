@@ -82,11 +82,18 @@ export class Modal extends Component {
         }
     }
 
+    onOverlayClick = (e) => {
+        const { onDialogClose } = this.props
+        if (e.currentTarget === e.target) {
+            onDialogClose && onDialogClose(e)
+        }
+    }
+
     render() {
         const { children, containerProperties = {}, open, onDialogClose, isAnimating, title = 'Modal Title', buttons = [{ text: 'Close', onClick: this.props.onDialogClose }] } = this.props
 
         return (
-            <Overlay open={open} isAnimating={false} onClick={onDialogClose}>
+            <Overlay open={open} isAnimating={false} onClick={this.onOverlayClick}>
                 <Container>
                     <Title>{title}</Title>
                     <ScrollSection style={containerProperties}>

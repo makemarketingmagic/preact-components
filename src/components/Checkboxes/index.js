@@ -87,16 +87,13 @@ export default class Checkboxes extends Component {
 
     handleChange = (e, i) => {
         const { onChange } = this.props
-        let options = this.state.options
+        let options = this.props.options
         options[i].selected = !options[i].selected
-        this.setState({
-            options
-        })
         onChange && onChange(options)
     }
 
     render() {
-        const { options = [] } = this.state
+        const { options = [] } = this.props
         const { formStyle } = this.props
         return (
             <form style={formStyle}>

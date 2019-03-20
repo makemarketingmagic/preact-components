@@ -54,7 +54,7 @@ export default class Files extends Component {
             filteredFiles: [],
             editFileName: '',
             orderBy: 'date_uploaded',
-            direction: SORT_DIRECTION.ASC,
+            direction: SORT_DIRECTION.DESC,
             search: '',
             selected: false
         }
@@ -62,8 +62,7 @@ export default class Files extends Component {
     }
 
     reloadFilters = () => {
-        let { files } = this.props
-        let { direction, orderBy, search } = this.state
+        let { files, direction, orderBy, search } = this.state
         let filteredFiles = files
         if (search !== '') {
             filteredFiles = filteredFiles.filter((value) => {
@@ -100,26 +99,45 @@ export default class Files extends Component {
         this.setState({ editFileName })
     }
 
+    getFiles = async () => {
+        this.setState({ loading: true }, async () => {
+            const { events: { getFiles = null } } = this.props
+            let files = getFiles ? await getFiles() : this.props.files
+            this.setState({ files, filteredFiles: files, loading: false }, () => {
+                return this.reloadFilters()
+            })
+        })
+    }
+
     saveFilename = (file, newFileName) => {
-        const { events: { saveFile = false } } = this.props
-        if (saveFile) {
-            saveFile(file, newFileName)
-        }
-        this.setState({ selected: false, editFileName: '' })
+        this.setState({ loading: true }, async () => {
+            const { events: { saveFileName = false } } = this.props
+            if (saveFileName) {
+                await saveFileName(file, newFileName)
+                await this.getFiles()
+            }
+            this.setState({ selected: false, editFileName: '' })
+        })
     }
 
-    openFile = (file) => {
-        const { events: { downloadFile = false } } = this.props
-        if (downloadFile) {
-            downloadFile(file)
-        }
+    openFile = async (file) => {
+        this.setState({ loading: true }, async () => {
+            const { events: { downloadFile = false } } = this.props
+            if (downloadFile) {
+                await downloadFile(file)
+                this.setState({ loading: false })
+            }
+        })
     }
 
-    deleteFile = (file) => {
-        const { events: { deleteFile = false } } = this.props
-        if (deleteFile) {
-            deleteFile(file)
-        }
+    deleteFile = async (file) => {
+        this.setState({ loading: true }, async () => {
+            const { events: { deleteFile = false } } = this.props
+            if (deleteFile) {
+                await deleteFile(file)
+                await this.getFiles()
+            }
+        })
     }
 
     updateSearch = ({ value }) => {
@@ -128,13 +146,20 @@ export default class Files extends Component {
         })
     }
 
-    onDrop = (file) => {
-
+    onDrop = async (files) => {
+        this.setState({ loading: true }, async () => {
+            const { events: { uploadFile } } = this.props
+            if (uploadFile) {
+                await uploadFile(files)
+                await this.getFiles()
+            }
+        })
     }
 
     componentDidMount() {
         let { files } = this.props
-        this.setState({ files, filteredFiles: files })
+        this.getFiles()
+        //this.setState({ files, filteredFiles: files })
     }
 
     render() {

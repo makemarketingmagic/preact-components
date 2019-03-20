@@ -51,6 +51,7 @@ export default class SalesOpportunities extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            leads: [],
             filteredLeads: [],
             search: '',
             filter: [],
@@ -67,7 +68,17 @@ export default class SalesOpportunities extends Component {
     }
 
     componentDidMount() {
-        this.reloadFilters()
+        this.getOpportunities()
+    }
+
+    getOpportunities = async () => {
+        this.setState({ loading: true }, async () => {
+            const { events: { getOpportunities } } = this.props
+            let leads = getOpportunities ? await getOpportunities : this.props.leads
+            this.setState({ leads, filteredLeads: leads }, () => {
+                this.reloadFilters()
+            })
+        })
     }
 
     onSelect = (id) => {
@@ -100,7 +111,7 @@ export default class SalesOpportunities extends Component {
     }
 
     reloadFilters() {
-        let { leads } = this.props
+        let { leads } = this.state
         let { direction, orderBy, search } = this.state
         let filteredLeads = leads
         if (search !== '') {
@@ -159,9 +170,8 @@ export default class SalesOpportunities extends Component {
     }
 
     render() {
-        const { filteredLeads = [] } = this.state,
+        const { filteredLeads = [], leads } = this.state,
             {
-                leads,
                 labels = defaultLabels,
                 events: {
                     downloadCsv,

@@ -64,9 +64,9 @@ export default class SingleLineTextInput extends Component {
     }
 
     render() {
-        const { type = 'text', disabled = false, placeholder = '', iconLeft = false, Icon = null, value, validation = false } = this.props
+        const { type = 'text', style = {}, disabled = false, placeholder = '', iconLeft = false, Icon = null, value, validation = false } = this.props
         return (
-            <Container>
+            <Container style={style}>
                 {iconLeft && <div style={{ marginLeft: 4, display: 'flex' }} ><Icon /></div>}
                 <Input onChange={this.handleChange} placeholder={placeholder} type={type} value={value} disabled={disabled} />
                 {(validation && value.length > 0) && this.renderValidIcon()}

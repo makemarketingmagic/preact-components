@@ -3,6 +3,7 @@ import { h, Component } from 'preact'
 import mdl from 'material-design-lite/material';
 import { MUIButton } from '../common/MUIComponents';
 import styled from 'styled-components';
+import { colors } from '../common/scMixins';
 
 const ButtonContent = styled.div`
     height: 100%;
@@ -14,6 +15,7 @@ const ButtonContent = styled.div`
 export default class Button extends Component {
     render() {
         const { children, onClick = null, Icon = null, iconLeft = false, iconRight = false, secondary = false, disabled = false } = this.props
+        const color = secondary ? colors.red : colors.white
         return (
             <MUIButton
                 raised={true}
@@ -27,14 +29,14 @@ export default class Button extends Component {
                 }}
             >
                 <ButtonContent>
-                    {iconLeft && Icon && (<span style={{ display: 'flex' }}><Icon color='inherit' /></span>)}
+                    {iconLeft && Icon && (<span style={{ display: 'flex' }}><Icon color={color} /></span>)}
                     <span style={{
                         textAlign: 'center',
                         width: '100%',
                         marginLeft: iconLeft ? 8 : 0,
                         marginRight: iconRight ? 8 : 0
                     }}>{children}</span>
-                    {iconRight && Icon && (<span style={{ display: 'flex' }}><Icon color='inherit' /></span>)}
+                    {iconRight && Icon && (<span style={{ display: 'flex' }}><Icon color={color} /></span>)}
                 </ButtonContent>
             </MUIButton>
         )

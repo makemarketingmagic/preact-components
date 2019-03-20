@@ -55,6 +55,7 @@ export class Tabs extends Component {
     }
 
     _pointerPosition(index = 0) {
+        if (!this.tabs || !this.navigation) return {}
         const startPoint = this.tabs.base.getBoundingClientRect().left;
         const label = this.navigation.base.children[index].getBoundingClientRect();
 

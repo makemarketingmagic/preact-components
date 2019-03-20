@@ -67,7 +67,7 @@ export default class MultiLineTextInput extends Component {
     }
 
     render() {
-        const { placeholder = '', variant = 'large' } = this.props,
+        const { placeholder = '', variant = 'large', style } = this.props,
             InputEl = {
                 'large': InputLarge,
                 'medium': Input,
@@ -80,6 +80,7 @@ export default class MultiLineTextInput extends Component {
                 value={this.state.value}
                 placeholder={placeholder}
                 type="text"
+                style={style}
             />
         )
     }

@@ -23,7 +23,7 @@ const LogoContainer = styled.div`
 
 export default class Navigation extends Component {
     render() {
-        const { tabs, user } = this.props
+        const { tabs, user, $location, accountId } = this.props
         let { translations = { getTranslation: (label, fallback) => fallback } } = this.props
         translations.getLL = (label, fallback, values = []) => {
             let string = translations.getTranslation(label, fallback)
@@ -51,8 +51,8 @@ export default class Navigation extends Component {
                 <LogoContainer>
                     <WOOLogo />
                 </LogoContainer>
-                <Tabs tabs={tabs} brandId={user.accountid} translations={translations} />
-                <CurrentUser user={user} />
+                <Tabs $location={$location} tabs={tabs} brandId={accountId} translations={translations} />
+                <CurrentUser user={user} $location={$location} />
             </Header>
         )
     }

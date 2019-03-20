@@ -21,7 +21,6 @@ const Container = styled.div`
 `, NavItem = styled.div`
     padding: 15px;
 `, ImageContainer = styled.div`
-    display: flex;
     padding: 10px;
 `, HeaderImg = styled.img`
     width: 100%;

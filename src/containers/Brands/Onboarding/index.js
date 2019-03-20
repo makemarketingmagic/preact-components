@@ -5,6 +5,11 @@ import styled from 'styled-components';
 import Label from '../../../components/Label';
 import SingleLineTextInput from '../../../components/SingleLineTextInput';
 import Targets from './Targets';
+import UploadFiles from './UploadFiles';
+import EstablishConnections from './EstablishConnections';
+import TargetAudience from './TargetAudience';
+import { colors } from '../../../components/common/scMixins';
+import marked from 'marked'
 
 const Divider = styled.div`
     border-bottom: 1px solid rgba(32, 32, 32, 0.1);
@@ -31,11 +36,21 @@ const Divider = styled.div`
     margin: 19px 0;
 `, IFrameContainer = styled.div`
     margin-bottom: 64px;
+`, SectionTitle = styled.div`
+    line-height: 32px;
+    font-size: 24px;
+    color: ${colors.text};
 `
 export default class Onboarding extends Component {
     constructor(props) {
         super(props)
         let { translations = { getTranslation: (label, fallback) => fallback } } = this.props
+        this.updateTimeout = {
+            goals: null,
+            audience: null,
+            connections: null,
+            files: null
+        }
         translations.getLL = (label, fallback, values = []) => {
             let string = translations.getTranslation(label, fallback)
             const re = /(%v\d*)/ig
@@ -57,33 +72,34 @@ export default class Onboarding extends Component {
             }
             return isString ? result.join('') : result
         }
+        translations.getLLMarked = (label, fallback, values = []) => {
+            let translation = translations.getLL(label, fallback, values)
+            if (typeof translation === 'string') {
+                return <span dangerouslySetInnerHTML={{ __html: marked(translation, { sanitize: true }) }} />
+            }
+            return translation
+        }
         this.translations = translations
-        this.steps = [
-            { navigation: { info: this.translations.getLL('DEFINE_GOALS', 'Define Goals') }, step: { completed: false } },
-            { navigation: { info: this.translations.getLL('TARGET_AUDIENCE_WRITING_STYLE', 'Target Audience & Writing Style') }, step: { completed: false } },
-            { navigation: { info: this.translations.getLL('ESTABLISH_CONNECTIONS', 'Establish Connections') }, step: { completed: false } },
-            { navigation: { info: this.translations.getLL('UPLOAD_FILES', 'Upload Files') }, step: { completed: false } }
-        ]
         this.state = {
             currentStep: 0,
-            targets: {
-                clients: '',
-                futureClients: '',
-                offers: '',
-                conversations: '',
+            goals: {
+                klanten: '',
+                gewensteKlanten: '',
+                offertes: '',
+                gesprekken: '',
                 inDatabase: ''
             },
-            targetAudience: {
-                excited: null,
-                excitedForWriting: null,
-                willOrganisationCommunicate: null,
-                interviewOthers: null,
-                corporate: null,
-                formal: null,
-                british: null,
-                example: ''
+            audience: {
+                spannendCommuniceren: 'null',
+                schrijvenSpannend: 'null',
+                leukCommuniceren: 'null',
+                interviewer: 'null',
+                stijlZakelijkPersoonlijk: 'null',
+                stijlFormeelInformeel: 'null',
+                stijlAanhef: 'null',
+                voorbeeldUrl: ''
             },
-            establishConnections: {
+            connections: {
                 senderName: '',
                 senderEmail: '',
                 wbFullName: '',
@@ -100,8 +116,36 @@ export default class Onboarding extends Component {
             files: {
                 emailDatabase: null,
                 socialSharing: null
-            }
+            },
+            steps: [
+                { navigation: { info: this.translations.getLL('DEFINE_GOALS', 'Define Goals') }, step: { completed: false } },
+                { navigation: { info: this.translations.getLL('TARGET_AUDIENCE_WRITING_STYLE', 'Target Audience & Writing Style') }, step: { completed: false } },
+                { navigation: { info: this.translations.getLL('ESTABLISH_CONNECTIONS', 'Establish Connections') }, step: { completed: false } },
+                { navigation: { info: this.translations.getLL('UPLOAD_FILES', 'Upload Files') }, step: { completed: false } }
+            ]
         }
+    }
+
+    componentWillMount() {
+        this.getOnBoardingDetails()
+    }
+
+    getOnBoardingDetails = async () => {
+        this.setState({ loading: true }, async () => {
+            const { events: { getOnBoardingDetails, getPercentage } } = this.props
+            let { steps } = this.state
+            if (getOnBoardingDetails) {
+                let goals = await getOnBoardingDetails('goals')
+                let audience = await getOnBoardingDetails('audience')
+                let connections = await getOnBoardingDetails('connections')
+                let files = await getOnBoardingDetails('files')
+                steps[0].step.complete = getPercentage(goals) === 100
+                steps[1].step.complete = getPercentage(audience) === 100
+                steps[2].step.complete = getPercentage(connections) === 100
+                steps[3].step.complete = getPercentage(files) === 100
+                this.setState({ steps, goals, audience, connections, files, loading: false })
+            }
+        })
     }
 
     updateField = (sectionName, field, value) => {
@@ -111,7 +155,32 @@ export default class Onboarding extends Component {
             section[field] = value
         }
         update[sectionName] = section
+        if (this.updateTimeout[sectionName]) {
+            clearTimeout(this.updateTimeout[sectionName])
+        }
         this.setState(update)
+        this.updateTimeout[sectionName] = setTimeout(async () => {
+            const { events: {
+                submitOnboardingTargets,
+                submitOnboardingTargetAudience,
+                submitOnboardingConnections,
+                submitOnboardingFiles
+            } } = this.props
+            switch (sectionName) {
+                case 'goals':
+                    await submitOnboardingTargets(section)
+                    break;
+                case 'audience':
+                    await submitOnboardingTargetAudience(section)
+                    break;
+                case 'connections':
+                    await submitOnboardingConnections(section)
+                    break;
+                case 'files':
+                    await submitOnboardingFiles(section)
+            }
+        }, 500)
+
     }
 
     setActive = (id) => {
@@ -125,22 +194,42 @@ export default class Onboarding extends Component {
 
 
     render() {
+        const { currentStep, steps } = this.state
         return (
             <div>
                 <StepNavigation showLogo={false}>
-                    {this.steps.map((props, i) => {
+                    {steps.map((props, i) => {
                         return (
-                            cloneElement(<Step />, { ...props.navigation, id: i, setActive: this.setActive, active: this.state.currentStep === i, complete: props.step.completed, canGoToStep: this.canGoToStep })
+                            cloneElement(<Step />, { ...props.navigation, id: i, setActive: this.setActive, active: this.state.currentStep === i, complete: props.step.complete, canGoToStep: this.canGoToStep })
                         )
                     })}
                 </StepNavigation>
                 <Divider />
                 <Container>
-                    <Targets
+                    {currentStep === 0 && <Targets
                         components={{ IFrameContainer, StepContents, Explaination, StepForm, Group }}
                         translations={this.translations}
                         updateField={this.updateField}
-                    />
+                        data={this.state.goals}
+                    />}
+                    {currentStep === 1 && <TargetAudience
+                        components={{ IFrameContainer, StepContents, SectionTitle, Explaination, StepForm, Group }}
+                        translations={this.translations}
+                        updateField={this.updateField}
+                        data={this.state.audience}
+                    />}
+                    {currentStep === 2 && <EstablishConnections
+                        components={{ IFrameContainer, StepContents, SectionTitle, Explaination, StepForm, Group }}
+                        translations={this.translations}
+                        updateField={this.updateField}
+                        data={this.state.connections}
+                    />}
+                    {currentStep === 3 && <UploadFiles
+                        components={{ IFrameContainer, StepContents, SectionTitle, Explaination, StepForm, Group }}
+                        translations={this.translations}
+                        updateField={this.updateField}
+                        data={this.state.files}
+                    />}
                 </Container>
             </div>
         )

@@ -1,15 +1,13 @@
 import { h, Component } from 'preact'
 import styled from 'styled-components'
 import { colors } from '../common/scMixins'
-import { route } from 'preact-router';
-import { Link } from 'preact-router/match'
 
 const TabsEl = styled.nav`
     display: flex; 
     flex-direction: row;
     height: 100%;
     background-color: ${colors.white};
-`, TabEl = styled(Link)`
+`, TabEl = styled.a`
     display: flex;
     position: relative;
     flex-direction: column;
@@ -21,7 +19,7 @@ const TabsEl = styled.nav`
     transition: border-bottom 250ms ease-in-out,
         color 250ms ease-in-out;
     white-space: nowrap;
-    color: ${colors.text};
+    color: ${props => props.active ? colors.red : colors.text};
     text-decoration: none;
     
     &:hover {
@@ -56,10 +54,14 @@ export default class Tabs extends Component {
             active: 0,
             subMenuOpen: false
         }
+        window.onhashchange = () => {
+            this.setState({})
+        }
     }
 
     isActive = (tab) => {
         const { DYNAMIC_URL = false, URL } = tab
+        const { $location } = this.props
         let vars = {
 
         }
@@ -74,27 +76,26 @@ export default class Tabs extends Component {
             //         index: match.index + 1
             //     }
             url = url.replace(re, '.+?')
-            return new RegExp(url).test(window.location.pathname)
+            return new RegExp(url).test('#' + $location.path())
             // url = url.slice(match.index + 1 + match[1].length)
             // match = re.exec(url)
             // }
 
         } else {
             if (URL[0] === '#')
-                return window.location.hash === URL
+
+                return '#' + $location.path() === URL
             else return window.location.pathname === URL
         }
     }
 
     handleOpen = (tab, key) => {
         const { DYNAMIC_URL = false, URL } = tab
-        const { brandId } = this.props
+        const { brandId, $location } = this.props
         if (DYNAMIC_URL) {
-            route(DYNAMIC_URL.replace(/:accountid/ig, brandId), true)
+            $location.path(DYNAMIC_URL.replace(/:accountid/ig, brandId), false)
         } else {
-            if (URL[0] === '#')
-                window.location.hash = URL
-            else window.location.pathname = URL
+            $location.path(URL)
         }
         // this.setState({ subMenuOpen: tab.subMenu ? key : false })
         // tab.subMenu && setTimeout(() => {
@@ -119,6 +120,7 @@ export default class Tabs extends Component {
                         brandId={brandId}
                         tab={tab}
                         id={key}
+                        handleOpen={this.handleOpen}
                         active={this.isActive(tab)}
                         subMenuOpen={this.state.subMenuOpen}
                         translations={translations}
@@ -130,27 +132,30 @@ export default class Tabs extends Component {
 }
 
 class Tab extends Component {
-    handleOpen = (e) => {
-        const { handleOpen, tab, id } = this.props
-        handleOpen && tab && id >= 0 && handleOpen(tab, id)
-        e.stopPropagation()
-    }
+    // handleOpen = (e) => {
+    //     const { handleOpen, tab, id } = this.props
+    //     handleOpen && tab && id >= 0 && handleOpen(tab, id)
+    //     e.stopPropagation()
+    // }
 
     render() {
         const { brandId, tab: { TITLE, TITLE_TRANSLATION_LABEL, URL, DYNAMIC_URL, IS_ALLOWED, IS_MICROSOFT = false }, id, active, subMenuOpen, translations } = this.props
+        let currentUrl = window.location.hash.replace(/^#/, ''),
+            dynamicUrl = '' + DYNAMIC_URL.replace(/:accountid/i, brandId)
         return (
+
             <TabEl
-                onClick={this.handleOpen}
-                active={active}
-                activeClassName="active" href={DYNAMIC_URL.replace(/:accountid/ig, brandId)}
+                // onClick={this.handleOpen}
+                active={currentUrl === dynamicUrl}
+                href={dynamicUrl}
             >
                 {translations.getLL(TITLE_TRANSLATION_LABEL || TITLE, TITLE)}
                 {/* {tab.subMenu &&
-                    <SubMenu open={subMenuOpen === id}>
-                        {tab.subMenu.map((subTab, subKey) => (
-                            <SubTab key={subKey}>{subTab.text}</SubTab>
-                        ))}
-                    </SubMenu> */}
+                        <SubMenu open={subMenuOpen === id}>
+                            {tab.subMenu.map((subTab, subKey) => (
+                                <SubTab key={subKey}>{subTab.text}</SubTab>
+                            ))}
+                        </SubMenu> */}
 
             </TabEl>
         )

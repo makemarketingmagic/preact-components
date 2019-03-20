@@ -3,17 +3,17 @@ import 'babel-polyfill';
 import { h, render } from 'preact';
 import './style';
 
+require('preact/devtools');   // turn this on if you want to enable React DevTools!
 
 let root;
 function init() {
-    let App = require('./components/app').default;
+    let App = require('./containers/demo').default;
     root = render(<App />, document.body, root);
 }
 
 // in development, set up HMR:
 if (module.hot) {
-    require('preact/devtools');   // turn this on if you want to enable React DevTools!
-    module.hot.accept('./components/app', () => requestAnimationFrame(init));
+    module.hot.accept('./containers/demo', () => requestAnimationFrame(init));
 }
 
 init();
