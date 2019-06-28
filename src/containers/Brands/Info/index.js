@@ -5,6 +5,7 @@ import Button from './../../../components/Button/index';
 import Label from '../../../components/Label';
 import SingleLineTextInput from '../../../components/SingleLineTextInput';
 import DragDropZone from './../../../components/DragDropZone/index';
+import Helmet from "preact-helmet";
 
 const Container = styled.div`
     display: flex;
@@ -69,7 +70,6 @@ export default class Info extends Component {
     }
 
     onDrop = (files) => {
-        debugger
         const { uploadFile } = this.props
         uploadFile && uploadFile(files)
     }
@@ -101,6 +101,7 @@ export default class Info extends Component {
         return (
             <Container>
                 <LeftSide>
+                    <Helmet title={`${translations.getLL('INFO', 'Info')} | WOO`} />
                     <ImageContainer>
                         <div><BrandImage src={this.state.info.brand_logo_image} /></div>
                     </ImageContainer>

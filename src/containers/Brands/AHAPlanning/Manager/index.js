@@ -4,11 +4,11 @@ import Annotator from '../../../../components/Annotator';
 import { colors } from '../../../../components/common/scMixins';
 import SingleLineTextInput from './../../../../components/SingleLineTextInput/index';
 import { Tabs, Tab } from './../../../../components/Tabs/index';
-import Markdown from 'preact-markdown';
 import MockWebsite from './MockWebsite';
 import Button from '../../../../components/Button';
 import marked from 'marked'
 import { Modal } from './../../../../components/Modal/index';
+import Helmet from "preact-helmet";
 
 /* 
   color: #8a6d3b;
@@ -95,6 +95,7 @@ const FeedbackAreaEl = styled.div`
 export default class AHAManager extends Component {
     constructor(props) {
         super(props)
+        this.backendTimeout = null
         this.state = {
             loading: false,
             lpHighlights: [],
@@ -115,7 +116,9 @@ export default class AHAManager extends Component {
             flags: {
                 outOfSync: false,
                 notReady: false,
-                feedbackAlreadyGiven: false
+                feedbackAlreadyGiven: false,
+                alreadyApproved: false,
+                cancelled: false
             },
             cancelReason: '',
             cancelAhaModal: false,
@@ -195,42 +198,78 @@ export default class AHAManager extends Component {
         await this.getAHADetails()
     }
 
-    addHighlight = (type) => (highlight) => {
+    addHighlight = (type) => async (highlight) => {
         if (highlight.start === highlight.end || highlight.content === '') return
         let highlightType = `${type}Highlights`,
             update = {},
             highlights = this.state[highlightType],
-            i = highlights.push(highlight)
+            i = highlights.push(highlight),
+            target = type === 'email' ? 'email_highlights' : 'page_highlights'
         update[highlightType] = highlights
+        const { events: { updateHighlight } } = this.props,
+            { sending: { aha_sending_feedbackround } } = this.state
+        let result
+        if (updateHighlight) {
+            result = await updateHighlight(highlights, target, aha_sending_feedbackround)
+        }
         this.setState(update)
         return i
     }
 
-    updateHighlight = (type) => (comment, i) => {
+    updateHighlight = (type) => async (comment, i) => {
         let highlightType = `${type}Highlights`,
             update = {},
-            highlights = this.state[highlightType]
+            highlights = this.state[highlightType],
+            target = type === 'email' ? 'email_highlights' : 'page_highlights'
+        const { events: { updateHighlight } } = this.props,
+            { sending: { aha_sending_feedbackround } } = this.state
         highlights[i].comment = comment
         update[highlightType] = highlights
+        let result
+        if (updateHighlight) {
+            result = await updateHighlight(highlights, target, aha_sending_feedbackround)
+        }
+
         this.setState(update)
+        return result
     }
 
-    deleteHighlight = (type) => (i) => {
+    deleteHighlight = (type) => async (i) => {
         let highlightType = `${type}Highlights`,
             update = {},
-            highlights = this.state[highlightType]
+            highlights = this.state[highlightType],
+            target = type === 'email' ? 'email_highlights' : 'page_highlights'
+        const { events: { updateHighlight } } = this.props,
+            { sending: { aha_sending_feedbackround } } = this.state
         highlights.splice(i, 1)
         update[highlightType] = highlights
+        let result
+        if (updateHighlight) {
+            result = await updateHighlight(highlights, target, aha_sending_feedbackround)
+        }
         this.setState(update)
+        return result
     }
 
-    updateFeedback = (field, value) => {
-        let { feedback } = this.state
+    updateFeedback = async (field, value) => {
+        let { feedback, sending: { aha_sending_feedbackround } } = this.state
+        const { events: { updateFeedbackEntry } } = this.props
+        if (value === '') {
+            return
+        }
         if (!field) {
             field = 'general'
         }
         feedback[field] = value
+        let result
         this.setState({ feedback })
+        if (updateFeedbackEntry) {
+            if (this.backendTimeout) clearTimeout(this.backendTimeout)
+            this.backendTimeout = setTimeout(async () => {
+                result = await updateFeedbackEntry(feedback, aha_sending_feedbackround)
+            })
+        }
+        return result
     }
 
     componentDidMount() {
@@ -263,7 +302,7 @@ export default class AHAManager extends Component {
         return {
             aha: details.aha || {},
             formentry: details.ahaForm || {},
-            feedback: details.feedback || {},
+            feedback: details.newFeedbackRound || {},
             brand: details.brand || {},
             all_journalists: details.all_journalists || {}
         }
@@ -275,28 +314,50 @@ export default class AHAManager extends Component {
         //     loadEmailTemplate: this.loadEmailTemplate
         const { SENDING_STATES } = this.props
         let notReady = false,
-            feedbackAlreadyGiven = false
+            feedbackAlreadyGiven = false,
+            alreadyApproved = false,
+            cancelled = false
         this.setState({ loading: true }, async () => {
             const { events: { getHighlighterFeedback, loadEmailTemplate } } = this.props
             let details = await this.loadAHAManagement()
-            if (details.aha.aha_sending_status === SENDING_STATES.ACTIVE ||
-                details.aha.aha_sending_status === SENDING_STATES.INACTIVE) {
+            if (details.aha.aha_sending_status === SENDING_STATES.ACTIVE.toString() ||
+                details.aha.aha_sending_status === SENDING_STATES.INACTIVE.toString()) {
                 notReady = true
-            } else if (details.aha.aha_sending_status === SENDING_STATES.FEEDBACK) {
+            } else if (details.aha.aha_sending_status === SENDING_STATES.FEEDBACK.toString()) {
                 feedbackAlreadyGiven = true
+            } else if (details.aha.aha_sending_status == SENDING_STATES.APPROVED.toString() ||
+                details.aha.aha_sending_status == SENDING_STATES.PLANNED.toString() ||
+                details.aha.aha_sending_status == SENDING_STATES.SENT.toString() ||
+                details.aha.aha_sending_status == SENDING_STATES.SMR_SENT.toString()) {
+                alreadyApproved = true
+            } else if (details.aha.aha_sending_status == SENDING_STATES.CANCELLED.toString()) {
+                cancelled = true
             }
             let highlights = getHighlighterFeedback ? await getHighlighterFeedback() : {}
             let templates = loadEmailTemplate ? await loadEmailTemplate() : {}
+            let latestHighlights = highlights[0] || {
+                body: { highlights: [] },
+                email: { highlights: [] },
+            }
+
             if (!details.feedback) details.feedback = {}
             this.setState({
                 loading: false,
-                ...details,
+                feedback: details.feedback,
+                brand: details.brand,
+                formentry: details.formentry,
                 highlights,
+                lpHighlights: latestHighlights.body.highlights,
+                emailHighlights: latestHighlights.email.highlights,
                 templateUrl: templates,
+                all_journalists: details.all_journalists,
+                sending: details.aha,
                 flags: {
                     ...this.state.flags,
                     notReady,
-                    feedbackAlreadyGiven
+                    alreadyApproved,
+                    feedbackAlreadyGiven,
+                    cancelled
                 }
             })
         })
@@ -335,6 +396,7 @@ export default class AHAManager extends Component {
         };
         return loading ? (<div></div>) : (
             <div>
+                <Helmet title={`${translations.getLL('AHA_FEEDBACK', 'AHA Feedback')} | WOO`} />
                 <div>
                     {Object.entries(flags).map(([key, value]) => {
                         return value ? <FeedbackArea
@@ -354,17 +416,22 @@ export default class AHAManager extends Component {
                     <LeftColumn>
                         <Section>
                             <SectionTitle>{translations.getLL("GENERAL_REMARKS", "General Remarks")}</SectionTitle>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('', val)} field='' translations={translations} value={this.state.feedback.general || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('', val)} field='' translations={translations} value={this.state.feedback.general || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("EMAIL_SUBJECT", "Email Subject")}:</SectionTitle>
-                            <JournalistContent>{formentry.aha_form_entrys_emailtitel}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('subject', val)} field='subject' translations={translations} value={this.state.feedback.subject || ''} />
+                            <JournalistContent>{formentry.aha_form_entrys_onderwerp}</JournalistContent>
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('subject', val)} field='subject' translations={translations} value={this.state.feedback.subject || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("EMAIL_PREHEADER", "Email Preheader")}:</SectionTitle>
                             <JournalistContent>{formentry.aha_form_entrys_emailpreheader}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('preheader', val)} field='preheader' translations={translations} value={this.state.feedback.preheader || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('preheader', val)} field='preheader' translations={translations} value={this.state.feedback.preheader || ''} />
+                        </Section>
+                        <Section>
+                            <SectionTitle>{translations.getLL("EMAIL_TITLE", 'Email Title')}:</SectionTitle>
+                            <JournalistContent>{formentry.aha_form_entrys_emailtitel}</JournalistContent>
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('emailTitle', val)} field='emailTitle' translations={translations} value={this.state.feedback.emailTitle || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("EMAIL_BODY_TEXT", "Email Body Text")}:</SectionTitle>
@@ -372,49 +439,49 @@ export default class AHAManager extends Component {
                             <FeedbackLabel>{translations.getLL('SELECT_TEXT_COMMENT', 'Select text to add a comment')}</FeedbackLabel>
                             <br />
                             <JournalistContent>
-                                <Annotator text={formentry.aha_form_entrys_emailbodytekst_raw} readOnly={false} highlights={emailHighlights} addHighlight={this.addHighlight('email')} deleteHighlight={this.deleteHighlight('email')} updateHighlight={this.updateHighlight('email')} />
+                                <Annotator text={formentry.aha_form_entrys_emailbodytekst_raw} readOnly={flags.notReady} highlights={emailHighlights} addHighlight={this.addHighlight('email')} deleteHighlight={this.deleteHighlight('email')} updateHighlight={this.updateHighlight('email')} />
                             </JournalistContent>
 
-                            <FeedbackSection onChange={(val) => this.updateFeedback('emailBody', val)} field='emailBody' translations={translations} value={this.state.feedback.emailBody || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('emailBody', val)} field='emailBody' translations={translations} value={this.state.feedback.emailBody || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("EMAIL_BUTTON_TEXT", "Email Button Text")}:</SectionTitle>
                             <JournalistContent>{formentry.aha_form_entrys_emailbuttontekst}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('buttonText', val)} field='buttonText' translations={translations} value={this.state.feedback.buttonText || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('buttonText', val)} field='buttonText' translations={translations} value={this.state.feedback.buttonText || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("IMAGE", "Image")}:</SectionTitle>
                             <JournalistContent><img src={formentry.aha_form_entrys_lpbeeld} /></JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('image', val)} field='image' translations={translations} value={this.state.feedback.image || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('image', val)} field='image' translations={translations} value={this.state.feedback.image || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("PAGE_TITLE", "Page Title")}:</SectionTitle>
                             <JournalistContent>{formentry.aha_form_entrys_paginatitel}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('pageTitle', val)} field='pageTitle' translations={translations} value={this.state.feedback.pageTitle || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('pageTitle', val)} field='pageTitle' translations={translations} value={this.state.feedback.pageTitle || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("BODY_TEXT_WEBSITE", "Body Text Website")}:</SectionTitle>
                             <FeedbackLabel>{translations.getLL('SELECT_TEXT_COMMENT', 'Select text to add a comment')}</FeedbackLabel>
                             <br />
                             <JournalistContent>
-                                <Annotator text={formentry.aha_form_entrys_lpbodytekst_raw} readOnly={false} highlights={lpHighlights} addHighlight={this.addHighlight('lp')} deleteHighlight={this.deleteHighlight('lp')} updateHighlight={this.updateHighlight('lp')} />
+                                <Annotator text={formentry.aha_form_entrys_lpbodytekst_raw} readOnly={flags.notReady} highlights={lpHighlights} addHighlight={this.addHighlight('lp')} deleteHighlight={this.deleteHighlight('lp')} updateHighlight={this.updateHighlight('lp')} />
                             </JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('pageBody', val)} field='pageBody' translations={translations} value={this.state.feedback.pageBody || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('pageBody', val)} field='pageBody' translations={translations} value={this.state.feedback.pageBody || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("META_TITLE", "Meta Title")}:</SectionTitle>
                             <JournalistContent>{formentry.aha_form_entrys_lpmetatitel}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('metaTitle', val)} field='metaTitle' translations={translations} value={this.state.feedback.metaTitle || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('metaTitle', val)} field='metaTitle' translations={translations} value={this.state.feedback.metaTitle || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("META_TEXT", "Meta Text")}:</SectionTitle>
                             <JournalistContent>{formentry.aha_form_entrys_lpmetatekst}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('metaText', val)} field='metaText' translations={translations} value={this.state.feedback.metaText || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('metaText', val)} field='metaText' translations={translations} value={this.state.feedback.metaText || ''} />
                         </Section>
                         <Section>
                             <SectionTitle>{translations.getLL("SOCIAL_SHARING_TEXT", "Social Sharing Text")}:</SectionTitle>
                             <JournalistContent>{formentry.aha_form_entrys_dtSocialMediaReminder}</JournalistContent>
-                            <FeedbackSection onChange={(val) => this.updateFeedback('social', val)} field='social' translations={translations} value={this.state.feedback.social || ''} />
+                            <FeedbackSection disabled={flags.notReady} onChange={(val) => this.updateFeedback('social', val)} field='social' translations={translations} value={this.state.feedback.social || ''} />
                         </Section>
                     </LeftColumn>
                     <RightColumn>
@@ -428,13 +495,16 @@ export default class AHAManager extends Component {
                 <ButtonContainer>
                     <Button
                         secondary={true}
+                        disabled={flags.notReady}
                         onClick={() => this.setModal('submit', true)}
                     >{translations.getLL('SUBMIT_FEEDBACK', 'Submit AHAH Feedback')}</Button>
                     <Button
                         secondary={true}
+                        disabled={flags.notReady}
                         onClick={() => this.setModal('approve', true)}
                     >{translations.getLL('APPROVE_SENDING', 'Approve AHA')}</Button>
                     <Button
+                        disabled={flags.notReady}
                         onClick={() => this.setModal('cancel', true)}
                     >{translations.getLL('CANCEL_SENDING_AHA', 'Cancel AHA')}</Button>
                 </ButtonContainer>
@@ -457,7 +527,7 @@ export default class AHAManager extends Component {
                     onClose={() => this.setModal('submit', false)}
                     onDone={() => this.submitFeedback()}
                     translations={translations}
-                    sendingName={this.state.aha_sending_name}
+                    sendingName={this.state.sending.aha_sending_name}
                     journalistFirstName={this.state.all_journalists.first_name}
                     journalistLastName={this.state.all_journalists.last_name}
                 />
@@ -467,11 +537,11 @@ export default class AHAManager extends Component {
 }
 
 function FeedbackSection(props) {
-    const { value, translations, onChange, field } = this.props
+    const { value, translations, onChange, field, disabled = false } = this.props
     return (
         <div>
             <FeedbackLabel>{translations.getLL('YOUR_FEEDBACK', 'Your Feedback')}:</FeedbackLabel>
-            <SingleLineTextInput value={value} onChange={({ value }) => onChange(field, value)} />
+            <SingleLineTextInput disabled={disabled} value={value} onChange={({ value }) => onChange(value)} />
         </div>
     )
 }
@@ -479,6 +549,14 @@ function FeedbackSection(props) {
 function FeedbackArea(props) {
     const { translations, type } = props,
         flags = {
+            alreadyApproved: {
+                content: (
+                    <div>
+                        {translations.getLLMarked('WATCH_OUT_AHA_ALREADY_APPROVED', '**Let op!** Deze AHA is al goedgekeurd. Je kunt daarom nu geen feedback meer geven op deze AHA.')}
+                    </div>
+                ),
+                level: 1
+            },
             notReady: {
                 content: (
                     <div>
@@ -507,7 +585,16 @@ function FeedbackArea(props) {
                     <div>
                         {translations.getLLMarked('ALREADY_GAVE_FEEDBACK_ALERT', '**Let op!** Je hebt al feedback gegeven op deze AHA. Je kunt weer feedback geven als de journalist jouw feedback heeft verwerkt.')}
                     </div>
-                )
+                ),
+                level: 2
+            },
+            cancelled: {
+                content: (
+                    <div>
+                        {translations.getLLMarked('WATCH_OUT_AHA_HAS_BEEN_CANCELLED', '**Let op!** Deze AHA is geannuleerd. Je kunt daarom nu geen feedback meer geven op deze AHA.')}
+                    </div>
+                ),
+                level: 1
             }
         },
         flag = flags[type]
@@ -554,7 +641,7 @@ class EmailTemplate extends Component {
     render() {
         const { templateUrl, iframeContent } = this.props
         return (
-            <IFrameEl onLoad={this.onLoad} ref={ref => this.frame = ref} srcdoc={iframeContent} sandbox="allow-same-origin" />
+            <IFrameEl onLoad={this.onLoad} ref={ref => this.frame = ref} src={templateUrl} sandbox="allow-same-origin" />
         )
     }
 }

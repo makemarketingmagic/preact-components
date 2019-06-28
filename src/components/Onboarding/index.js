@@ -258,7 +258,7 @@ export class Onboarding extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.steps !== prevProps.steps) {
-            debugger
+            
         }
     }
 
@@ -341,7 +341,6 @@ export class Onboarding extends Component {
     completeOnboarding = () => {
         const { steps } = this.props
         const data = steps.reduce((acc, value) => Object.assign(acc, value.step.data), {})
-        console.debug(data)
     }
 
 

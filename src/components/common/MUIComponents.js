@@ -165,7 +165,6 @@ let upgradeQueue = {
         }
     },
     process() {
-        // console.log(`upgrading ${upgradeQueue.items.length} items`);
         let p = upgradeQueue.items;
         for (let i = p.length; i--;) {
             let el = p[i],

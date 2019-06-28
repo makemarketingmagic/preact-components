@@ -2,6 +2,7 @@ import { h, Component } from 'preact'
 import styled from 'styled-components'
 import Label from '../../../components/Label';
 import DragDropZone from './../../../components/DragDropZone/index';
+import Helmet from "preact-helmet";
 
 export default class UploadFiles extends Component {
     constructor(props) {
@@ -56,6 +57,7 @@ export default class UploadFiles extends Component {
         } = this.props
         return (
             <StepContents>
+                <Helmet title={`${translations.getLL('ONBOARDING', 'Onboarding')} | ${translations.getLL('UPLOAD_FILES', 'Upload Files')} | WOO`} />
                 <IFrameContainer>
                     <iframe class="embed-responsive-item" src={translations.getLL('ONBOARDING_VIDEO_SRC_FILES', 'https://www.youtube.com/embed/XhEp4EH10lI?rel=0')}
                         frameborder="0" allowfullscreen></iframe>

@@ -54,6 +54,10 @@ const Overlay = styled.div`
     display: flex;
     justify-content: center;
     border-top: 1px solid rgba(32, 32, 32, 0.1);
+
+    & > button {
+        margin: 0 4px;
+    }
 `, ScrollSection = styled.div`
     overflow-y: scroll;
     padding-top: 32px;

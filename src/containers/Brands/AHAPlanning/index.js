@@ -9,7 +9,7 @@ import FilterIcon from './../../../components/icons/FilterIcon';
 import Checkboxes from '../../../components/Checkboxes';
 import DatePicker from '../../../components/DatePicker';
 import Label from '../../../components/Label';
-import { route } from 'preact-router';
+import Helmet from "preact-helmet";
 
 const Title = styled.div`
     font-family: 'Varela Round';
@@ -133,6 +133,7 @@ export default class AHAPlanning extends Component {
         }
         return (
             <div>
+                <Helmet title={`${translations.getLL('AHA_PLANNING', 'AHA Planning')} | WOO`} />
                 <TitleArea>
                     <Modal
                         open={this.state.dialogOpen}

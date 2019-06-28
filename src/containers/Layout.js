@@ -1,20 +1,76 @@
 import { h, Component, cloneElement } from 'preact'
 import styled from 'styled-components'
 import Navigation from './../components/Navigation/index';
-
+import { colors } from '../components/common/scMixins';
+import { desaturate, darken } from 'polished'
+import Cookie from '../utils/Cookie'
 const StyledContainer = styled.div`
     max-width: 1200px;
     width: 90%;
-    margin: 64px auto;
+    margin: 106px auto 64px auto;
     background-color: white;
     font-family: 'Montserrat', sans-serif;
 `, StyledBigContainer = styled.div`
     margin: 64px auto;
     background-color: white;
-    margin-top: 0px;
+    margin-top: 42px;
     width: 100%;
     max-width: 100%;
     font-family: 'Montserrat', sans-serif;
+`, FeedbackArea = styled.div`
+    display: flex;
+    flex-direction: column;
+    & > div {
+        margin: 16px 0;
+    }
+`, Feedback = styled.div`
+    background-color: ${(props) => {
+            switch (props.level) {
+                case FEEDBACK_LEVELS.ERROR:
+                    return desaturate(0.25, colors.red)
+                case FEEDBACK_LEVELS.WARNING:
+                    return desaturate(0.25, colors.orange)
+                case FEEDBACK_LEVELS.SUCCESS:
+                    return desaturate(0.25, colors.green)
+            }
+        }};
+`, FeedbackTitle = styled.div`
+    padding: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 2px solid ${(props) => {
+            switch (props.level) {
+                case FEEDBACK_LEVELS.ERROR:
+                    return darken(0.5, colors.red)
+                case FEEDBACK_LEVELS.WARNING:
+                    return darken(0.5, colors.orange)
+                case FEEDBACK_LEVELS.SUCCESS:
+                    return darken(0.5, colors.green)
+            }
+        }};
+    color: ${(props) => {
+            switch (props.level) {
+                case FEEDBACK_LEVELS.ERROR:
+                    return darken(0.5, colors.red)
+                case FEEDBACK_LEVELS.WARNING:
+                    return darken(0.5, colors.orange)
+                case FEEDBACK_LEVELS.SUCCESS:
+                    return darken(0.5, colors.green)
+            }
+        }};
+`, FeedbackMessage = styled.div`
+    padding: 4px;
+    margin-top: 8px;
+    color: ${(props) => {
+            switch (props.level) {
+                case FEEDBACK_LEVELS.ERROR:
+                    return darken(0.5, colors.red)
+                case FEEDBACK_LEVELS.WARNING:
+                    return darken(0.5, colors.orange)
+                case FEEDBACK_LEVELS.SUCCESS:
+                    return darken(0.5, colors.green)
+            }
+        }};
 `, data = {
         tabs: [
             {
@@ -118,14 +174,53 @@ function BigContainer(props) {
     )
 }
 
+export const FEEDBACK_LEVELS = {
+    NONE: 0,
+    WARNING: 1,
+    SUCCESS: 2,
+    ERROR: 3
+}
+
 export default class Layout extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            feedback: [],
+        }
+        Cookie.set('redesign', true, { days: 31 })
+    }
+
+    clearCurrentFeedback = () => {
+        let { feedback } = this.state,
+            currentFeedback = feedback.pop()
+        this.setState({ feedback })
+    }
+
+
+
+    addFeedback = (title, message, feedbackLevel) => {
+        let { feedback } = this.state
+        feedback.push({ feedbackTitle: title, feedbackMessage: message, feedbackLevel })
+        feedback = feedback.sort((a, b) => a.feedbackLevel - b.feedbackLevel)
+        this.setState({ feedback })
+    }
+
     render() {
-        const { Component, componentProps, user, $location, accountId, tabs = data.tabs, big = false } = this.props
+        const { isMicrosoft = false, Component, componentProps, user, $location, accountId, tabs = data.tabs, big = false } = this.props
         const Container = big ? BigContainer : RegularContainer
+        const { feedback } = this.state
         return (
             <div>
-                <Navigation $location={$location} accountId={accountId} user={user} tabs={tabs} translations={componentProps.translations} />
+                <Navigation isMicrosoft={isMicrosoft} $location={$location} accountId={accountId} user={user} tabs={tabs} translations={componentProps.translations} />
                 <Container>
+                    <FeedbackArea>
+                        {feedback.map((feedback) =>
+                            <Feedback level={feedback.feedbackLevel}>
+                                <FeedbackTitle level={feedback.feedbackLevel}>{feedback.feedbackTitle}</FeedbackTitle>
+                                <FeedbackMessage level={feedback.feedbackLevel}>{feedback.feedbackMessage}</FeedbackMessage>
+                            </Feedback>
+                        )}
+                    </FeedbackArea>
                     <Component {...componentProps} />
                 </Container>
             </div>

@@ -40,7 +40,6 @@ export const components = {
 export default class ExpandableMarkdownSection extends Component {
     render() {
         const { title, content } = this.props
-        console.debug(content)
         return (
             <ExpandableSection title={title}>
                 <Markdown markdown={content} markupOpts={{

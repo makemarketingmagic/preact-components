@@ -1,6 +1,7 @@
 import { h, Component } from 'preact'
 import Label from './../../../components/Label/index';
 import SingleLineTextInput from './../../../components/SingleLineTextInput/index';
+import Helmet from "preact-helmet";
 
 export default class Targets extends Component {
     render() {
@@ -24,8 +25,9 @@ export default class Targets extends Component {
         } = this.props
         return (
             <StepContents>
+                <Helmet title={`${translations.getLL('ONBOARDING', 'Onboarding')} | ${translations.getLL('TARGETS', 'Targets')} | WOO`} />
                 <IFrameContainer>
-                    <iframe width="504" height="284" src={translations.getLL('ONBOARDING_VIDEO_SRC_GOALS', 'https://www.youtube.com/embed/2vtO__uWTtw')} frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src={translations.getLL('ONBOARDING_VIDEO_SRC_GOALS', 'https://www.youtube.com/embed/2vtO__uWTtw')} frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </IFrameContainer>
                 <Explaination>
                     SOME TEXT HERE

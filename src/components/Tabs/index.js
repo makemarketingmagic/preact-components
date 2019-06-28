@@ -27,6 +27,10 @@ const Navigation = styled.nav`
     padding: 16px 12px;
     cursor: pointer;
 `, TabEl = styled.div`
+    &:focus {
+        outline: none;
+    }
+    
     display: ${({ active }) => active ? 'block' : 'none'};
 `
 
@@ -102,7 +106,7 @@ export class Tabs extends Component {
                 onClick: !disabled ? this.handleClick.bind(this, index) : null
             });
 
-            return cloneElement(tab, { active, key: index, tabIndex: index });
+            return cloneElement(tab, { active, key: index, 'tab-index': index });
         });
         return (
             <TabsEl ref={ref => this.tabs = ref}>

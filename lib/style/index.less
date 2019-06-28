@@ -283,3 +283,64 @@ input.mdl-button[type="submit"] {
 .ql-toolbar.ql-snow, .ql-container.ql-snow {
     background-color: white;
 }
+
+/* File: ./app/components/d3-lines/d3-lines.scss */
+
+.we-chart-axis path,
+.we-chart-axis line
+{
+  fill: none;
+  stroke: black;
+  //shape-rendering: crispEdges;
+}
+
+.we-chart-axis text {
+  font-family: 'Varela Round';
+  font-size: 11px;
+}
+
+.we-chart-axis .tick line {
+  stroke: #ddd;
+}
+
+.we-chart-hover-line {
+  opacity:0;
+  &:hover{
+    opacity:0.1;
+  }
+}
+
+.we-chart-legend-circle {
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  margin-right: 3px;
+  float: left;
+}
+
+.l-we-chart-legend-col {
+  line-height: 1rem;
+  vertical-align:middle;
+  margin-top:4px;
+  margin-bottom:4px;
+}
+
+.we-d3-lines-tool-tip {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: absolute;
+  display: none;
+  width: auto;
+  height: auto;
+  background: none repeat scroll 0 0 white;
+  border: 0 none;
+  border-radius: 8px 8px 8px 8px;
+  box-shadow: -3px 3px 15px #888888;
+  color: black;
+  font: 12px sans-serif;
+  padding: 5px;
+  text-align: center;
+}
+
+.l-we-chart-legend-row {
+  margin-bottom: 20px;
+}

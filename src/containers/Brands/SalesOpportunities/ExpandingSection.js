@@ -18,7 +18,9 @@ const Container = styled.div`
     margin-left: 32px;
     flex-direction: column;
     flex: 0.4;
-
+    & > * {
+        margin: 4px 0;
+    }
     
 `, Visit = styled.div`
     font-style: normal;

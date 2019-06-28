@@ -317,7 +317,6 @@ export default class Annotator extends Component {
                 content: text,
                 comment: ''
             }
-        console.debug(highlight)
 
         if (addHighlight && !checkForOverlap(highlight)) {
             let i = addHighlight(highlight)

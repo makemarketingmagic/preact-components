@@ -12,6 +12,7 @@ import { defaultLabels } from '../MockFunctions';
 import { Modal } from '../../../components/Modal';
 import Checkboxes from './../../../components/Checkboxes/index';
 import ExpandingSection from './ExpandingSection';
+import Helmet from "preact-helmet";
 
 const PageTitle = styled.div`
     font-family: 'Varela Round';
@@ -74,7 +75,7 @@ export default class SalesOpportunities extends Component {
     getOpportunities = async () => {
         this.setState({ loading: true }, async () => {
             const { events: { getOpportunities } } = this.props
-            let leads = getOpportunities ? await getOpportunities : this.props.leads
+            let leads = getOpportunities ? await getOpportunities() : this.props.leads
             this.setState({ leads, filteredLeads: leads }, () => {
                 this.reloadFilters()
             })
@@ -144,6 +145,26 @@ export default class SalesOpportunities extends Component {
         this.setState({ filteredLeads, totalPages: this.calculatePages(filteredLeads) })
     }
 
+    getFiveAround = (array, index) => {
+        if (array.length <= 5) return array
+        else if (array[index - 2] && array[index + 2]) {
+            return array.slice(index - 2, index + 3)
+        } else if (!array[index - 2]) {
+            if (array[index - 1]) {
+                return array.slice(index - 1, index + 4)
+            } else {
+                return array.slice(index, index + 5)
+            }
+        } else if (!array[index + 2]) {
+            if (array[index + 1]) {
+                return array.slice(index - 3, index + 2)
+            } else {
+                return array.slice(index - 4, index + 1)
+            }
+        }
+    }
+
+
     renderPages() {
         let pages = []
         const { currentPage, totalPages } = this.state
@@ -157,13 +178,16 @@ export default class SalesOpportunities extends Component {
         // if (currentPage + 2 > totalPages) {
         //     rightSide = currentPage - totalPages
         // }
-        // debugger
+        // 
+        let pageNumbers = []
         for (let i = 1; i <= totalPages; i++) {
-            pages.push((<PageNumber
+            pageNumbers.push((<PageNumber
                 current={i === currentPage}
                 onClick={() => this.changePage(i)}
             >{i}</PageNumber>))
         }
+        pageNumbers = this.getFiveAround(pageNumbers, currentPage)
+        pages.push(...pageNumbers)
         pages.push(<PageNumber current={false} onClick={() => this.changePage(currentPage + 1)}>{'>'}</PageNumber>)
         pages.push(<PageNumber current={false} onClick={() => this.changePage(totalPages)}>{'>>'}</PageNumber>)
         return pages
@@ -206,6 +230,7 @@ export default class SalesOpportunities extends Component {
         }
         return (
             <div>
+                <Helmet title={`${translations.getLL('SALES_OPPORTUNITIES', 'Sales Opportunities')} | WOO`} />
                 <TitleArea>
                     <Modal
                         onDialogClose={() => {

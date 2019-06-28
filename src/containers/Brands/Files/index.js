@@ -13,6 +13,7 @@ import DotsIcon from './../../../components/icons/DotsIcon';
 import TickIcon from './../../../components/icons/TickIcon';
 import DragDropZone from './../../../components/DragDropZone/index';
 import { debounce } from 'lodash';
+import Helmet from "preact-helmet";
 
 const Title = styled.div`
     font-family: 'Varela Round';
@@ -188,6 +189,7 @@ export default class Files extends Component {
         }
         return (
             <div>
+                <Helmet title={`${translations.getLL('FILES', 'Files')} | WOO`} />
                 <TitleArea>
                     <Title>{translations.getLL('NUMBER_OF_FILES_WITH_VALUE', 'You have %v1 files', [<span style={{ color: colors.red }}>{files.length}</span>])}</Title>
                     <FilesControls>
@@ -249,6 +251,9 @@ export default class Files extends Component {
                         }}
                         selected={this.state.selected}
                         selectedBackground={colors.white}
+                        spanStyles={{
+                            'file_name': { wordBreak: 'break-all' }
+                        }}
                         renderers={{
                             'date_uploaded': (val) => { return new Date(val * 1000).toISOString().split('T')[0] },
                             'file_name': (keyVal, selected, value) => {

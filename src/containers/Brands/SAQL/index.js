@@ -11,6 +11,7 @@ import { Modal } from './../../../components/Modal/index';
 import Label from '../../../components/Label';
 import DatePicker from './../../../components/DatePicker/index';
 import Checkboxes from '../../../components/Checkboxes';
+import Helmet from "preact-helmet";
 
 const Title = styled.div`
     font-family: 'Varela Round';
@@ -244,6 +245,7 @@ export default class SAQL extends Component {
 
         return (
             <div>
+                <Helmet title={`${translations.getLL('SAQL', 'SAQL')} | WOO`} />
                 {this.renderModal(translations)}
                 <TitleArea>
                     <Title>{translations.getLL('NUMBER_OF_SAQLS_WITH_VALUE', 'You have %v1 Sales Qualified Leads', [<span style={{ color: colors.red }}>{leads.length}</span>])}</Title>

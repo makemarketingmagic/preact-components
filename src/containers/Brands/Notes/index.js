@@ -9,6 +9,7 @@ import Table, { SORT_DIRECTION } from '../../../components/Table';
 import { debounce } from 'lodash';
 import ExpandingSection from './ExpandingSection';
 import Dropdown from './../../../components/Dropdown/index';
+import Helmet from "preact-helmet";
 
 const Title = styled.div`
     font-family: 'Varela Round';
@@ -76,7 +77,7 @@ export default class Notes extends Component {
     }
 
     onSelect = (id) => {
-        if (id && id !== this.state.selected) {
+        if (id >= -1 && id !== this.state.selected) {
             let selectedNote = this.state.notes.filter((value) => value.id === id)[0] || false
             if (selectedNote) {
                 this.setState({ selected: id, selectedNote })
@@ -88,7 +89,6 @@ export default class Notes extends Component {
         let { selectedNote } = this.state
         selectedNote.private = val
         this.setState({ selectedNote })
-        debugger
     }
 
     reloadFilters = () => {
@@ -127,22 +127,41 @@ export default class Notes extends Component {
 
     updateNote = async (note) => {
         this.setState({ loading: true }, async () => {
-            const { events: { updateNote = null } } = this.props
+            const { events: { updateNote = null, createNote = null } } = this.props
             const { selectedNote } = this.state
             if (note.private !== selectedNote.private) {
                 note.private = selectedNote.private
             }
-            await updateNote(note)
-            return await this.getNotes()
+            if (note.id === -1) {
+                note = await createNote(note)
+                await this.getNotes()
+                this.onSelect(false)
+            } else {
+                await updateNote(note)
+                await this.getNotes()
+                this.onSelect(false)
+            }
+
         })
     }
 
     addNote = async () => {
-        this.setState({ loading: true }, async () => {
-            const { events: { createNote = null } } = this.props
-            await createNote()
-            return await this.getNotes()
+        let { notes } = this.state
+        notes = [{
+            id: -1,
+            innerContent: '',
+            private: true,
+            dateCreated: new Date().toISOString()
+        }, ...notes]
+        this.setState({ notes }, () => {
+            this.reloadFilters()
+            this.onSelect(-1)
         })
+        // this.setState({ loading: true }, async () => {
+        //     const { events: { createNote = null } } = this.props
+        //     await createNote()
+        //     return await this.getNotes()
+        // })
     }
 
     render() {
@@ -171,6 +190,7 @@ export default class Notes extends Component {
         }
         return (
             <div>
+                <Helmet title={`${translations.getLL('NOTES', 'Notes')} | WOO`} />
                 <TitleArea>
                     <Title>{translations.getLL('NUMBER_OF_NOTES_WITH_VALUE', 'You have %v1 notes', [<span style={{ color: colors.red }}>{notes.length}</span>])}</Title>
                     <NotesControls>
@@ -200,9 +220,12 @@ export default class Notes extends Component {
                         dateCreated: translations.getLL('CREATED', 'Created'),
                         private: translations.getLL('TYPE', 'Type')
                     }}
+                    spanStyle={{
+                        innerContent: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
+                    }}
                     renderers={{
-                        innerContent: (value) => (<span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{this.stripHtmlTags(value)}</span>),
-                        dateCreated: (value) => value,
+                        innerContent: (value) => this.stripHtmlTags(value),
+                        dateCreated: (value) => value.replace(' ', '\n'),
                         private: (value, selected) =>
                             selected ?
                                 (<Dropdown

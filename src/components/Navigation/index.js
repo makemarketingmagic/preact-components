@@ -2,15 +2,20 @@ import { h, Component } from 'preact'
 import styled from 'styled-components';
 import WOOLogo from '../icons/WOOLogo';
 import CurrentUser from './CurrentUser';
-import Tabs from './Tabs';
+import Tabs, { MobileTabs } from './Tabs';
 import { colors } from '../common/scMixins';
+import { debounce } from 'lodash';
+import { isMobile } from 'react-device-detect';
 
 const Header = styled.header`
+    position: fixed;
+    top: 0;
+    z-index: 10000000;
     font-family: 'Montserrat', sans-serif;
     width: 100%;
-    height: 48px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-areas: 'logo nav currentUser';
     background-color: ${colors.white};
     border-bottom: 1px solid rgba(32, 32, 32, 0.1);
     align-items: center;
@@ -19,11 +24,26 @@ const Header = styled.header`
 
 const LogoContainer = styled.div`
     margin-left: 32px;
+    grid-area: logo;
+
 `
 
 export default class Navigation extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            scrolled: false
+        }
+        window.addEventListener('scroll', debounce(this.onScroll))
+    }
+
+    onScroll = (e) => {
+        let scrollPos = window.scrollY
+        this.setState({ scrolled: scrollPos > 32 })
+    }
+
     render() {
-        const { tabs, user, $location, accountId } = this.props
+        const { tabs, user, $location, accountId, isMicrosoft } = this.props
         let { translations = { getTranslation: (label, fallback) => fallback } } = this.props
         translations.getLL = (label, fallback, values = []) => {
             let string = translations.getTranslation(label, fallback)
@@ -46,13 +66,14 @@ export default class Navigation extends Component {
             }
             return isString ? result.join('') : result
         }
+        let TabsComponent = isMobile ? MobileTabs : Tabs
         return (
-            <Header>
+            <Header scrolled={this.state.scrolled}>
                 <LogoContainer>
                     <WOOLogo />
                 </LogoContainer>
-                <Tabs $location={$location} tabs={tabs} brandId={accountId} translations={translations} />
-                <CurrentUser user={user} $location={$location} />
+                <TabsComponent isMicrosoft={isMicrosoft} $location={$location} tabs={tabs} user={user} brandId={accountId} translations={translations} />
+                <CurrentUser translations={translations} user={user} $location={$location} />
             </Header>
         )
     }

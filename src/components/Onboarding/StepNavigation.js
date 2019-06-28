@@ -5,7 +5,6 @@ import WOOLogo from '../icons/WOOLogo';
 
 const StepNavEl = styled.nav`
     height: 160px;
-    width: 100%;
     background-color: ${colors.white};
     padding: 16px 64px;
     display: flex;

@@ -1,8 +1,8 @@
 import { h, Component } from 'preact'
-import styled from 'styled-components'
 import RadioButtons from './../../../components/RadioButtons/index';
 import Label from './../../../components/Label/index';
 import SingleLineTextInput from '../../../components/SingleLineTextInput';
+import Helmet from "preact-helmet";
 
 export default class TargetAudience extends Component {
     render() {
@@ -30,6 +30,7 @@ export default class TargetAudience extends Component {
         } = this.props
         return (
             <StepContents>
+                <Helmet title={`${translations.getLL('ONBOARDING', 'Onboarding')} | ${translations.getLL('TARGET_AUDIENCE', 'Target Audience')} | WOO`} />
                 <IFrameContainer>
                     <iframe
                         class="embed-responsive-item"

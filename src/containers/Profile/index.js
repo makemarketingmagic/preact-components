@@ -6,7 +6,10 @@ import Label from '../../components/Label';
 import SingleLineTextInput from '../../components/SingleLineTextInput';
 import Dropdown from '../../components/Dropdown';
 import DatePicker from './../../components/DatePicker/index';
-
+import DragDropZone from './../../components/DragDropZone/index';
+import { Modal } from '../../components/Modal';
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css';
 
 const Container = styled.div`
     display: flex;
@@ -42,12 +45,23 @@ const Container = styled.div`
     font-weight: normal;
     line-height: 32px;
     font-size: 24px;
-
     color: ${colors.text};
 `, ProfileForm = styled.form`
-
+    margin-bottom: 16px;
 `, Group = styled.div`
     margin: 19px 0;
+
+    & > label {
+        margin-bottom: 12px;
+        display: block;
+    }
+
+`, CropContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    max-height: 60vh;
+    display: flex;
+    justify-content: center;
 `
 export default class Profile extends Component {
     constructor(props) {
@@ -63,16 +77,94 @@ export default class Profile extends Component {
             languages: [{ text: 'English', value: 'en_GB' }],
             old_password: '',
             new_password: '',
-            new_password2: ''
+            new_password2: '',
+            imageSelected: false,
+            crop: {},
+            originalLanguage: ''
         }
     }
 
     componentDidMount() {
-        let { user } = this.props,
-            languages = Object.entries(this.props.languages).map(([key, value]) => {
-                return { value: key, text: value, selected: key === user.language }
+        this.initialise()
+    }
+
+    initialise = async () => {
+        let user = await this.getUserDetails(),
+            languages = await this.getLanguages(user.language)
+        this.setState({ ...user, languages, originalLanguage: user.language })
+    }
+
+    getUserDetails = async () => {
+        const { events: { getUserDetails } } = this.props
+        let result
+        if (getUserDetails) {
+            result = await getUserDetails()
+
+        }
+        return result
+    }
+
+    getLanguages = async (language) => {
+        const { events: { getLanguages } } = this.props
+        let result
+        if (getLanguages) {
+            result = await getLanguages()
+            result = result.map((val) => {
+                val.selected = val.data === language
+                val.value = val.data
+                return val
             })
-        this.setState({ ...user, languages })
+        }
+        return result
+    }
+
+    savePassword = async () => {
+        const { events: { savePassword } } = this.props,
+            { new_password } = this.state
+        let result
+        if (savePassword) {
+            result = await savePassword(new_password)
+            await this.initialise()
+        }
+        return result
+    }
+
+    saveProfile = async () => {
+        const { events: { saveProfile } } = this.props,
+            { originalLanguage } = this.state
+        let result,
+            user = {
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                company: this.state.company,
+                email: this.state.email,
+                id: this.state.id,
+                birthdate: this.state.birthdate,
+                language: this.state.language
+            }
+        if (saveProfile) {
+            result = await saveProfile(user)
+            if (user.language !== originalLanguage) {
+                window.location.reload()
+            } else {
+                this.initialise()
+            }
+        }
+        return result
+    }
+
+    uploadPhoto = async (photo) => {
+        const { events: { uploadPhoto } } = this.props
+        let result
+        if (uploadPhoto) {
+            result = await uploadPhoto(photo)
+            await this.initialise()
+        }
+        return result
+    }
+
+    onDrop = ([file]) => {
+        this.setState({ imageSelected: file })
     }
 
     saveChanges = async () => {
@@ -107,6 +199,40 @@ export default class Profile extends Component {
         this.setState(update)
     }
 
+    getCroppedImg = (img, pixelCrop, fileName) => {
+        return new Promise((resolve, reject) => {
+            let image = new Image()
+            image.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = pixelCrop.width;
+                canvas.height = pixelCrop.height;
+                const ctx = canvas.getContext('2d');
+
+                ctx.drawImage(
+                    image,
+                    pixelCrop.x,
+                    pixelCrop.y,
+                    pixelCrop.width,
+                    pixelCrop.height,
+                    0,
+                    0,
+                    pixelCrop.width,
+                    pixelCrop.height
+                );
+
+                // As Base64 string
+                const base64Image = canvas.toDataURL('image/jpeg');
+                resolve(base64Image)
+                // As a blob
+                // canvas.toBlob(blob => {
+                //     blob.name = fileName;
+                //     resolve(blob);
+                // }, 'image/jpeg');
+            }
+            image.src = img
+        });
+    }
+
     render() {
         let { translations = { getTranslation: (label, fallback) => fallback } } = this.props
         const { lockdown } = this.state
@@ -133,11 +259,55 @@ export default class Profile extends Component {
         }
         return (
             <Container>
+                <Modal
+                    onDialogClose={() => {
+                        this.setState({ imageSelected: false, crop: null })
+                    }}
+                    open={this.state.imageSelected}
+                    title={translations.getLL('CROP_PROFILE_PHOTO', 'Crop Profile Photo')}
+                    buttons={[
+                        {
+                            text: translations.getLL('UPLOAD_IMAGE', 'Upload Image'),
+                            onClick: async () => {
+                                const { pixelCrop, imageSelected } = this.state
+                                let cropped = await this.getCroppedImg(URL.createObjectURL(imageSelected), pixelCrop, 'profile.jpeg')
+                                this.setState({ imageSelected: false, crop: null })
+                                await this.uploadPhoto(cropped)
+                            }
+                        },
+                        {
+                            text: translations.getLL('CANCEL', 'Cancel'),
+                            onClick: () => {
+                                this.setState({ imageSelected: false, crop: null })
+                            }
+                        }
+                    ]}
+                >
+                    {this.state.imageSelected &&
+                        <CropContainer>
+                            <ReactCrop
+                                src={URL.createObjectURL(this.state.imageSelected)}
+                                crop={{ ...this.state.crop, aspect: 1 }}
+                                onChange={(crop, pixelCrop) => this.setState({ crop, pixelCrop })}
+                                keepSelection={true}
+                                style={{ height: '100%' }}
+                            />
+                        </CropContainer>}
+                </Modal>
                 <LeftSide>
                     <ImageContainer>
                         <ProfileImage src={this.state.image} />
                     </ImageContainer>
-                    <Button secondary={true}>{translations.getLL('UPLOAD_NEW_IMAGE', 'Upload new image')}</Button>
+                    <DragDropZone
+                        multiple={false}
+                        onDrop={this.onDrop}
+                        style={{}}
+                        activeStyle={{}}
+                        rejectStyle={{}}
+                        accept={'image/*'}
+                    >
+                        <Button secondary={true}>{translations.getLL('UPLOAD_NEW_IMAGE', 'Upload new image')}</Button>
+                    </DragDropZone>
                 </LeftSide>
                 <RightSide>
                     <Title>{translations.getLL('PROFILE', 'Profile')}</Title>
@@ -168,7 +338,7 @@ export default class Profile extends Component {
                             <Dropdown disabled={lockdown} options={this.state.languages} onChange={({ value }) => { this.onChange('language', value) }} />
                         </Group>
                         <Group>
-                            <Button disabled={lockdown} onClick={() => { this.saveChanges() }} secondary={true}>{translations.getLL('SAVE_CHANGES', 'Save changes')}</Button>
+                            <Button disabled={lockdown} onClick={() => { this.saveProfile() }} secondary={true}>{translations.getLL('SAVE_CHANGES', 'Save changes')}</Button>
                         </Group>
                     </ProfileForm>
                     <Title>{translations.getLL('PASSWORD', 'Password')}</Title>
@@ -185,7 +355,7 @@ export default class Profile extends Component {
                             <Label>{translations.getLL('REPEAT_NEW_PASSWORD', 'Repeat New Password')}</Label>
                             <SingleLineTextInput disabled={lockdown} type='password' value={this.state.new_password2} onChange={({ value }) => { this.onChange('new_password2', value) }} validation={'password'} />
                         </Group>
-                        <Button secondary={true} disabled={lockdown} >{translations.getLL('SAVE_NEW_PASSWORD', 'Save new password')}</Button>
+                        <Button secondary={true} onClick={() => { this.savePassword() }} disabled={lockdown} >{translations.getLL('SAVE_NEW_PASSWORD', 'Save new password')}</Button>
                     </ProfileForm>
                 </RightSide>
             </Container>

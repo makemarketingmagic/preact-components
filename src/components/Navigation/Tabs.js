@@ -7,6 +7,8 @@ const TabsEl = styled.nav`
     flex-direction: row;
     height: 100%;
     background-color: ${colors.white};
+    grid-area: nav;
+    justify-content: center;
 `, TabEl = styled.a`
     display: flex;
     position: relative;
@@ -25,6 +27,26 @@ const TabsEl = styled.nav`
     &:hover {
         border-bottom: ${props => props.active ? `2px solid ${colors.red}` : `1px solid ${colors.red}`};
         color: ${ colors.red};
+    }
+`, CurrentTab = styled.div`
+    display: flex;
+`, MobileTabsEl = styled.div`
+    display: grid; 
+    grid-template-columns: ${props => Array.apply(null, Array(props.tabs + 1)).map(() => "auto").join(' ')}; 
+    height: 100%;
+    background-color: ${colors.white};
+    overflow-x: scroll;
+
+
+    &::after {
+        pointer-events: none;
+        content: "";
+        display: block;
+        height: 100%;
+        width: 64px;
+        position: sticky;
+        right: 0;
+        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
     }
 `, SubMenu = styled.div`
     position: absolute;
@@ -45,6 +67,14 @@ const TabsEl = styled.nav`
     &:hover {
         color: ${colors.red};
     }
+`, MobileContainer = styled.div`
+    display: flex; 
+    flex-direction: row;
+    height: 100%;
+    background-color: ${colors.white};
+    grid-area: nav;
+    justify-content: center;
+    max-width: calc(100vw - 180px);
 `
 
 export default class Tabs extends Component {
@@ -111,11 +141,24 @@ export default class Tabs extends Component {
         this.setState({ subMenuOpen: false })
     }
 
+    canViewTab = (tab) => {
+        const { user, isMicrosoft } = this.props,
+            { IS_ALLOWED = [], IS_MICROSOFT = false } = tab
+        if (IS_ALLOWED.indexOf(parseInt(user.rights_id)) >= 0 || IS_ALLOWED.length === 0) {
+            if (IS_MICROSOFT === isMicrosoft) {
+                return true
+            } else if (IS_MICROSOFT === false && isMicrosoft) {
+                return true
+            }
+        }
+        return false
+    }
+
     render() {
         const { tabs = [], translations, brandId } = this.props
         return (
             <TabsEl>
-                {tabs.map((tab, key) => (
+                {tabs.filter(this.canViewTab).map((tab, key) => (
                     <Tab
                         brandId={brandId}
                         tab={tab}
@@ -146,7 +189,7 @@ class Tab extends Component {
 
             <TabEl
                 // onClick={this.handleOpen}
-                active={currentUrl === dynamicUrl}
+                active={active}
                 href={dynamicUrl}
             >
                 {translations.getLL(TITLE_TRANSLATION_LABEL || TITLE, TITLE)}
@@ -158,6 +201,42 @@ class Tab extends Component {
                         </SubMenu> */}
 
             </TabEl>
+        )
+    }
+}
+
+export class MobileTabs extends Tabs {
+    render() {
+        const { translations, brandId, tabs = [] } = this.props
+        let currentTab = tabs.find((value) => this.isActive(value)),
+            rest = tabs.filter((value) => !this.isActive(value)).filter(this.canViewTab)
+        return (
+            <MobileContainer>
+                {currentTab && <CurrentTab>
+                    <Tab
+                        brandId={brandId}
+                        tab={currentTab}
+                        id={-1}
+                        handleOpen={this.handleOpen}
+                        active={this.isActive(currentTab)}
+                        subMenuOpen={this.state.subMenuOpen}
+                        translations={translations}
+                    />
+                </CurrentTab>}
+                <MobileTabsEl tabs={rest.length}>
+                    {rest.map((tab, key) => (
+                        <Tab
+                            brandId={brandId}
+                            tab={tab}
+                            id={key}
+                            handleOpen={this.handleOpen}
+                            active={this.isActive(tab)}
+                            subMenuOpen={this.state.subMenuOpen}
+                            translations={translations}
+                        />
+                    ))}
+                </MobileTabsEl>
+            </MobileContainer>
         )
     }
 }

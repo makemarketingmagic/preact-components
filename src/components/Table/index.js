@@ -8,6 +8,7 @@ const Grid = styled.div`
     display: grid;
     grid-template-columns: ${props => props.headers.map((val) => 'auto').join(' ')};
     width: 100%;
+    overflow: hidden;
 `, HeaderRow = styled.div`
     
     
@@ -20,6 +21,7 @@ const Grid = styled.div`
     font-size: 14px;
     border-bottom:  ${props => props.ordered ? `2px solid ${colors.red}` : '1px solid rgba(32, 32, 32, 0.1)'};
     padding-bottom: 7px;
+    padding-right: 16px;
     color: #323232;
     display: flex;
     align-items: center;
@@ -34,11 +36,46 @@ const Grid = styled.div`
     padding-right: 16px;
     display: flex;
     align-items: center;
-
+    position: relative;
     color: #888888;
+    ${props => props.selected ? `
+        &:before {
+            background-color: ${props.selectedBackground};
+        }
+    ` : ''}
+    ${props => props.hasExpandingSection ? `
+        cursor: pointer;
+    
+        & span {
+            z-index: 2;
+        }
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: -1000%;
+            left: -1000%;
+            z-index: 1;
+        }
+        
+        &:nth-child(${props.cols}n+${props.cols})::after {
+            bottom: -1px;
+        right: 0;
+        left: -1000%;
+        height: 1px;
+        z-index: 3;
+        width: auto;
+        top: auto;
+        background-color: #fff;
+    }
+    
+    &:hover::before {
+        background-color: ${props.selectedBackground};
+    }
+    ` : ''}
 
-    background-color: ${props => props.selected ? props.selectedBackground : colors.white};
-`, SortIcon = styled.img`
+    `, SortIcon = styled.img`
     margin-left: 4px;
     transition: all 250ms ease-in-out;
     display: inline-block;
@@ -65,6 +102,7 @@ export default class Table extends Component {
             ExpandingSection = null,
             selected = false,
             onSelect = null,
+            spanStyle = {},
             selectedBackground = colors.actionIncomplete
         } = this.props,
             headersArray = Object.entries(headers)
@@ -85,12 +123,14 @@ export default class Table extends Component {
                     return [headersArray.map(([key, value]) => {
                         return (
                             <StyledCell
+                                hasExpandingSection={hasExpandingSection}
                                 selected={selected === val.id}
                                 selectedBackground={selectedBackground}
+                                cols={headersArray.length}
                                 onClick={() => {
                                     onSelect && onSelect(val.id, val)
                                 }}
-                            >{renderers[key] ? renderers[key](val[key], selected === val.id, val) : val[key]}</StyledCell>
+                            ><span style={spanStyle[key]}>{renderers[key] ? renderers[key](val[key], selected === val.id, val) : val[key]}</span></StyledCell>
                         )
                     }),
                     (hasExpandingSection && ExpandingSection && selected === val.id) ?

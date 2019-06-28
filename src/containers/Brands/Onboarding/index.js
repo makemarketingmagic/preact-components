@@ -2,8 +2,6 @@ import { h, Component, cloneElement } from 'preact'
 import StepNavigation from '../../../components/Onboarding/StepNavigation';
 import Step from './../../../components/Onboarding/Step';
 import styled from 'styled-components';
-import Label from '../../../components/Label';
-import SingleLineTextInput from '../../../components/SingleLineTextInput';
 import Targets from './Targets';
 import UploadFiles from './UploadFiles';
 import EstablishConnections from './EstablishConnections';
@@ -36,6 +34,21 @@ const Divider = styled.div`
     margin: 19px 0;
 `, IFrameContainer = styled.div`
     margin-bottom: 64px;
+    width: 100%;
+
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+    
+    & iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
 `, SectionTitle = styled.div`
     line-height: 32px;
     font-size: 24px;

@@ -1,8 +1,8 @@
 import { h, Component } from 'preact'
-import styled from 'styled-components'
 import SingleLineTextInput from '../../../components/SingleLineTextInput';
 import Checkboxes from './../../../components/Checkboxes/index';
 import Label from './../../../components/Label/index';
+import Helmet from "preact-helmet";
 
 export default class EstablishConnections extends Component {
     render() {
@@ -35,6 +35,7 @@ export default class EstablishConnections extends Component {
 
         return (
             <StepContents>
+                <Helmet title={`${translations.getLL('ONBOARDING', 'Onboarding')} | ${translations.getLL('ESTABLISH_CONNECTIONS', 'Establish Connections')} | WOO`} />
                 <IFrameContainer>
                     <iframe class="embed-responsive-item" src={translations.getLL('ONBOARDING_VIDEO_SRC_CONNECTIONS', 'https://www.youtube.com/embed/OvnX9Xm7F0Q?rel=0')}
                         frameborder="0" allowfullscreen />

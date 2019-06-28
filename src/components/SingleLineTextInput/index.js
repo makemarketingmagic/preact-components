@@ -29,6 +29,9 @@ const Input = styled.input`
     &::placeholder {
         color: ${colors.grey};
     }
+    &:disabled {
+        background-color: rgba(136,165,173,0.2);
+    }
 `
 export default class SingleLineTextInput extends Component {
     constructor(props) {
@@ -67,7 +70,7 @@ export default class SingleLineTextInput extends Component {
         const { type = 'text', style = {}, disabled = false, placeholder = '', iconLeft = false, Icon = null, value, validation = false } = this.props
         return (
             <Container style={style}>
-                {iconLeft && <div style={{ marginLeft: 4, display: 'flex' }} ><Icon /></div>}
+                {iconLeft && <div style={{ marginLeft: 4, marginRight: 4, display: 'flex' }} ><Icon /></div>}
                 <Input onChange={this.handleChange} placeholder={placeholder} type={type} value={value} disabled={disabled} />
                 {(validation && value.length > 0) && this.renderValidIcon()}
             </Container>
